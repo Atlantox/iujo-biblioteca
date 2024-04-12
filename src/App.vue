@@ -1,12 +1,12 @@
 <script setup>
 import { ref, onMounted, inject } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
 import { Modal } from 'bootstrap'
 
 const myModal = ref('')
 const swal = inject('$swal')
 
+/*
 onMounted(() => {
   myModal.value = new Modal('#exampleModalLong')
 })
@@ -22,151 +22,72 @@ const ShowModal = (() => {
 const HideModal = (() => {
   myModal.value.hide()
 })
+*/
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
+  <div class="row m-0 p-0 h6" style="height:1500px">
+    <section class="row m-0 p-0 col-12 col-lg-3">
+      <div class="col-12 col-lg-9 lb-bg-primary my-sidebar shadowed-n">
+
+        <div class="row m-0 p-0 w-100 justify-content-end mt-4">
+          <figure class="col-3 text-right text-white">
+            <i class="bi bi-arrow-bar-left menu-hider"></i>
+          </figure>
+        </div>
+        
+        <div class="flex-shrink-0 p-3 h6 row align-items-center h-100">          
+          <ul class="list-unstyled ps-0">
+            <li class="mb-1">
+              <button class="btn btn-toggle align-items-center rounded collapsed col-12 text-white fw-bold align-middle d-flex align-items-center" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+                <i class="bi bi-caret-down-fill align-middle mx-2"></i>
+                <span class="fs-2 text-left m-0">Home</span>
+              </button>
+              <div class="collapse  fs-5" id="home-collapse">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-5 small">
+                  <li><a href="#" class="link-dark rounded">Overview</a></li>
+                  <li><a href="#" class="link-dark rounded">Updates</a></li>
+                  <li><a href="#" class="link-dark rounded">Reports</a></li>
+                </ul>
+              </div>
+            </li>
           </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-        </li>
-      </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
-    </div>
+        </div>
+
+
+        <!--
+
+          
+          
+          <div class="row m-0 p-0 w-100 justify-content-end mt-4">
+            
+          </div>
+        -->
+      </div>
+    </section>
+    <section class="col-12 col-lg-9">
+      el contenido
+    </section>
   </div>
-</nav>
-
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper bg-danger">
-
-      <!-- Button trigger modal -->
-<button type="button" @click="ShowModal" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
-  Launch demo modal
-</button>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" @click="HideModal" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+<style scoped lang="scss">
+.my-sidebar{
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+  height:100vh;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+.menu-hider{
+  font-size:40px;
+  font-weight: 800;
 }
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+a{
+  color:white !important;
+  text-decoration:none
 }
 </style>
