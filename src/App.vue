@@ -6,11 +6,14 @@ import { Modal } from 'bootstrap'
 const myModal = ref('')
 const swal = inject('$swal')
 
-/*
+
 onMounted(() => {
-  myModal.value = new Modal('#exampleModalLong')
+  //myModal.value = new Modal('#exampleModalLong')
+  
+  $('#datatable').DataTable()
 })
 
+/*
 const ShowModal = (() => {
   swal.fire({
     title: 'Titulaso',
@@ -65,13 +68,45 @@ const HideModal = (() => {
         -->
       </div>
     </section>
-    <section class="col-12 col-lg-9">
-      el contenido
+    <section class="row m-0 p-0 col-12 col-lg-9 align-items-start">
+      <table class="datatable col-12" id="datatable">
+        <thead>
+          <tr>
+            <th>Nº</th>
+            <th>Título</th>
+            <th>Autor</th>
+            <th>Páginas</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Mein Kaphf</td>
+            <td>Adolf Hitler</td>
+            <td>209</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Mein Kaphf</td>
+            <td>Adolf Hitler</td>
+            <td>209</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Mein Kaphf</td>
+            <td>Adolf Hitler</td>
+            <td>209</td>
+          </tr>
+        </tbody>
+      </table>
     </section>
   </div>
 </template>
 
 <style scoped lang="scss">
+tr, td{
+  border: 1px black solid
+}
 .my-sidebar{
   border-top-right-radius: 30px;
   border-bottom-right-radius: 30px;
