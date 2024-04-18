@@ -9,8 +9,25 @@ const swal = inject('$swal')
 
 onMounted(() => {
   //myModal.value = new Modal('#exampleModalLong')
-  
-  $('#datatable').DataTable()
+
+  $('#mydatatable').DataTable( {
+        "language": {
+            paginate: {
+              previous: '<i class="bi bi-caret-left-fill text-white datatable-navigation"></i>',
+              next:     '<i class="bi bi-caret-right-fill text-white datatable-navigation"></i>'
+            },
+            aria: {
+              paginate: {
+                  previous: '<i class="bi bi-caret-right-fill text-white datatable-navigation"></i>',
+                  next:     '<i class="bi bi-caret-right-fill text-white datatable-navigation"></i>'
+              }
+            },
+            search: '<i class="bi bi-search text-black me-2 datatable-search"></i>',
+
+            "url": "//cdn.datatables.net/plug-ins/2.0.5/i18n/es-ES.json"
+        }
+    } );
+
 })
 
 /*
@@ -68,14 +85,14 @@ const HideModal = (() => {
         -->
       </div>
     </section>
-    <section class="row m-0 p-0 col-12 col-lg-9 align-items-start">
-      <table class="datatable col-12" id="datatable">
+    <section class="row m-0 p-0 py-5 col-12 col-lg-9 align-items-start">
+      <table class="mydatatable col-12 shadowed" id="mydatatable">
         <thead>
-          <tr>
-            <th>Nº</th>
-            <th>Título</th>
-            <th>Autor</th>
-            <th>Páginas</th>
+          <tr class="text-white">
+            <th class="text-center lb-bg-terciary">Nº</th>
+            <th class="text-center lb-bg-terciary">Título</th>
+            <th class="text-center lb-bg-terciary">Autor</th>
+            <th class="text-center lb-bg-terciary">Páginas</th>
           </tr>
         </thead>
         <tbody>

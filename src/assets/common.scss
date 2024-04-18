@@ -1,6 +1,11 @@
 $primary: #71E580;
+
 $secondary: #719CE5;
+
 $terciary: #E571D6;
+$terciary-l:#EB94E0;
+$terciary-ul: #F8DBF5;
+
 $quartary: #E5BA71;
 
 
@@ -15,6 +20,14 @@ $quartary: #E5BA71;
 
 .lb-bg-terciary{
     background-color: $terciary;
+}
+
+.lb-bg-terciary-l{
+    background-color: $terciary-l;
+}
+
+.lb-bg-terciary-ul{
+    background-color: $terciary-ul;
 }
 
 .lb-bg-quartary{
@@ -68,4 +81,65 @@ $quartary: #E5BA71;
 
 .shadow-deep-l{
     box-shadow: inset 0 0 20px 5px black;
+}
+
+.dataTables_wrapper{
+    margin:auto;
+    width: 90% !important;
+}
+
+.dataTable{
+    margin-top:50px !important;
+    border:none;
+    border-radius: 20px !important;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 10px 1px; /* shadowed-l */
+}
+
+.dt-buttons{
+    margin:15px;
+}
+
+.mydatatable{
+    th{
+        border:1px black solid;
+        text-align: center;
+    }
+}
+
+.dataTables_paginate{
+    color:white;
+}
+
+.dataTables_filter label input, .dataTables_length label select{
+    border-radius: 5px !important;
+    border: 2px $terciary-l solid !important;
+}
+
+.even{
+    background-color: $terciary-ul !important;
+}
+
+.dt-button, .paginate_button{
+    margin: 5px 10px;
+    border: $primary  solid 2px;    
+    background-color: $terciary !important;
+    
+    padding:8px 15px;
+    border-radius: 20px;
+    font-size: 1em;
+    transition: 0.3s;
+    font-weight:bold;
+}
+
+.datatable-search{
+    font-size: 23px;
+}
+
+.dataTables_paginate span{
+    color:white;
+}
+
+.current{
+    border: none !important;
 }
