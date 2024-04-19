@@ -1,3 +1,5 @@
+@import 'animations.css';
+
 $primary: #71E580;
 
 $secondary: #719CE5;
@@ -54,7 +56,6 @@ $quartary: #E5BA71;
     box-shadow:inset 0 0 50px 0px black;
 }
 
-
 .text-shadow-l{
     text-shadow: 2px 2px black !important; 
 }
@@ -81,6 +82,14 @@ $quartary: #E5BA71;
 
 .shadow-deep-l{
     box-shadow: inset 0 0 20px 5px black;
+}
+
+.shake-on-hover{
+    transition: 0.1s
+}
+
+.shake-on-hover:hover{
+    transform: scale(1.2)
 }
 
 .dataTables_wrapper{
@@ -142,4 +151,8 @@ $quartary: #E5BA71;
 
 .current{
     border: none !important;
+}
+
+.sorting::before, .sorting::after{
+    color:black !important;
 }

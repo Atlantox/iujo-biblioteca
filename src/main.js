@@ -24,27 +24,4 @@ app.use(createPinia())
 app.use(router)
 app.use(VueSweetalert2, sweetalertOptions)
 
-
-/*
-// select2
-import "@/assets/libs/select2/css/select2.min.css"
-
-// DataTable
-import "@/assets/libs/datatable/css/jquery.dataTables.min.css"
-import "@/assets/libs/datatable/css/jquery.dataTables.css"
-*/
-
 app.mount('#app')
-
-/*
-// DataTable
-import "@/assets/libs/datatable/js/jquery.dataTables.min.js"
-import "@/assets/libs/datatable/js/dataTables.buttons.min.js"
-import "@/assets/libs/datatable/js/jszip.min.js"
-import "@/assets/libs/datatable/js/buttons.html5.min.js"
-import "@/assets/libs/datatable/js/buttons.print.min.js"
-
-
-// Select 2
-import "@/assets/libs/select2/js/select2.min.js"
-*/

@@ -1,48 +1,5 @@
 <script setup>
-import { ref, onMounted, inject } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
-import { Modal } from 'bootstrap'
-
-const myModal = ref('')
-const swal = inject('$swal')
-
-
-onMounted(() => {
-  //myModal.value = new Modal('#exampleModalLong')
-
-  $('#mydatatable').DataTable( {
-        "language": {
-            paginate: {
-              previous: '<i class="bi bi-caret-left-fill text-white datatable-navigation"></i>',
-              next:     '<i class="bi bi-caret-right-fill text-white datatable-navigation"></i>'
-            },
-            aria: {
-              paginate: {
-                  previous: '<i class="bi bi-caret-right-fill text-white datatable-navigation"></i>',
-                  next:     '<i class="bi bi-caret-right-fill text-white datatable-navigation"></i>'
-              }
-            },
-            search: '<i class="bi bi-search text-black me-2 datatable-search"></i>',
-
-            "url": "//cdn.datatables.net/plug-ins/2.0.5/i18n/es-ES.json"
-        }
-    } );
-
-})
-
-/*
-const ShowModal = (() => {
-  swal.fire({
-    title: 'Titulaso',
-    icon:'warning'
-  })
-  //myModal.value.show()
-})
-
-const HideModal = (() => {
-  myModal.value.hide()
-})
-*/
 </script>
 
 <template>
@@ -86,44 +43,12 @@ const HideModal = (() => {
       </div>
     </section>
     <section class="row m-0 p-0 py-5 col-12 col-lg-9 align-items-start">
-      <table class="mydatatable col-12 shadowed" id="mydatatable">
-        <thead>
-          <tr class="text-white">
-            <th class="text-center lb-bg-terciary">Nº</th>
-            <th class="text-center lb-bg-terciary">Título</th>
-            <th class="text-center lb-bg-terciary">Autor</th>
-            <th class="text-center lb-bg-terciary">Páginas</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>Mein Kaphf</td>
-            <td>Adolf Hitler</td>
-            <td>209</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Mein Kaphf</td>
-            <td>Adolf Hitler</td>
-            <td>209</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>Mein Kaphf</td>
-            <td>Adolf Hitler</td>
-            <td>209</td>
-          </tr>
-        </tbody>
-      </table>
+      <router-view></router-view>  
     </section>
   </div>
 </template>
 
 <style scoped lang="scss">
-tr, td{
-  border: 1px black solid
-}
 .my-sidebar{
   border-top-right-radius: 30px;
   border-bottom-right-radius: 30px;
