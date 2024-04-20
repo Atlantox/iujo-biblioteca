@@ -4,6 +4,7 @@ import { Modal } from 'bootstrap'
 import useBookStore from '@/stores/books.js'
 
 import BooksTable from '@/components/BooksTable.vue'
+import ExampleForm from '@/components/ExampleForm.vue'
 
 const myModal = ref('')
 const swal = inject('$swal')
@@ -15,28 +16,8 @@ onMounted(()  => {
   bookStore.GetActiveBooks()
 })
 
-
-
-
-/*
-//myModal.value = new Modal('#exampleModalLong')
-const ShowModal = (() => {
-  swal.fire({
-    title: 'Titulaso',
-    icon:'warning'
-  })
-  //myModal.value.show()
-})
-
-const HideModal = (() => {
-  myModal.value.hide()
-})
-*/
 </script>
 
 <template>
-  <BooksTable
-    v-if="books.value !== undefined"
-    :books="books.value"/>
-
+  <ExampleForm/>
 </template>
