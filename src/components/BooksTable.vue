@@ -50,6 +50,6 @@ onMounted(() => {
 
 <style scoped>
 tr, td{
-  border: 1px black solid
+  border: 1px rgba(66, 66, 66, 0.445) solid
 }
 </style>

@@ -1,12 +1,14 @@
 @import 'animations.css';
 
 $primary: #71E580;
+$primary-dark: #68d37620;
 
 $secondary: #719CE5;
 
 $terciary: #E571D6;
+$terciary-dark: #E571D620;
 $terciary-l:#EB94E0;
-$terciary-ul: #F8DBF5;
+$terciary-ul: #fae9f8;
 
 $quartary: #E5BA71;
 
@@ -16,12 +18,20 @@ $quartary: #E5BA71;
     background-color: $primary;
 }
 
+.lb-bg-primary-dark{
+    background-color: $primary-dark;
+}
+
 .lb-bg-secondary{
     background-color: $secondary;
 }
 
 .lb-bg-terciary{
     background-color: $terciary;
+}
+
+.lb-bg-terciary-dark{
+    background-color: $terciary-dark;
 }
 
 .lb-bg-terciary-l{
@@ -34,6 +44,10 @@ $quartary: #E5BA71;
 
 .lb-bg-quartary{
     background-color: $quartary;
+}
+
+.lb-border-primary{
+    border: $primary solid 2px;
 }
 
 .shadowed-h{
@@ -155,4 +169,86 @@ $quartary: #E5BA71;
 
 .sorting::before, .sorting::after{
     color:black !important;
+}
+
+/*  F O R M S  */
+.myInput{
+    border-radius: 5px;
+    padding: 2px;
+    align-self:center;
+    border: $terciary-l solid 1px;
+    outline: none;
+    transition: 0.25s;
+
+}   
+
+.myInput:focus{    
+    font-size:30px !important;
+    border: $terciary-l solid 1px;
+}
+
+input[type="radio"] {
+    /* ...existing styles */
+    display: grid;
+    place-content: center;
+    width: 25px;
+    height: 25px;
+}
+  
+input[type="radio"]::before {
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em $terciary;
+}
+
+input[type="radio"]:checked::before {
+    transform: scale(1);
+}
+
+input[type="radio"]:focus {
+    outline-offset: max(2px, 0.15em);
+}
+
+
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    border:rgb(119, 119, 119) solid 2px;
+    padding:0;
+
+    background-color: #fff;
+    margin: 0;
+    /* ...existing styles */
+    display: grid;
+    place-content: center;
+    width: 25px;
+    height: 25px;
+}
+  
+input[type="checkbox"]::before {
+    content: "";
+    width: 0.70em;
+    height: 0.70em;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em $terciary;
+}
+  
+input[type="checkbox"]:checked::before {
+    transform: scale(1);
+}
+
+input[type="file"] {
+    cursor:pointer;
+}
+
+.myForm{
+    label{
+        font-weight: 500;
+        align-self: center;
+    }
 }

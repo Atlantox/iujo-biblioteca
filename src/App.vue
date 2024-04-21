@@ -4,10 +4,10 @@ import SidebarMenu from '@/components/SidebarMenu.vue'
 
 <template>
   <div class="row m-0 p-0 h6" style="height:1500px">
-    <section class="row m-0 p-0 col-12 col-lg-3">
+    <section class="row m-0 p-0 col-12 col-lg-2">
       <SidebarMenu/>
     </section>
-    <section class="row m-0 p-0 py-5 col-12 col-lg-9 align-items-start">
+    <section class="row m-0 px-4 py-5 col-12 col-lg-10 align-items-start">
       <router-view></router-view>  
     </section>
   </div>
