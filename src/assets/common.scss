@@ -183,7 +183,6 @@ $quartary: #E5BA71;
 }   
 
 .myInput:focus{    
-    font-size:30px !important;
     border: $terciary-l solid 1px;
 }
 
@@ -244,6 +243,27 @@ input[type="checkbox"]:checked::before {
 
 input[type="file"] {
     cursor:pointer;
+    padding:none;
+    overflow:hidden;
+    opacity:0;
+    z-index:-1;
+    height:0px;
+}
+
+.fileinput-label{
+    border:2px solid $terciary;
+    background-color: $terciary-dark;
+    border-radius: 7px;
+    padding: 0 15px;
+}
+
+.select2-container{
+    width:100% !important;
+    padding:0 !important;
+}
+
+.select2-selection__arrow {
+    margin-right:30px;
 }
 
 .myForm{

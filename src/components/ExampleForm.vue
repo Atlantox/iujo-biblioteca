@@ -1,11 +1,22 @@
 <script setup>
+import { ref, onMounted } from 'vue'
+import Select2Initializer from '@/utils/Select2Initializer'
+const myFile = ref('')
 
+onMounted(() => {
+    const s2Initializer = new Select2Initializer()
+})
+
+const UploadFile = (event) => {
+    const file = event.target.files[0];
+    //const reader = new FileReader();
+    myFile.value = file
+}
 </script>
 
 <template>
     <div class="row m-0 p-0">
         <form action="" class="col-12 row m-0 p-2 fs-4 myForm shadowed-l rounded lb-bg-terciary-dark">
-
             <div class="row m-0 p-0 justify-content-center my-2">
                 <div class="row m-0 p-0 col-3">
                     <label class="text-end" for="text">Text input</label>
@@ -75,13 +86,41 @@
 
             <div class="row m-0 p-0 justify-content-center my-2">
                 <div class="row m-0 p-0 col-3">
-                    <label class="text-end" for="file">File</label>
+                    <label class="text-end">File</label>
                 </div>
                 <div class="row m-0 p-0 col-6">
-                    <input name="" id="file" cols="30" rows="4" class="myInput" type="file">
+                    <label for="file">
+                        <span class="fileinput-label">
+                            <template
+                            v-if="myFile === ''">
+                                Subir archivo                                
+                            </template>
+                            <template
+                            v-else>
+                                {{ myFile.name }}                        
+                            </template>
+                        </span>
+                    </label>
+                    <input name="" id="file" cols="30" rows="4" class="myInput" type="file" @change="UploadFile">
                 </div>
             </div>
 
+            <div class="row m-0 p-0 justify-content-center my-2">
+                <div class="row m-0 p-0 col-3">
+                    <label class="text-end" for="select2">Select</label>
+                </div>
+                <div class="row m-0 p-0 col-6">
+                    <select class="myInput select2 h6" id="select2">
+                        <option value=""></option>
+                        <option class="h6" value="">Category 1</option>
+                        <option value="">Category 2</option>
+                        <option value="">Category 3</option>
+                        <option value="">Category 4</option>
+                        <option value="">Category 5</option>
+                        <option value="">Category 6</option>
+                    </select>
+                </div>
+            </div>
         
         </form>
     </div>
