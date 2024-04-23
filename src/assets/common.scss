@@ -180,7 +180,19 @@ $quartary: #E5BA71;
     outline: none;
     transition: 0.25s;
 
+    
 }   
+
+.primary-btn{
+    background-color: $primary;
+}
+
+.terciary-btn{
+    background-color: $terciary;
+    border: 1px $terciary-l solid;
+    border-radius: 15px;
+    color:white !important;
+}
 
 .myInput:focus{    
     border: $terciary-l solid 1px;
@@ -260,10 +272,20 @@ input[type="file"] {
 .select2-container{
     width:100% !important;
     padding:0 !important;
+    border: 1px $terciary solid;
+    border-radius: 5px;
+}
+
+.select2-container--default .select2-selection--single{
+    border:none !important;
 }
 
 .select2-selection__arrow {
     margin-right:30px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b{
+    border-color:$terciary transparent transparent transparent;
 }
 
 .myForm{
