@@ -1,24 +1,23 @@
 class FormValidator{
-    
 
-    FieldsAreEmpty(fields, keys){
-
-    }
-
-    FieldsAreNumber(fields, keys){
+    FieldsAreEmpty(data, keys){
 
     }
 
-    FieldsAreDate(fields, keys){
+    FieldsAreNumber(data, keys){
 
     }
 
-    FieldsAreEmail(fields, keys){
+    FieldsAreDate(data, keys){
 
     }
 
-    FieldsOnLengthRange(fields, keys){
+    FieldsAreEmail(data, keys){
 
+    }
+
+    FieldsIsInLengthRange(data, keys, lengthConfig){
+        
     }
 }
 

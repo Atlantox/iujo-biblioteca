@@ -26,6 +26,12 @@ const UploadFile = (event) => {
 const ValidateForm = ((e) => {
     const myForm = e.srcElement
     const validator = new FormValidator()
+        // General validations
+        const bookLengthConfig = {
+        'title': {'max': 50, 'min': 4},
+        'title': {'max': 50, 'min': 4}, 
+        'description': {'max': 1000, 'min': 4}
+    }
 
     
     
