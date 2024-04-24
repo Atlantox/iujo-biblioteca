@@ -1,16 +1,17 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import Select2Initializer from '@/utils/Select2Initializer'
+import FormValidator from '@/utils/FormValidator'
 const formErrors = ref([])
 
-const myText = ref('')
-const myNumber = ref('')
-const myTextarea = ref('')
-const myRadio = ref('')
-const myCheckbox = ref([])
+const myText = ref('UwU')
+const myNumber = ref(5055)
+const myTextarea = ref('Whatojell')
+const myRadio = ref('4')
+const myCheckbox = ref(['1', '4'])
 const myFile = ref('')
-const mySelect = ref('')
-const myDate = ref('')
+const mySelect = ref('1')
+const myDate = ref('2024-04-16')
 
 onMounted(() => {
     const s2Initializer = new Select2Initializer()
@@ -24,7 +25,9 @@ const UploadFile = (event) => {
 
 const ValidateForm = ((e) => {
     const myForm = e.srcElement
+    const validator = new FormValidator()
     // General validations
+
     
     
 })
@@ -150,7 +153,7 @@ const ValidateForm = ((e) => {
                     <div class="row col-7">
                         <select class="myInput select2" id="select2" v-model="mySelect">
                             <option class="" value=""></option>
-                            <option class="" value="1">Category 1</option>
+                            <option class="fw-normal" value="1">Category 1</option>
                             <option class="" value="2">Category 2</option>
                             <option class="" value="3">Category 3</option>
                             <option class="" value="4">Category 4</option>
