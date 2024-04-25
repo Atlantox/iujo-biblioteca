@@ -5,7 +5,7 @@ import SidebarMenu from '@/components/SidebarMenu.vue'
 </script>
 
 <template>
-  <div class="row m-0 p-0 h6" style="height:1500px">
+  <div class="row m-0 p-0 h6 align-items-start" style="height:1500px">
     <section class="row m-0 p-0 col-12 col-lg-2">
       <SidebarMenu/>
     </section>

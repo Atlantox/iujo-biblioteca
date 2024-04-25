@@ -12,6 +12,9 @@ $terciary-ul: #fae9f8;
 
 $quartary: #E5BA71;
 
+*{
+    font-family: cambria;
+}
 
 /* lb = Library abreviation */
 .lb-bg-primary{
@@ -305,4 +308,12 @@ input[type="file"] {
         font-weight: 500;
         align-self: center;
     }
+}
+
+.myBtn{
+    transition:0.2s;
+}
+
+.myBtn:hover{
+    transform:scale(1.1);
 }

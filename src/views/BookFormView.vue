@@ -4,7 +4,7 @@ import { Modal } from 'bootstrap'
 import useBookStore from '@/stores/books.js'
 
 import BooksTable from '@/components/BooksTable.vue'
-import ExampleForm from '@/components/ExampleForm.vue'
+import BookForm from '@/components/BookForm.vue'
 
 const myModal = ref('')
 const swal = inject('$swal')
@@ -19,5 +19,10 @@ onMounted(()  => {
 </script>
 
 <template>
-  <ExampleForm/>
+
+  <BookForm/>
 </template>
+
+<style scoped>
+
+</style>
