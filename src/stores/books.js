@@ -8,7 +8,7 @@ const useBookStore = defineStore('books', {
         }
     },
     actions:{
-        GetActiveBooks(){
+        FetchActiveBooks(){
             // TODO request            
             this.books.value = [
                 {

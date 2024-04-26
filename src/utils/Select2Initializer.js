@@ -1,6 +1,15 @@
 class Select2Initializer{
     constructor(){
-        $('#select2').select2()
+        const select2Ids = [
+            'books',
+            'select2',
+            'readers',
+            'state'
+        ]
+
+        select2Ids.forEach((id) => { 
+            $('#' + id).select2() 
+        })
     }
 }
 
