@@ -11,7 +11,7 @@ const route = useRoute()
             Volver
         </router-link>
     </div>
-    <h1>Libro {{ route.params.bookId }}</h1>
+    <h1>Préstamo {{ route.params.id }}</h1>
 </template>
 
 <style scoped>

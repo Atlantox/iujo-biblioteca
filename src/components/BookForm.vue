@@ -1,7 +1,12 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, inject } from 'vue'
 import Select2Initializer from '@/utils/Select2Initializer'
 import FormValidator from '@/utils/FormValidator'
+import { Modal } from 'bootstrap'
+
+const myModal = ref('')
+const swal = inject('$swal')
+
 const formErrors = ref([])
 const categories = ref([{id:1, name:'Ficción'}, {id:2, name:'Acción'}, {id:3, name:'Fantasía'}])
 const states = ref([{id:1, name:'En biblioteca'}, {id:2, name:'Extraviado'}, {id:3, name:'Prestado'}])
@@ -19,7 +24,7 @@ onMounted(() => {
     const edit = false
     const s2Initializer = new Select2Initializer()
 
-    if (edit === false) bookAuthor.state.value = 'En biblioteca'
+    if (edit === false) bookState.value = '1'
 })
 
 const ValidateForm = ((e) => {
@@ -39,19 +44,20 @@ const ValidateForm = ((e) => {
 
 <template>
     <div class="row m-0 p-0">
-        <form action="" class="col-12 row m-0 p-2 fs-4 myForm shadowed-l rounded lb-bg-terciary-dark" @submit.prevent="ValidateForm">
+        <form class="col-12 row m-0 p-2 fs-4 myForm shadowed-l rounded lb-bg-terciary-dark" @submit.prevent="ValidateForm">
             <div class="row col-12 m-0 p-0 justify-content-center my-4">
                 <h1 class="fw-bold text-center col-6 m-0 rounded-pill lb-bg-terciary-l text-white shadowed-l">
-                Nuevo libro
+                    Nuevo libro
                 </h1>
             </div>
+            
             <div class="row m-0 p-0 justify-content-center my-2">
                 <div class="row m-0 p-0 col-3">
                     <label class="text-end" for="title">Título</label>
                 </div>
                 <div class="row m-0 p-0 col-6">
                     <div class="row col-10">
-                        <input type="text" class="myInput" id="title" autofocus v-model="bookTitle">
+                        <input type="text" class="myInput" maxlength="150" id="title" autofocus v-model="bookTitle">
                     </div>
                 </div>
             </div>
@@ -62,7 +68,7 @@ const ValidateForm = ((e) => {
                 </div>
                 <div class="row m-0 p-0 col-6">
                     <div class="row col-3">
-                        <input type="text" class="myInput" id="call_number" v-model="bookCallNumber">
+                        <input type="text" class="myInput" maxlength="8" id="call_number" v-model="bookCallNumber">
                     </div>
                 </div>
             </div>
@@ -73,7 +79,7 @@ const ValidateForm = ((e) => {
                 </div>
                 <div class="row m-0 p-0 col-6">
                     <div class="row col-7">
-                        <input type="text" class="myInput" id="author" v-model="bookAuthor">
+                        <input type="text" class="myInput" maxlength="100" id="author" v-model="bookAuthor">
                     </div>
                 </div>
             </div>
@@ -84,7 +90,7 @@ const ValidateForm = ((e) => {
                 </div>
                 <div class="row m-0 p-0 col-6">
                     <div class="row col-6">
-                        <input type="text" class="myInput" id="editorial"  v-model="bookEditorial">
+                        <input type="text" class="myInput" maxlength="100" id="editorial"  v-model="bookEditorial">
                     </div>
                 </div>
             </div>
@@ -95,7 +101,7 @@ const ValidateForm = ((e) => {
                 </div>
                 <div class="row m-0 p-0 col-6">
                     <div class="row col-2">
-                        <input type="number" class="myInput" id="pages" v-model="bookPages">
+                        <input type="number" class="myInput" max="9999" id="pages" v-model="bookPages">
                     </div>
                 </div>
             </div>
@@ -124,11 +130,11 @@ const ValidateForm = ((e) => {
                 </div>
                 <div class="row m-0 p-0 col-6">
                     <div class="row col-7">
-                        <select class="myInput select2" id="state" v-model="bookState">
+                        <select class="myInput select2" id="state" :v-model="bookState">
                             <template
                             v-for="state, index in states"
                             :key="index">
-                                <option class="fw-normal" value="1">
+                                <option class="fw-normal" :value="state.id">
                                     {{ state.name }}
                                 </option>                                    
                             </template>
@@ -143,7 +149,7 @@ const ValidateForm = ((e) => {
                 </div>
                 <div class="row m-0 p-0 col-6">
                     <div class="row col-10">
-                        <textarea id="description" cols="30" rows="4" class="myInput" v-model="bookDescription"></textarea>
+                        <textarea id="description" cols="30" rows="4" maxlength="1000" class="myInput" v-model="bookDescription"></textarea>
                     </div>
                 </div>
             </div>

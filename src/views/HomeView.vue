@@ -12,7 +12,7 @@ const bookStore = useBookStore()
 const books = bookStore.books
 
 onMounted(()  => {
-  bookStore.GetActiveBooks()
+  bookStore.FetchActiveBooks()
 })
 
 

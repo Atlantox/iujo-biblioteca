@@ -12,8 +12,7 @@ app = Flask(__name__)
 CORS(app)
 connection = MySQL(app)
 
-# Le pasamos la conexión de la base de datos a los blueprints
-userController.connection = connection
+# Le pasamos la conexión de la base de datos a los blueprints / controladores
 userController.connection = connection
 
 def NotFound(error):
