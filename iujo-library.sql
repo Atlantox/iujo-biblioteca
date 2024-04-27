@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.4
+-- version 5.1.0
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-04-2024 a las 14:24:06
--- Versión del servidor: 10.4.17-MariaDB
--- Versión de PHP: 7.2.34
+-- Tiempo de generación: 27-04-2024 a las 03:46:10
+-- Versión del servidor: 10.4.18-MariaDB
+-- Versión de PHP: 8.0.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -93,6 +93,31 @@ CREATE TABLE `loan` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `permisson`
+--
+
+CREATE TABLE `permisson` (
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `level` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `permisson`
+--
+
+INSERT INTO `permisson` (`id`, `name`, `level`) VALUES
+(1, 'Libros', 3),
+(2, 'Categorías', 1),
+(3, 'Lectores', 1),
+(4, 'Préstamos', 1),
+(5, 'Estados de libros', 1),
+(6, 'Editores', 1),
+(7, 'Administradores', 2);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `reader`
 --
 
@@ -135,10 +160,11 @@ INSERT INTO `state` (`id`, `name`) VALUES
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `nickname` varchar(50) NOT NULL,
-  `level` int(11) NOT NULL,
+  `level` int(11) NOT NULL DEFAULT 1,
   `username` varchar(200) NOT NULL,
   `password` varchar(200) NOT NULL,
-  `token` varchar(200) NOT NULL
+  `token` varchar(200) NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -158,6 +184,7 @@ CREATE TABLE `user_level` (
 
 INSERT INTO `user_level` (`id`, `name`) VALUES
 (1, 'admin'),
+(3, 'editor'),
 (2, 'super');
 
 --
@@ -201,6 +228,13 @@ ALTER TABLE `loan`
   ADD PRIMARY KEY (`id`),
   ADD KEY `loan_reader` (`reader`),
   ADD KEY `loan_book` (`book`);
+
+--
+-- Indices de la tabla `permisson`
+--
+ALTER TABLE `permisson`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `permisson_user_level` (`level`);
 
 --
 -- Indices de la tabla `reader`
@@ -267,6 +301,12 @@ ALTER TABLE `loan`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `permisson`
+--
+ALTER TABLE `permisson`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT de la tabla `reader`
 --
 ALTER TABLE `reader`
@@ -288,7 +328,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT de la tabla `user_level`
 --
 ALTER TABLE `user_level`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas
@@ -319,6 +359,12 @@ ALTER TABLE `book_category`
 ALTER TABLE `loan`
   ADD CONSTRAINT `loan_book` FOREIGN KEY (`book`) REFERENCES `book` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `loan_reader` FOREIGN KEY (`reader`) REFERENCES `reader` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `permisson`
+--
+ALTER TABLE `permisson`
+  ADD CONSTRAINT `permisson_user_level` FOREIGN KEY (`level`) REFERENCES `user_level` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `user`

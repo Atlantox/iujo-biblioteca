@@ -3,11 +3,10 @@ from flask_cors import cross_origin
 from models.UserModel import UserModel
 from helpers import *
 
+NICKNAME_MIN, NICKNAME_MAX = 4, 50
+USERNAME_MIN, USERNAME_MAX = 8, 50
+PASSWORD_MIN, PASSWORD_MAX = 8, 50
 
-
-USERNAME_MAX, USERNAME_MIN = 50, 4
-PASSWORD_MAX, PASSWORD_MIN = 40, 8
-EMAIL_MAX, EMAIL_MIN = 100, 4
 
 userController = Blueprint('users', __name__)
 
