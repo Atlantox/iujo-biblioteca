@@ -98,34 +98,6 @@ def ValidateNoteData(recievedData):
         result = error
     return result
 
-def ValidateUserData(recievedData):
-    error = ''
-    requiredFields = [
-        'username',
-        'password',
-        'email'
-    ]
-
-    cleanData = HasEmptyFields(requiredFields, recievedData)
-    if type(cleanData) is str:
-        error = cleanData
-
-    if error == '':
-        lengthOK = ValidateLength(userLengthConfig, cleanData)
-        if lengthOK is not True:
-            error = lengthOK
-
-    if error == '':
-        suspicious = HasSuspiciousCharacters(['username'], cleanData)
-        if suspicious is not False:
-            error = suspicious
-
-    if error == '':
-        emailOK = EmailIsOK(cleanData['email'])
-        if emailOK == False:
-            error = 'Correo inválido'
-    
-    return error
 
 def JsonExists(request):
     recievedData = None

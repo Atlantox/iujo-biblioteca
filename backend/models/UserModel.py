@@ -30,7 +30,7 @@ class UserModel(BaseModel):
                     '{3}'
                 )
                 '''.format(
-                    userData['username'],
+                    hasher.hash(userData['username']),
                     hasher.hash(userData['password']),
                     userData['email'],
                     newToken
@@ -83,44 +83,76 @@ class UserModel(BaseModel):
     def GetUserPublicData(self, token):
         cursor = self.connection.connection.cursor()
         sql = '''SELECT
-            usuario.username,
-            usuario.email
+            nickname,
+            level,
+            active        
             FROM
             usuario
             WHERE
-            usuario.token = '{0}'
+            token = '{0}'
             '''.format(token)
         
         cursor.execute(sql)
         return cursor.fetchone()
-    
-    def EmailExists(self, email):
-        cursor = self.connection.connection.cursor()
-        sql = "SELECT email FROM usuario WHERE email = '{0}'".format(email)
-        cursor.execute(sql)
-        data = cursor.fetchone()
-        return data != None
 
-    def UsernameExists(self, username):
+    def UsernameExists(self, recievedUsername):
         cursor = self.connection.connection.cursor()
-        sql = "SELECT username FROM usuario WHERE username = '{0}'".format(username)
+        hasher = PasswordHasher()
+
+        sql = "SELECT username FROM user"
         cursor.execute(sql)
-        data = cursor.fetchone()
-        return data != None
+        usernames = cursor.fetchall()
+        found = False
+
+        if usernames is not None:
+            for user in usernames:
+                if found: break
+
+                try:
+                    hasher.verify(user['username'], recievedUsername)
+                    found = True
+                    break
+                except Exception as err:
+                    pass
+
+        return found
     
     def TryLogin(self, username, password):
         cursor = self.connection.connection.cursor()
         hasher = PasswordHasher()
-        sql = "SELECT password, token FROM usuario WHERE username = '{0}'".format(username)
+        sql = "SELECT username, password, token FROM usuario"
         cursor.execute(sql)
-        userExists = cursor.fetchone()
-        if userExists is None:
-            result = False
-        else:
-            realPassword = userExists['password']
-            try:
-                hasher.verify(realPassword, password)
-                result = userExists['token']
-            except Exception as err:
-                result = False
+        users = cursor.fetchall()
+        result = False
+
+        if users is not None:
+            for user in users:
+                if result: break
+
+                try:
+                    hasher.verify(user['username'], username)
+                    hasher.verify(user['password'], password)
+                    result = user['token']
+                    break
+                except Exception as err:
+                    pass
+
         return result
+    
+    def UserHasPermisson(self, userId, permisson):
+        cursor = self.connection.connection.cursor()
+        sql = '''
+            SELECT
+            permisson.name
+            FROM
+            permisson
+            INNER JOIN user_level ON user_level.name = permisson.level
+            INNER JOIN user ON user.level = user_level.name
+            WHERE
+            user.id = '{0}' AND
+            permisson.name = '{1}'
+            '''.format(userId, permisson)
+        
+        cursor.execute(sql)
+        result = cursor.fetchone()
+        return result is None

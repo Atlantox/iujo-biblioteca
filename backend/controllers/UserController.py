@@ -3,9 +3,11 @@ from flask_cors import cross_origin
 from models.UserModel import UserModel
 from helpers import *
 
-NICKNAME_MIN, NICKNAME_MAX = 4, 50
-USERNAME_MIN, USERNAME_MAX = 8, 50
-PASSWORD_MIN, PASSWORD_MAX = 8, 50
+USER_LENGTH_CONFIG = {
+    'nickname': {'max': 50, 'min':4},
+    'username': {'max': 50, 'min':8},
+    'password': {'max': 50, 'min':8}
+}
 
 
 userController = Blueprint('users', __name__)
@@ -50,3 +52,144 @@ def GetUserData():
         response = {'success': False, 'message': error}
 
     return jsonify(response), statusCode
+
+
+@userController.route('/users', methods=['POST'])
+def RegisterUser():
+    connection = GetConnection()
+    userModel = UserModel(connection)
+    
+    recievedData, error, statusCode = JsonExists(request)
+
+    if error == '':
+        targetUser = userModel.GetUserByToken(request)
+        if type(targetUser) is str:
+            error = targetUser
+            statusCode = 400
+    
+    if error == '':
+        cleanData = ValidateUserData(recievedData)
+        if type(cleanData) is str:
+            error = cleanData
+            statusCode = 400
+
+    if error == '':
+        if userModel.UserHasPermisson(targetUser['id'], cleanData['level']) is False:
+            error = 'Acción denegada'
+            statusCode = 401  # Unauthorized
+
+    if error == '':
+        if userModel.UsernameExists(cleanData['username']) is True:
+            error = 'Usuario ya registrado'
+            statusCode = 400
+    
+    if error == '':
+        created = userModel.CreateUser(cleanData)
+        if created:
+            message = 'Usuario creado correctamente'
+        else:
+            error = 'Hubo un error al crear al usuario'
+            statusCode = 500
+
+    if error != '':
+        message = error
+        
+    success = error == ''
+    return jsonify({'success': success, 'message': message}), statusCode
+
+
+@userController.route('/login', methods=['POST'])
+def TryLogin():
+    connection = GetConnection()
+    userModel = UserModel(connection)
+    recievedData, error, statusCode = JsonExists(request)
+
+    if error == '':
+        token = GetTokenOfRequest(request)
+        if token is not None:
+            error = 'Usted ya está autenticado'
+            statusCode = 401  # Unauthorized
+
+    if error == '':
+        requiredFields = [
+            'username',
+            'password'
+        ]
+        dataOK = HasEmptyFields(requiredFields, recievedData)
+        if type(dataOK) is str:
+            error = dataOK
+            statusCode = 400  # Bad request
+
+    if error == '':
+        lengthValidator = {
+            'username': {'max': USERNAME_MAX, 'min': USERNAME_MIN},
+            'password': {'max': PASSWORD_MAX, 'min': PASSWORD_MIN}
+        }
+
+        lengthOK = ValidateLength(lengthValidator, recievedData)
+        if lengthOK is not True:
+            error = lengthOK
+            statusCode = 400
+            
+    if error == '':
+        suspicious = HasSuspiciousCharacters(['username'], recievedData)
+        if suspicious is not False:
+            error = 'El usuario contiene caracteres sospechosos'
+            statusCode = 400
+    
+    if error == '':
+        loginResult = userModel.TryLogin(recievedData['username'], recievedData['password'])
+        if loginResult is False:
+            error = 'Credenciales inválidas'
+        else:
+            userData = userModel.GetUserPublicData(loginResult)
+            message = loginResult
+            
+    if error != '':
+        message = error
+    
+    success = error == ''
+    response = {'success': success}
+
+    if error == '':
+        response['token'] = message
+        response['userData'] = userData
+    else:
+        response['message'] = message
+    
+    return jsonify(response), statusCode
+
+
+def ValidateUserData(recievedData):
+    '''
+    Recieves userData and validate them
+    If the data has no issues, return the data cleaned
+    '''
+    error = ''
+    requiredFields = [
+        'nickname',
+        'username',
+        'password',
+        'level'
+    ]
+
+    cleanData = HasEmptyFields(requiredFields, recievedData)
+    if type(cleanData) is str:
+        error = cleanData
+
+    if error == '':
+        lengthOK = ValidateLength(USER_LENGTH_CONFIG, cleanData)
+        if lengthOK is not True:
+            error = lengthOK
+
+    if error == '':
+        suspicious = HasSuspiciousCharacters(['nickname'], cleanData)
+        if suspicious is not False:
+            error = suspicious
+
+    if error == '':
+        emailOK = EmailIsOK(cleanData['email'])
+        if emailOK == False:
+            error = 'Correo inválido'
+    
+    return error if error == '' else cleanData
