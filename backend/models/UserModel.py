@@ -15,7 +15,7 @@ class UserModel(BaseModel):
             hasher = PasswordHasher()
             sql = '''
                 INSERT INTO
-                usuario
+                user
                 (
                     username,
                     password,
@@ -43,22 +43,20 @@ class UserModel(BaseModel):
 
         return result
 
-    def GetUserByToken(self, request):
+    def GetUserByToken(self, token):
         '''
         Obtain the request, check if the token exists and if the user exists
         '''
-        headers = request.headers
-        bearer = headers.get('Authorization')
-        token = None
-        if bearer is not None:
-            if len(bearer) > 0:
-                token = bearer.split(' ')[1]
-
+        if token is not None:
             cursor = self.connection.connection.cursor()
-            sql = "SELECT * FROM usuario WHERE token = '{0}'".format(token)
+            sql = "SELECT * FROM user WHERE token = '{0}'".format(token)
             cursor.execute(sql)
             user = cursor.fetchone()
-            result = user
+
+            if user is None:
+                result = 'Usuario no encontrado'
+            else:
+                result = user
         else:
             result = 'Authenticación requerida'
         
@@ -68,7 +66,7 @@ class UserModel(BaseModel):
     def GetNewToken(self):
         tentativeToken = '{0}-{1}'.format(uuid4(), uuid4())
         cursor = self.connection.connection.cursor()
-        sql = "SELECT token FROM usuario WHERE token = '{0}'"
+        sql = "SELECT token FROM user WHERE token = '{0}'"
         cursor.execute(sql.format(tentativeToken))
         tokenExists = cursor.fetchone()
 
@@ -87,7 +85,7 @@ class UserModel(BaseModel):
             level,
             active        
             FROM
-            usuario
+            user
             WHERE
             token = '{0}'
             '''.format(token)
@@ -120,7 +118,7 @@ class UserModel(BaseModel):
     def TryLogin(self, username, password):
         cursor = self.connection.connection.cursor()
         hasher = PasswordHasher()
-        sql = "SELECT username, password, token FROM usuario"
+        sql = "SELECT username, password, token FROM user"
         cursor.execute(sql)
         users = cursor.fetchall()
         result = False

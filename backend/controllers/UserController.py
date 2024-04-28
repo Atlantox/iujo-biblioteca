@@ -3,21 +3,18 @@ from flask_cors import cross_origin
 from models.UserModel import UserModel
 from helpers import *
 
-USER_LENGTH_CONFIG = {
+REGISTER_USER_LENGTH_CONFIG = {
     'nickname': {'max': 50, 'min':4},
     'username': {'max': 50, 'min':8},
     'password': {'max': 50, 'min':8}
 }
 
+CREATE_USER_LENGTH_CONFIG = {
+    'username': REGISTER_USER_LENGTH_CONFIG['username'],
+    'password': REGISTER_USER_LENGTH_CONFIG['password'],
+}
 
 userController = Blueprint('users', __name__)
-
-def initModels():
-    connection = getattr(userController, 'connection', None)
-    if connection is None:
-        raise Exception('No se pudo obtener la conexión desde el Blueprint Notes')
-    
-    return UserModel(connection)
 
 def GetConnection():
     connection = getattr(userController, 'connection', None)
@@ -60,9 +57,13 @@ def RegisterUser():
     userModel = UserModel(connection)
     
     recievedData, error, statusCode = JsonExists(request)
+    token = GetTokenOfRequest(request)
+    if token == None:
+        error = 'Acceso denegado. Autenticación requerida'
+        statusCode = 401
 
     if error == '':
-        targetUser = userModel.GetUserByToken(request)
+        targetUser = userModel.GetUserByToken(token)
         if type(targetUser) is str:
             error = targetUser
             statusCode = 400
@@ -106,6 +107,7 @@ def TryLogin():
 
     if error == '':
         token = GetTokenOfRequest(request)
+        print(token)
         if token is not None:
             error = 'Usted ya está autenticado'
             statusCode = 401  # Unauthorized
@@ -121,20 +123,9 @@ def TryLogin():
             statusCode = 400  # Bad request
 
     if error == '':
-        lengthValidator = {
-            'username': {'max': USERNAME_MAX, 'min': USERNAME_MIN},
-            'password': {'max': PASSWORD_MAX, 'min': PASSWORD_MIN}
-        }
-
-        lengthOK = ValidateLength(lengthValidator, recievedData)
+        lengthOK = ValidateLength(CREATE_USER_LENGTH_CONFIG, recievedData)
         if lengthOK is not True:
             error = lengthOK
-            statusCode = 400
-            
-    if error == '':
-        suspicious = HasSuspiciousCharacters(['username'], recievedData)
-        if suspicious is not False:
-            error = 'El usuario contiene caracteres sospechosos'
             statusCode = 400
     
     if error == '':
@@ -142,8 +133,9 @@ def TryLogin():
         if loginResult is False:
             error = 'Credenciales inválidas'
         else:
-            userData = userModel.GetUserPublicData(loginResult)
-            message = loginResult
+            token = loginResult
+            userData = userModel.GetUserPublicData(token)
+            message = token
             
     if error != '':
         message = error
@@ -178,7 +170,7 @@ def ValidateUserData(recievedData):
         error = cleanData
 
     if error == '':
-        lengthOK = ValidateLength(USER_LENGTH_CONFIG, cleanData)
+        lengthOK = ValidateLength(CREATE_USER_LENGTH_CONFIG, cleanData)
         if lengthOK is not True:
             error = lengthOK
 
@@ -186,10 +178,5 @@ def ValidateUserData(recievedData):
         suspicious = HasSuspiciousCharacters(['nickname'], cleanData)
         if suspicious is not False:
             error = suspicious
-
-    if error == '':
-        emailOK = EmailIsOK(cleanData['email'])
-        if emailOK == False:
-            error = 'Correo inválido'
     
-    return error if error == '' else cleanData
+    return cleanData if error == '' else error
