@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-04-2024 a las 03:46:10
+-- Tiempo de generación: 29-04-2024 a las 23:21:50
 -- Versión del servidor: 10.4.18-MariaDB
 -- Versión de PHP: 8.0.3
 
@@ -99,7 +99,7 @@ CREATE TABLE `loan` (
 CREATE TABLE `permisson` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
-  `level` int(11) NOT NULL
+  `level` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -107,13 +107,13 @@ CREATE TABLE `permisson` (
 --
 
 INSERT INTO `permisson` (`id`, `name`, `level`) VALUES
-(1, 'Libros', 3),
-(2, 'Categorías', 1),
-(3, 'Lectores', 1),
-(4, 'Préstamos', 1),
-(5, 'Estados de libros', 1),
-(6, 'Editores', 1),
-(7, 'Administradores', 2);
+(1, 'Libros', 'Editor'),
+(2, 'Categorías', 'Admin'),
+(3, 'Lectores', 'Admin'),
+(4, 'Préstamos', 'Admin'),
+(5, 'Estados de libros', 'Admin'),
+(6, 'Editor', 'Admin'),
+(7, 'Admin', 'Super');
 
 -- --------------------------------------------------------
 
@@ -160,12 +160,19 @@ INSERT INTO `state` (`id`, `name`) VALUES
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `nickname` varchar(50) NOT NULL,
-  `level` int(11) NOT NULL DEFAULT 1,
+  `level` varchar(20) NOT NULL,
   `username` varchar(200) NOT NULL,
   `password` varchar(200) NOT NULL,
   `token` varchar(200) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `user`
+--
+
+INSERT INTO `user` (`id`, `nickname`, `level`, `username`, `password`, `token`, `active`) VALUES
+(1, 'Atlantox7', 'Admin', '$argon2id$v=19$m=65536,t=3,p=4$3AS4idk0Vww0t4Sb01WeTA$jGz2iJeNl6gDxT2fMeWDqSoxQFQDGMiKysTEl77zrtE', '$argon2id$v=19$m=65536,t=3,p=4$ZdHbxL0d8wcfNPlDgenj+A$fl4pfvgOkUwHLCjxIAP5d794CGpc13YWcDrOWgrvtak', 'd4239cd0-77e5-4d73-bb73-7ba3e9ecbc00-b4828893-f47d-47fe-a5f0-128b13e8a786', 1);
 
 -- --------------------------------------------------------
 
@@ -174,7 +181,6 @@ CREATE TABLE `user` (
 --
 
 CREATE TABLE `user_level` (
-  `id` int(11) NOT NULL,
   `name` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -182,10 +188,10 @@ CREATE TABLE `user_level` (
 -- Volcado de datos para la tabla `user_level`
 --
 
-INSERT INTO `user_level` (`id`, `name`) VALUES
-(1, 'admin'),
-(3, 'editor'),
-(2, 'super');
+INSERT INTO `user_level` (`name`) VALUES
+('Admin'),
+('Editor'),
+('Super');
 
 --
 -- Índices para tablas volcadas
@@ -257,13 +263,13 @@ ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `nickname` (`nickname`),
   ADD UNIQUE KEY `token` (`token`),
+  ADD UNIQUE KEY `username` (`username`),
   ADD KEY `user_user_level` (`level`);
 
 --
 -- Indices de la tabla `user_level`
 --
 ALTER TABLE `user_level`
-  ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
 
 --
@@ -322,13 +328,7 @@ ALTER TABLE `state`
 -- AUTO_INCREMENT de la tabla `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `user_level`
---
-ALTER TABLE `user_level`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Restricciones para tablas volcadas
@@ -364,13 +364,13 @@ ALTER TABLE `loan`
 -- Filtros para la tabla `permisson`
 --
 ALTER TABLE `permisson`
-  ADD CONSTRAINT `permisson_user_level` FOREIGN KEY (`level`) REFERENCES `user_level` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `permisson_user_level` FOREIGN KEY (`level`) REFERENCES `user_level` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `user`
 --
 ALTER TABLE `user`
-  ADD CONSTRAINT `user_user_level` FOREIGN KEY (`level`) REFERENCES `user_level` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `user_user_level` FOREIGN KEY (`level`) REFERENCES `user_level` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
