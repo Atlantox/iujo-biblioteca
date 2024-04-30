@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.0
+-- version 5.0.4
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-04-2024 a las 23:21:50
--- Versión del servidor: 10.4.18-MariaDB
--- Versión de PHP: 8.0.3
+-- Tiempo de generación: 30-04-2024 a las 21:42:01
+-- Versión del servidor: 10.4.17-MariaDB
+-- Versión de PHP: 7.2.34
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -34,6 +34,16 @@ CREATE TABLE `binnacle` (
   `date` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Volcado de datos para la tabla `binnacle`
+--
+
+INSERT INTO `binnacle` (`id`, `user`, `action`, `date`) VALUES
+(1, 1, 'Atlantox7 Ha creado al usuario El pepito5', '2024-04-30 10:03:08'),
+(2, 1, 'Atlantox7 Ha creado al usuario El pepito6', '2024-04-30 10:11:46'),
+(3, 1, 'Atlantox7 Ha creado al usuario El pepito7', '2024-04-30 10:12:11'),
+(4, 1, 'Atlantox7 Ha creado al usuario El pepito8', '2024-04-30 10:13:45');
+
 -- --------------------------------------------------------
 
 --
@@ -47,6 +57,7 @@ CREATE TABLE `book` (
   `title` varchar(150) NOT NULL,
   `editorial` varchar(100) NOT NULL,
   `pages` int(4) NOT NULL,
+  `shelf` varchar(10) DEFAULT NULL,
   `description` text NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `state` int(11) NOT NULL DEFAULT 1
@@ -172,7 +183,15 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `nickname`, `level`, `username`, `password`, `token`, `active`) VALUES
-(1, 'Atlantox7', 'Admin', '$argon2id$v=19$m=65536,t=3,p=4$3AS4idk0Vww0t4Sb01WeTA$jGz2iJeNl6gDxT2fMeWDqSoxQFQDGMiKysTEl77zrtE', '$argon2id$v=19$m=65536,t=3,p=4$ZdHbxL0d8wcfNPlDgenj+A$fl4pfvgOkUwHLCjxIAP5d794CGpc13YWcDrOWgrvtak', 'd4239cd0-77e5-4d73-bb73-7ba3e9ecbc00-b4828893-f47d-47fe-a5f0-128b13e8a786', 1);
+(1, 'Atlantox7', 'Admin', '$argon2id$v=19$m=65536,t=3,p=4$3AS4idk0Vww0t4Sb01WeTA$jGz2iJeNl6gDxT2fMeWDqSoxQFQDGMiKysTEl77zrtE', '$argon2id$v=19$m=65536,t=3,p=4$ZdHbxL0d8wcfNPlDgenj+A$fl4pfvgOkUwHLCjxIAP5d794CGpc13YWcDrOWgrvtak', 'd4239cd0-77e5-4d73-bb73-7ba3e9ecbc00-b4828893-f47d-47fe-a5f0-128b13e8a786', 1),
+(2, 'El pepito', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$sp8mhZbVtyUACABltP8eCg$XlidoVZSzekOnHySDnU/kRYAKs8Ud8B4N/HMyxLQCuE', '$argon2id$v=19$m=65536,t=3,p=4$rQF6bSodODC/FDhfDiAsyw$tmoSw54ricWjwJdTi2wjuox93J5FEt9JHDly3tcDFco', '9559e961-3d82-4013-ac43-1071ae4bbea9-48f22212-d27f-439d-a32e-9c7facdc62c2', 1),
+(3, 'El pepito2', 'Admin', '$argon2id$v=19$m=65536,t=3,p=4$sC68eq03u8/8VvWIlE7V2w$8zFKttxeLrzFfxzoCv38GzAnNGEdln7SamRwOV+1GRY', '$argon2id$v=19$m=65536,t=3,p=4$bHwiNX9DS0r6cPzgUELkUA$XBm8tql9z9n6rvaSX1YAcbyI5ht97u8lLTnFczr4uak', '73361c62-9340-4c9e-9dd3-33a73547d761-029002f7-f5a7-4c99-bdd4-2d179f024977', 1),
+(4, 'El pepito3', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$LpxdH78OEo+g1pjBUaK04Q$HqgbgCdtTM4GaXFZ2ZqLmQv6gMs46Ot5c3Y5Am9LMsY', '$argon2id$v=19$m=65536,t=3,p=4$pkySPKBSNnOnewqZdy67Ww$gUgbBU6aqv5xEtiSdWYRDqoYcBVxCVafxysh4vvxnaY', '08bc0ff1-132b-40b4-ad58-c196890dee56-2ded1689-f8da-4534-9abe-67247860d3ab', 1),
+(5, 'El pepito4', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$cpWY38BOtU9Obhe3DR3bhA$XLJGqZHPj1WwsM9OL6JMR2yxTWkzjXwPO1Mw6KP1t2I', '$argon2id$v=19$m=65536,t=3,p=4$Wlmnwt6OoPS40ziRz3qwAQ$yFOrGDhX1sE5VjMiOzZgPz+fbwDBGGIwRWl/DkgL8vY', '876bbab3-5890-457b-888b-69c2acfc8a00-c0938fd2-a87d-4451-a865-fe8405df6122', 1),
+(6, 'El pepito5', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$jXGc7XJH4hQT3EOUnaG1uA$1x+TERIFqhg2mZshTx2l+mju0tkap4gSoJ1wFnu7j20', '$argon2id$v=19$m=65536,t=3,p=4$3ibE1pMM3ILiSFWS0bvLYg$Xq6xfDW7TdzXaGCd7KGQcMTclfiR6djZ0kZey/iKmsI', 'c6d08108-8771-46b0-adac-f5ce0c03f8ba-3972822d-3b25-4f54-9f43-c9f134eb266a', 1),
+(7, 'El pepito6', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$NqtGczl0CGAQlsjt55K79g$NdQWA4SWVJ/h+I14AA6CWZOJ0sBs6asyrNzPJpK8N0U', '$argon2id$v=19$m=65536,t=3,p=4$TMNXWRrkjSqdYirkW/q7DQ$1JXU038KTPR6PX0LBZuf9FtEbJ9P7J6a79NKi5tSoco', '1ccd1e8a-8272-49a9-a93b-af486ec03a8b-e33f60bc-38b5-4811-a889-04fec04acc4a', 1),
+(8, 'El pepito7', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$wkHf2sGs7rzpZr8NnxVpCg$qEP5Xdq2Ug2woLQZGgsVYr/ZcO7rm5jaP3SR0P37UGE', '$argon2id$v=19$m=65536,t=3,p=4$0oU/JC3TILOLMY8MHLgQbg$fa5pLqaom4IjiaL6In8wM0BTCYcBEW3yiN5JuKJ1ny0', 'bc7b23dd-63e4-4624-83d4-e2deeb0f3b05-ec23053e-925d-4e4f-ba67-6eff9ea464b3', 1),
+(9, 'El pepito8', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$vQfLmfv2+sGfhhFgruSzfA$PgYiH9XFyggzKsZA4P7tZozj32u8NXi0pPhpvd/RLtY', '$argon2id$v=19$m=65536,t=3,p=4$8vf2Q2qT5OoGFfOpMcCC1A$D9CvCFc2PBJI51YAW4uW8ZswGEgJZWVmCzy7VlLGi68', '45ec7c08-aca4-4c1a-9cdf-cbb9c54ff128-27f6b3b2-50c9-48ac-ba63-3103b995561c', 1);
 
 -- --------------------------------------------------------
 
@@ -280,7 +299,7 @@ ALTER TABLE `user_level`
 -- AUTO_INCREMENT de la tabla `binnacle`
 --
 ALTER TABLE `binnacle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `book`
@@ -328,7 +347,7 @@ ALTER TABLE `state`
 -- AUTO_INCREMENT de la tabla `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Restricciones para tablas volcadas

@@ -145,7 +145,7 @@ const ValidateForm = ((e) => {
 
             <div class="row m-0 p-0 justify-content-center my-2">
                 <div class="row m-0 p-0 col-3">
-                    <label class="text-end" for="description">Descripción</label>
+                    <label class="text-end" for="description">Descripción (Opcional)</label>
                 </div>
                 <div class="row m-0 p-0 col-6">
                     <div class="row col-10">

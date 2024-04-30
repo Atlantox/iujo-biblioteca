@@ -4,40 +4,39 @@ from uuid import uuid4
 from .BaseModel import BaseModel
 
 class UserModel(BaseModel):
-    def __init__(self, connection):
-        self.connection = connection
-
     def CreateUser(self, userData):
         result = True
-        try:
-            cursor = self.connection.connection.cursor()
-            newToken = self.GetNewToken()
-            hasher = PasswordHasher()
-            sql = '''
+        cursor = self.connection.connection.cursor()
+        newToken = self.GetNewToken()
+        hasher = PasswordHasher()
+        sql = '''
                 INSERT INTO
                 user
                 (
+                    nickname,
                     username,
                     password,
-                    email,
+                    level,
                     token
                 )
                 VALUES
                 (
-                    '{0}',
-                    '{1}',
-                    '{2}',
-                    '{3}'
+                    `{0}`,
+                    `{1}`,
+                    `{2}`,
+                    `{3}`,
+                    `{4}`
                 )
                 '''.format(
+                    userData['nickname'],
                     hasher.hash(userData['username']),
                     hasher.hash(userData['password']),
-                    userData['email'],
+                    userData['level'],
                     newToken
                 )
+        try:
             cursor.execute(sql)
             self.connection.connection.commit()
-            result = True
         except Exception as err:
             result = False
 
@@ -80,17 +79,9 @@ class UserModel(BaseModel):
     
     def GetUserPublicData(self, token):
         cursor = self.connection.connection.cursor()
-        sql = '''SELECT
-            nickname,
-            level,
-            active        
-            FROM
-            user
-            WHERE
-            token = '{0}'
-            '''.format(token)
+        sql = 'SELECT id, nickname, level, active FROM user WHERE token = %s'
         
-        cursor.execute(sql)
+        cursor.execute(sql, (token,))
         return cursor.fetchone()
 
     def UsernameExists(self, recievedUsername):
@@ -147,10 +138,10 @@ class UserModel(BaseModel):
             INNER JOIN user_level ON user_level.name = permisson.level
             INNER JOIN user ON user.level = user_level.name
             WHERE
-            user.id = '{0}' AND
-            permisson.name = '{1}'
+            user.id = `{0}` AND
+            permisson.name = `{1}`
             '''.format(userId, permisson)
-        
+
         cursor.execute(sql)
         result = cursor.fetchone()
-        return result is None
+        return result is not None

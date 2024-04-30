@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_cors import cross_origin
+
 from models.UserModel import UserModel
 from helpers import *
 
@@ -14,12 +15,19 @@ CREATE_USER_LENGTH_CONFIG = {
     'password': REGISTER_USER_LENGTH_CONFIG['password'],
 }
 
+REQUIRED_FIELDS = [
+    'nickname',
+    'username',
+    'password',
+    'level'
+]
+
 userController = Blueprint('users', __name__)
 
 def GetConnection():
     connection = getattr(userController, 'connection', None)
     if connection is None:
-        raise Exception('No se pudo obtener la conexión desde el Blueprint Notes')
+        raise Exception('No se pudo obtener la conexión desde el Blueprint User')
     
     return connection
 
@@ -32,15 +40,15 @@ def GetUserData():
     statusCode = 200
     error = ''
     token = GetTokenOfRequest(request)
-    if token == None:
+    if token is None:
         error = 'Acceso denegado. Autenticación requerida'
         statusCode = 401
     
     if error == '':
         targetUser = userModel.GetUserByToken(token)
-        if targetUser == None:
-            error = 'Usuario no encontrado'
-            statusCode = 401
+        if type(targetUser) is str:
+            error = targetUser
+            statusCode = 400
     
     if error == '':
         publicData = userModel.GetUserPublicData(token)
@@ -58,7 +66,7 @@ def RegisterUser():
     
     recievedData, error, statusCode = JsonExists(request)
     token = GetTokenOfRequest(request)
-    if token == None:
+    if token is None:
         error = 'Acceso denegado. Autenticación requerida'
         statusCode = 401
 
@@ -75,6 +83,11 @@ def RegisterUser():
             statusCode = 400
 
     if error == '':
+        if cleanData['level'] not in ['Admin', 'Editor']:
+            error = 'Tipo de usuario inválido'
+            statusCode = 400
+
+    if error == '':
         if userModel.UserHasPermisson(targetUser['id'], cleanData['level']) is False:
             error = 'Acción denegada'
             statusCode = 401  # Unauthorized
@@ -88,6 +101,8 @@ def RegisterUser():
         created = userModel.CreateUser(cleanData)
         if created:
             message = 'Usuario creado correctamente'
+            action = '{0} ha creado al usuario {1}'.format(targetUser['nickname'], cleanData['nickname'])
+            userModel.CreateBinnacle(targetUser['id'], action)
         else:
             error = 'Hubo un error al crear al usuario'
             statusCode = 500
@@ -136,6 +151,8 @@ def TryLogin():
             token = loginResult
             userData = userModel.GetUserPublicData(token)
             message = token
+            action = '{0} ha ingresado al sistema'.format(userData['nickname'])
+            userModel.CreateBinnacle(userData['id'], action)
             
     if error != '':
         message = error
@@ -158,14 +175,8 @@ def ValidateUserData(recievedData):
     If the data has no issues, return the data cleaned
     '''
     error = ''
-    requiredFields = [
-        'nickname',
-        'username',
-        'password',
-        'level'
-    ]
 
-    cleanData = HasEmptyFields(requiredFields, recievedData)
+    cleanData = HasEmptyFields(REQUIRED_FIELDS, recievedData)
     if type(cleanData) is str:
         error = cleanData
 
