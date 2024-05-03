@@ -1,4 +1,5 @@
 from .BaseModel import BaseModel
+from .CategoryModel import CategoryModel
 
 class BookModel(BaseModel):
     def CreateBook(self, bookData):
@@ -19,12 +20,12 @@ class BookModel(BaseModel):
                 )
                 VALUES
                 (
-                    `{0}`,
-                    `{1}`,
-                    `{2}`,
+                    '{0}',
+                    '{1}',
+                    '{2}',
                     {3},
-                    `{4}`,
-                    `{5}`,
+                    '{4}',
+                    '{5}',
                     {6}
                 )
                 '''.format(
@@ -94,6 +95,45 @@ class BookModel(BaseModel):
         cursor.execute(sql)
         books = cursor.fetchall()
         return books
+    
+    def GetBookById(self, id):
+        error = ''
+        cursor = self.connection.connection.cursor()
+        sql = '''
+            SELECT
+            book.id,
+            book.call_number,
+            book.title,
+            book.author,
+            book.editorial,
+            book.pages,
+            book.description,
+            book.shelf,
+            state.name
+            FROM
+            book
+            INNER JOIN state ON state.id = book.state
+            ORDER BY
+            book.title
+            WHERE
+            book.id = {0}
+            '''.format(id)
+        
+        cursor.execute(sql)
+        book = cursor.fetchone()
+        if book is None:
+            error = 'Libro no encontrado'
+
+        if error == '':
+            categoryModel = CategoryModel(self.connection)
+            book['categories'] = categoryModel.GetCategoriesOfBook(id)
+        
+        if error == '':
+            result = error
+        else:
+            result = book
+        
+        return result
     
     def UpdateBook(self, bookId, bookData):
         pass

@@ -3,6 +3,8 @@ from flask_cors import cross_origin
 
 from models.BookModel import BookModel
 from models.UserModel import UserModel
+from models.CategoryModel import CategoryModel
+
 from helpers import *
 
 BOOK_LENGTH_CONFIG = {
@@ -58,22 +60,36 @@ def CreateBook():
             statusCode = 400
 
     if error == '':
-        if userModel.UserHasPermisson(targetUser['id'], cleanData['level']) is False:
+        if userModel.UserHasPermisson(targetUser['id'], 'Libros') is False:
             error = 'Acción denegada'
             statusCode = 401  # Unauthorized
 
     if error == '':
-        if userModel.UsernameExists(cleanData['username']) is True:
-            error = 'Usuario ya registrado'
+        bookModel = BookModel(connection)
+        if bookModel.GetBookByCallNumber(cleanData['call_number']) is not None:
+            error = 'La cota ya está registrada'
+            statusCode = 400
+
+    if error == '':
+        categoryModel = CategoryModel(connection)
+        categoriesExists = categoryModel.CategoriesExists(cleanData['categories'])
+        if type(categoriesExists) is str:
+            error = categoriesExists
+            statusCode = 400
+
+    if error == '':
+        stateExists = bookModel.StateExists(cleanData['state'])
+        if stateExists is False:
+            error = 'El estado seleccionado no existe'
             statusCode = 400
     
     if error == '':
-        created = userModel.CreateUser(cleanData)
-        if created:
-            message = 'Usuario creado correctamente'
-        else:
-            error = 'Hubo un error al crear al usuario'
+        created = bookModel.CreateBook(cleanData)
+        if type(created) is str:
+            error = created
             statusCode = 500
+        else:
+            message = 'Usuario creado correctamente'
 
     if error != '':
         message = error
