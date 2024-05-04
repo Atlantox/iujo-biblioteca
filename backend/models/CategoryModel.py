@@ -1,109 +1,91 @@
 from .BaseModel import BaseModel
-from .CategoryModel import CategoryModel
 
 class CategoryModel(BaseModel):
-    def CreateBook(self, bookData):
-        result = True
+    def GetCategories(self):
         cursor = self.connection.connection.cursor()
-        sql = '''
-                INSERT INTO
-                book
-                (
-                    title,
-                    author,
-                    call_number,
-                    editorial,
-                    pages,
-                    shelf,
-                    description,
-                    state
-                )
-                VALUES
-                (
-                    '{0}',
-                    '{1}',
-                    '{2}',
-                    {3},
-                    '{4}',
-                    '{5}',
-                    {6}
-                )
-                '''.format(
-                    bookData['title'],
-                    bookData['author'],
-                    bookData['call_number'],
-                    bookData['editorial'],
-                    bookData['pages'],
-                    bookData['shelf'],
-                    bookData['description'],
-                    bookData['state']
-                )
+        sql = "SELECT name FROM category"
+        cursor.execute(sql)
+        return cursor.fetchall()
+
+    def CreateCategory(self, categoryData):
+        name = categoryData['name']
+        cursor = self.connection.connection.cursor()
+        sql = "INSERT INTO category (name) VALUES ('{0}')".format(name)
         try:
             cursor.execute(sql)
             self.connection.connection.commit()
-        except Exception as err:
-            result = 'Hubo un error al crear el libro'
+            result = True
+        except Exception as e:
+            result = 'Hubo un error al crear la categoría'
 
-        if result == True:
-            categoryModel = CategoryModel(self.connection)
-            sql = 'SELECT MAX(id) as id FROM book'
+        return result
+    
+    def GetCategoryByName(self, name):
+        cursor = self.connection.connection.cursor()
+        sql = "SELECT * FROM category WHERE name = '{0}'".format(name)
+        cursor.execute(sql)
+        return cursor.fetchone()
+    
+    def GetCategoryById(self, id):
+        cursor = self.connection.connection.cursor()
+        sql = "SELECT * FROM category WHERE id = '{0}'".format(id)
+        cursor.execute(sql)
+        return cursor.fetchone()
+
+    def AddCategoriesToBook(self, bookId, categories):
+        cursor = self.connection.connection.cursor()
+        sql = "INSERT INTO book_category (book, category) VALUES "
+        for category in categories:
+            sql += "({0}, {1}),".format(bookId, category)
+        
+        sql = sql[0:-1]  # Skipping the last comma
+        try:
             cursor.execute(sql)
-            createdBook = cursor.fetchone()
-            assignmentCreated = categoryModel.AddCategoriesToBook(createdBook['id'], bookData['categories'])
-            if assignmentCreated is False:
-                result = 'El libro fue creado. Sin embargo, hubo un error al asignar sus categorías'
+            self.connection.commit()
+            result = True
+        except:
+            result = False
 
         return result
 
-    def GetAvailableBooks(self):
+    def GetCategoriesOfBook(self, id):
         cursor = self.connection.connection.cursor()
         sql = '''
             SELECT
-            book.id,
-            book.call_number,
-            book.title,
-            book.author,
-            book.editorial,
-            book.pages,
-            book.description,
-            book.shelf,
-            state.name
+            category.name
             FROM
-            book
-            INNER JOIN state ON state.id = book.state
+            category
+            INNER JOIN book_category ON book_category.category = category.id
+            INNER JOIN book ON book.id = book_category.book
             WHERE
-            state.name = 'En biblioteca'
-            ORDER BY
-            book.title
-            '''
-        
+            book.id = {0}
+            '''.format(id)
+
         cursor.execute(sql)
-        books = cursor.fetchall()
-        return books
+        categories = cursor.fetchall()
+
+        if categories is None:
+            categories = []
+        
+        ordered_categories = []
+        for category in categories:
+            ordered_categories.append(category['name'])
+        
+        return ordered_categories
     
-    def GetAllBooks(self):
+    def CategoriesExists(self, ids):
         cursor = self.connection.connection.cursor()
-        sql = '''
-            SELECT
-            book.id,
-            book.call_number,
-            book.title,
-            book.author,
-            book.editorial,
-            book.pages,
-            book.description,
-            book.shelf,
-            state.name
-            FROM
-            book
-            INNER JOIN state ON state.id = book.state
-            ORDER BY
-            book.title
-            '''
+        orderedIds = ''
+        for id in ids:
+            orderedIds += "'{0}',".format(id)
         
+        orderedIds = orderedIds[0:-1]
+        sql = "SELECT * FROM category WHERE id IN ({0})".format(orderedIds)
         cursor.execute(sql)
-        books = cursor.fetchall()
-        return books
-    
-    def UpdateBook(self, bookId, bookData):
-        pass
+        categories = cursor.fetchall()
+        if categories is None:
+            result = False
+        else:
+            result = len(categories) == len(ids)
+
+        return result

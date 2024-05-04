@@ -1,16 +1,5 @@
 import re 
 
-userLengthConfig = {
-    'username': {'max': 50, 'min':4},
-    'password': {'max': 40, 'min':8},
-    'email': {'max': 100, 'min':4}
-}
-
-noteLengthConfig = {
-    'titulo': {'max': 50, 'min': 4},
-    'contenido': {'max': 1000, 'min': 4}
-}
-
 def ValidateLength(validations, data):
     lengthOK = True
     for field, value in validations.items():
@@ -50,10 +39,6 @@ def HasEmptyFields(indexes, content):
     for index in indexes:
         if index not in content:
             error = '{0} No encontrado'.format(index)
-            break
-
-        if content[index] == '':
-            error = '{0} Está vacío'.format(index)
             break
 
         finalData[index] = content[index]

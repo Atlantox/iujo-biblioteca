@@ -3,7 +3,7 @@ from .CategoryModel import CategoryModel
 
 class BookModel(BaseModel):
     def CreateBook(self, bookData):
-        result = True
+        error = ''
         cursor = self.connection.connection.cursor()
         sql = '''
                 INSERT INTO
@@ -23,10 +23,11 @@ class BookModel(BaseModel):
                     '{0}',
                     '{1}',
                     '{2}',
-                    {3},
-                    '{4}',
+                    '{3}',
+                    {4},
                     '{5}',
-                    {6}
+                    '{6}',
+                    {7}
                 )
                 '''.format(
                     bookData['title'],
@@ -42,9 +43,23 @@ class BookModel(BaseModel):
             cursor.execute(sql)
             self.connection.connection.commit()
         except Exception as err:
-            result = False
+            error = 'Hubo un error al crear el libro en la base de datos'
 
-        return result
+        if error == '':
+            sql = "SELECT MAX(id) as id from book"
+            cursor.execute(sql)
+            createdBook = cursor.fetchone()
+            categoryModel = CategoryModel(self.connection)            
+            categoriesAssigned = categoryModel.AddCategoriesToBook(createdBook, bookData['categories'])
+            if categoriesAssigned is False:
+                error = 'El libro fue creado, sin embargo, hubo un error al asignar las categorías de este'
+            
+        if error == '':
+            message = 'Libro creado correctamente'
+        else:
+            message = error
+
+        return message
 
     def GetAvailableBooks(self):
         cursor = self.connection.connection.cursor()
@@ -134,6 +149,51 @@ class BookModel(BaseModel):
             result = book
         
         return result
+    
+    def GetBookByCallNumber(self, callNumber):
+        error = ''
+        cursor = self.connection.connection.cursor()
+        sql = '''
+            SELECT
+            book.id,
+            book.call_number,
+            book.title,
+            book.author,
+            book.editorial,
+            book.pages,
+            book.description,
+            book.shelf,
+            state.name
+            FROM
+            book
+            INNER JOIN state ON state.id = book.state
+            WHERE
+            book.call_number = '{0}'
+            ORDER BY
+            book.title            
+            '''.format(callNumber)
+        
+        cursor.execute(sql)
+        book = cursor.fetchone()
+        if book is None:
+            error = 'Libro no encontrado'
+
+        if error == '':
+            categoryModel = CategoryModel(self.connection)
+            book['categories'] = categoryModel.GetCategoriesOfBook(book['id'])
+        
+        if error == '':
+            result = error
+        else:
+            result = book
+        
+        return result
+    
+    def StateExists(self, stateId):
+        cursor = self.connection.connection.cursor()
+        sql = "SELECT * FROM state WHERE id = '{0}'".format(stateId)
+        cursor.execute(sql)
+        return cursor.fetchone() is not None
     
     def UpdateBook(self, bookId, bookData):
         pass

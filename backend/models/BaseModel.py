@@ -15,7 +15,7 @@ class BaseModel():
             VALUES
             (
                 {0},
-                `{1}`
+                '{1}'
             )
             '''.format(userId, action)
         

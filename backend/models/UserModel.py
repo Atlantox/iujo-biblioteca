@@ -21,11 +21,11 @@ class UserModel(BaseModel):
                 )
                 VALUES
                 (
-                    `{0}`,
-                    `{1}`,
-                    `{2}`,
-                    `{3}`,
-                    `{4}`
+                    '{0}',
+                    '{1}',
+                    '{2}',
+                    '{3}',
+                    '{4}'
                 )
                 '''.format(
                     userData['nickname'],
@@ -138,8 +138,8 @@ class UserModel(BaseModel):
             INNER JOIN user_level ON user_level.name = permisson.level
             INNER JOIN user ON user.level = user_level.name
             WHERE
-            user.id = `{0}` AND
-            permisson.name = `{1}`
+            user.id = '{0}' AND
+            permisson.name = '{1}'
             '''.format(userId, permisson)
 
         cursor.execute(sql)

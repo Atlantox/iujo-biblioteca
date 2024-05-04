@@ -8,12 +8,12 @@ from models.CategoryModel import CategoryModel
 from helpers import *
 
 BOOK_LENGTH_CONFIG = {
-    'call_number': {'max': 1, 'min':8},
-    'title': {'max': 1, 'min':150},
-    'author': {'max': 1, 'min':100},
-    'editorial': {'max': 1, 'min':100},
-    'shelf': {'max': 1, 'min':10},
-    'description': {'max': 0, 'min':1000}
+    'call_number': {'min': 1, 'max':8},
+    'title': {'min': 1, 'max':150},
+    'author': {'min': 1, 'max':100},
+    'editorial': {'min': 1, 'max':100},
+    'shelf': {'min': 1, 'max':10},
+    'description': {'min': 0, 'max':1000, 'optional': True}
 }
 
 REQUIRED_FIELDS = [
@@ -24,7 +24,8 @@ REQUIRED_FIELDS = [
     'shelf',
     'pages',
     'description',
-    'state'
+    'state',
+    'categories'
 ]
 
 bookController = Blueprint('books', __name__)
@@ -73,8 +74,8 @@ def CreateBook():
     if error == '':
         categoryModel = CategoryModel(connection)
         categoriesExists = categoryModel.CategoriesExists(cleanData['categories'])
-        if type(categoriesExists) is str:
-            error = categoriesExists
+        if categoriesExists is False:
+            error = 'Alguna de las categorías no encaja con las registradas'
             statusCode = 400
 
     if error == '':
@@ -89,7 +90,9 @@ def CreateBook():
             error = created
             statusCode = 500
         else:
-            message = 'Usuario creado correctamente'
+            action = 'Creó el Libro {0}'.format(cleanData['title'])
+            bookModel.CreateBinnacle(targetUser['id'], action)
+            message = 'Libro creado correctamente'
 
     if error != '':
         message = error
