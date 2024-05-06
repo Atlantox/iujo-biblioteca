@@ -34,6 +34,7 @@ class CategoryModel(BaseModel):
 
     def AddCategoriesToBook(self, bookId, categories):
         cursor = self.connection.connection.cursor()
+        result = True
         sql = "INSERT INTO book_category (book, category) VALUES "
         for category in categories:
             sql += "({0}, {1}),".format(bookId, category)
@@ -41,8 +42,7 @@ class CategoryModel(BaseModel):
         sql = sql[0:-1]  # Skipping the last comma
         try:
             cursor.execute(sql)
-            self.connection.commit()
-            result = True
+            self.connection.connection.commit()
         except:
             result = False
 

@@ -50,42 +50,17 @@ class BookModel(BaseModel):
             cursor.execute(sql)
             createdBook = cursor.fetchone()
             categoryModel = CategoryModel(self.connection)            
-            categoriesAssigned = categoryModel.AddCategoriesToBook(createdBook, bookData['categories'])
+            categoriesAssigned = categoryModel.AddCategoriesToBook(createdBook['id'], bookData['categories'])
             if categoriesAssigned is False:
                 error = 'El libro fue creado, sin embargo, hubo un error al asignar las categorías de este'
             
         if error == '':
-            message = 'Libro creado correctamente'
+            result = True
         else:
-            message = error
+            result = error
 
-        return message
+        return result
 
-    def GetAvailableBooks(self):
-        cursor = self.connection.connection.cursor()
-        sql = '''
-            SELECT
-            book.id,
-            book.call_number,
-            book.title,
-            book.author,
-            book.editorial,
-            book.pages,
-            book.description,
-            book.shelf,
-            state.name
-            FROM
-            book
-            INNER JOIN state ON state.id = book.state
-            WHERE
-            state.name = 'En biblioteca'
-            ORDER BY
-            book.title
-            '''
-        
-        cursor.execute(sql)
-        books = cursor.fetchall()
-        return books
     
     def GetAllBooks(self):
         cursor = self.connection.connection.cursor()
@@ -128,10 +103,10 @@ class BookModel(BaseModel):
             FROM
             book
             INNER JOIN state ON state.id = book.state
-            ORDER BY
-            book.title
             WHERE
             book.id = {0}
+            ORDER BY
+            book.title            
             '''.format(id)
         
         cursor.execute(sql)
@@ -144,9 +119,9 @@ class BookModel(BaseModel):
             book['categories'] = categoryModel.GetCategoriesOfBook(id)
         
         if error == '':
-            result = error
-        else:
             result = book
+        else:
+            result = error
         
         return result
     
