@@ -10,7 +10,7 @@ class CategoryModel(BaseModel):
     def CreateCategory(self, categoryData):
         name = categoryData['name']
         cursor = self.connection.connection.cursor()
-        sql = "INSERT INTO category (name) VALUES ('{0}')".format(name)
+        sql = "INSERT INTO category (name) VALUES (`{0}`)".format(name)
         try:
             cursor.execute(sql)
             self.connection.connection.commit()

@@ -74,7 +74,7 @@ class BookModel(BaseModel):
             book.pages,
             book.description,
             book.shelf,
-            state.name
+            state.name as state
             FROM
             book
             INNER JOIN state ON state.id = book.state
@@ -84,10 +84,18 @@ class BookModel(BaseModel):
         
         cursor.execute(sql)
         books = cursor.fetchall()
-        return books
+        result = []
+        
+        if type(books) is tuple:
+            for i in range(len(books)):
+                book = books[i]
+                categoryModel = CategoryModel(self.connection)
+                book['categories'] = categoryModel.GetCategoriesOfBook(book['id'])
+                result.append(book)
+
+        return result
     
     def GetBookById(self, id):
-        error = ''
         cursor = self.connection.connection.cursor()
         sql = '''
             SELECT
@@ -99,7 +107,7 @@ class BookModel(BaseModel):
             book.pages,
             book.description,
             book.shelf,
-            state.name
+            state.name as state
             FROM
             book
             INNER JOIN state ON state.id = book.state
@@ -111,22 +119,17 @@ class BookModel(BaseModel):
         
         cursor.execute(sql)
         book = cursor.fetchone()
-        if book is None:
-            error = 'Libro no encontrado'
 
-        if error == '':
-            categoryModel = CategoryModel(self.connection)
-            book['categories'] = categoryModel.GetCategoriesOfBook(id)
-        
-        if error == '':
-            result = book
+        if book is None:
+            result = None
         else:
-            result = error
+            categoryModel = CategoryModel(self.connection)
+            book['categories'] = categoryModel.GetCategoriesOfBook(book['id'])
+            result = book
         
         return result
     
     def GetBookByCallNumber(self, callNumber):
-        error = ''
         cursor = self.connection.connection.cursor()
         sql = '''
             SELECT
@@ -138,7 +141,7 @@ class BookModel(BaseModel):
             book.pages,
             book.description,
             book.shelf,
-            state.name
+            state.name as state
             FROM
             book
             INNER JOIN state ON state.id = book.state
@@ -150,16 +153,12 @@ class BookModel(BaseModel):
         
         cursor.execute(sql)
         book = cursor.fetchone()
-        if book is None:
-            error = 'Libro no encontrado'
 
-        if error == '':
+        if book is None:
+            result = None
+        else:
             categoryModel = CategoryModel(self.connection)
             book['categories'] = categoryModel.GetCategoriesOfBook(book['id'])
-        
-        if error == '':
-            result = error
-        else:
             result = book
         
         return result
@@ -171,4 +170,31 @@ class BookModel(BaseModel):
         return cursor.fetchone() is not None
     
     def UpdateBook(self, bookId, bookData):
-        pass
+        result = True
+        cursor = self.connection.connection.cursor()
+        sql = "UPDATE book SET "
+        for column, value in bookData.items():
+            sql += "{0} = '{1}',".format(column, value)
+        
+        sql = sql[0:-1]
+        sql += " WHERE id = {0}".format(bookId)
+
+        try:
+            cursor.execute(sql)
+            self.connection.connection.commit()
+        except:
+            result = False
+        
+        return result
+    
+    def DeleteBook(self, bookId):
+        result = True
+        cursor = self.connection.connection.cursor()
+        sql = "DELETE FROM book WHERE id = {0}".format(bookId)
+        try:
+            cursor.execute(sql)
+            self.connection.connection.commit()
+        except:
+            result = False
+        
+        return result

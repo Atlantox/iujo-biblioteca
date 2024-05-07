@@ -4,6 +4,7 @@ from flask_cors import cross_origin
 from models.BookModel import BookModel
 from models.UserModel import UserModel
 from models.CategoryModel import CategoryModel
+from models.LoanModel import LoanModel
 
 from helpers import *
 
@@ -113,18 +114,8 @@ def GetBooks():
     response = {}
     statusCode = 200
     error = ''
-    token = GetTokenOfRequest(request)
 
-    if token is None:
-        books = bookModel.GetAllBooks()
-    else:
-        userModel = UserModel(connection)
-        targetUser = userModel.GetUserByToken(token)
-        if type(targetUser) is str:
-            error = targetUser
-            statusCode = 400
-        else:
-            books = bookModel.GetAllBooks()
+    books = bookModel.GetAllBooks()
 
     if books is None:
         error = 'No hay libros disponibles'
@@ -147,8 +138,8 @@ def GetBookById(id):
     error = ''
     targetBook = bookModel.GetBookById(id)
 
-    if type(targetBook) is str:
-        error = targetBook
+    if targetBook is None:
+        error = "Libro no encontrado"
         statusCode = 400
     
     success = error == ''
@@ -162,14 +153,15 @@ def GetBookById(id):
     return jsonify(response), statusCode
 
 
-@bookController.route('/books/<int:id>', methods=['PUT'])
-def UpdateBook(id):
+@bookController.route('/books/<int:updateId>', methods=['PUT'])
+def UpdateBook(updateId):
     connection = GetConnection()
     userModel = UserModel(connection)
     bookModel = BookModel(connection)
     response = {}
     recievedData, error, statusCode = JsonExists(request)
     token = GetTokenOfRequest(request)
+    
     if token is None:
         error = 'Acceso denegado. Autenticación requerida'
         statusCode = 401
@@ -181,7 +173,7 @@ def UpdateBook(id):
             statusCode = 400
     
     if error == '':
-        cleanData = ValidateBookData(recievedData)
+        cleanData = ValidateBookData(recievedData, False)
         if type(cleanData) is str:
             error = cleanData
             statusCode = 400
@@ -192,11 +184,23 @@ def UpdateBook(id):
             statusCode = 401  # Unauthorized
 
     if error == '':
+        if bookModel.GetBookById(updateId) is None:
+            error = 'Libro no encontrado'
+            statusCode = 400
+
+    if error == '' and 'categories' in cleanData:
         if cleanData['categories'] == []:
             error = 'Seleccione al menos una categoría'
             statusCode = 400
 
     if error == '':
+        if 'call_number' in cleanData:
+            bookModel = BookModel(connection)
+            if bookModel.GetBookByCallNumber(cleanData['call_number']) is not None:
+                error = 'La cota ya está registrada'
+                statusCode = 400
+
+    if error == '' and 'categories' in cleanData:
         categoryModel = CategoryModel(connection)
         categoriesExists = categoryModel.CategoriesExists(cleanData['categories'])
         if categoriesExists is False:
@@ -204,21 +208,85 @@ def UpdateBook(id):
             statusCode = 400
 
     if error == '':
-        stateExists = bookModel.StateExists(cleanData['state'])
-        if stateExists is False:
-            error = 'El estado seleccionado no existe'
+        if 'state' in cleanData:
+            stateExists = bookModel.StateExists(cleanData['state'])
+            if stateExists is False:
+                error = 'El estado seleccionado no existe'
+                statusCode = 400
+
+    if error == '':
+        if cleanData == {}:
+            error = 'Información recibida vacía'
             statusCode = 400
     
     if error == '':
-        created = bookModel.CreateBook(cleanData)
-        if type(created) is str:
-            error = created
+        updated = bookModel.UpdateBook(updateId, cleanData)
+        if type(updated) is str:
+            error = updated
             statusCode = 500
         else:
-            action = 'Creó el Libro {0}'.format(cleanData['title'])
+            action = 'Editó el Libro {0}'.format(updateId)
             bookModel.CreateBinnacle(targetUser['id'], action)
-            message = 'Libro creado correctamente'
+            message = 'Libro actualizado correctamente'
 
+    if error != '':
+        message = error
+        
+    success = error == ''
+    response['success'] = success
+    response['message'] = message
+
+    return jsonify(response), statusCode
+
+
+@bookController.route('/books/<int:deleteId>', methods=['DELETE'])
+def DeleteBook(deleteId):
+    connection = GetConnection()
+    userModel = UserModel(connection)
+    bookModel = BookModel(connection)
+    response = {}
+    error = ''
+    statusCode = 200
+    token = GetTokenOfRequest(request)
+    
+    if token is None:
+        error = 'Acceso denegado. Autenticación requerida'
+        statusCode = 401
+
+    if error == '':
+        targetUser = userModel.GetUserByToken(token)
+        if type(targetUser) is str:
+            error = targetUser
+            statusCode = 400
+
+    if error == '':
+        if userModel.UserHasPermisson(targetUser['id'], 'Libros') is False:
+            error = 'Acción denegada'
+            statusCode = 401  # Unauthorized
+
+    if error == '':
+        targetBook = bookModel.GetBookById(deleteId)
+        if targetBook is None:
+            error = 'Libro no encontrado'
+            statusCode = 400
+
+    if error == '':
+        loanModel = LoanModel(connection)
+        if loanModel.GetLoansOfBook(deleteId) is not ():
+            # The book has loans, then, the book can't be deleted
+            error = 'El libro tiene préstamos registrados, por lo tanto, no puede ser borrado'
+            statusCode = 400
+
+    if error == '':
+        deleted = bookModel.DeleteBook(deleteId)
+        if deleted is False:
+            error = 'Hubo un error al intentar borrar el libro'
+            statusCode = 500
+        else:
+            message = 'Libro borrado correctamente'
+            action = 'Borró el libro {0}'.format(targetBook['title'])
+            bookModel.CreateBinnacle(targetUser['id'], action)
+    
     if error != '':
         message = error
         
@@ -235,12 +303,12 @@ def ValidateBookData(recievedData, exactData = True):
     '''
     error = ''
 
-    cleanData = HasEmptyFields(REQUIRED_FIELDS, recievedData)
+    cleanData = HasEmptyFields(REQUIRED_FIELDS, recievedData, exactData)
     if type(cleanData) is str:
         error = cleanData
 
     if error == '':
-        lengthOK = ValidateLength(BOOK_LENGTH_CONFIG, cleanData)
+        lengthOK = ValidateLength(BOOK_LENGTH_CONFIG, cleanData, exactData)
         if lengthOK is not True:
             error = lengthOK
 

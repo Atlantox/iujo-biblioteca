@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-04-2024 a las 21:42:01
+-- Tiempo de generación: 07-05-2024 a las 20:05:31
 -- Versión del servidor: 10.4.17-MariaDB
 -- Versión de PHP: 7.2.34
 
@@ -42,7 +42,21 @@ INSERT INTO `binnacle` (`id`, `user`, `action`, `date`) VALUES
 (1, 1, 'Atlantox7 Ha creado al usuario El pepito5', '2024-04-30 10:03:08'),
 (2, 1, 'Atlantox7 Ha creado al usuario El pepito6', '2024-04-30 10:11:46'),
 (3, 1, 'Atlantox7 Ha creado al usuario El pepito7', '2024-04-30 10:12:11'),
-(4, 1, 'Atlantox7 Ha creado al usuario El pepito8', '2024-04-30 10:13:45');
+(4, 1, 'Atlantox7 Ha creado al usuario El pepito8', '2024-04-30 10:13:45'),
+(5, 1, 'Creó la categoría Comedia', '2024-05-07 09:15:18'),
+(6, 1, 'Creó la categoría Romance', '2024-05-07 09:15:21'),
+(7, 1, 'Creó la categoría Terror', '2024-05-07 09:15:25'),
+(8, 1, 'Creó la categoría Fantasía', '2024-05-07 09:15:29'),
+(9, 1, 'Creó la categoría Historia', '2024-05-07 09:15:35'),
+(10, 1, 'Creó la categoría Acción', '2024-05-07 09:15:45'),
+(11, 1, 'Creó la categoría Crecimiento personal', '2024-05-07 09:15:50'),
+(12, 1, 'Creó la categoría Enciclopedia', '2024-05-07 09:15:58'),
+(13, 1, 'Creó la categoría Normativo', '2024-05-07 09:16:02'),
+(14, 1, 'Creó el Libro Berserk Vol. 1', '2024-05-07 09:18:06'),
+(15, 1, 'Creó el Libro Berserk Vol. 1', '2024-05-07 09:25:33'),
+(16, 1, 'Editó el Libro 1', '2024-05-07 09:28:29'),
+(17, 1, 'Editó el Libro 1', '2024-05-07 09:44:58'),
+(18, 1, 'Borró el libro Berserk Vol. 2', '2024-05-07 11:46:43');
 
 -- --------------------------------------------------------
 
@@ -63,6 +77,13 @@ CREATE TABLE `book` (
   `state` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Volcado de datos para la tabla `book`
+--
+
+INSERT INTO `book` (`id`, `call_number`, `author`, `title`, `editorial`, `pages`, `shelf`, `description`, `created_at`, `state`) VALUES
+(2, 'BE-01', 'Kentaro Miura', 'Berserk Vol. 1', 'Shizuka', 26, 'A2', '', '2024-05-07 09:25:33', 2);
+
 -- --------------------------------------------------------
 
 --
@@ -75,6 +96,14 @@ CREATE TABLE `book_category` (
   `category` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Volcado de datos para la tabla `book_category`
+--
+
+INSERT INTO `book_category` (`id`, `book`, `category`) VALUES
+(3, 2, 1),
+(4, 2, 3);
+
 -- --------------------------------------------------------
 
 --
@@ -85,6 +114,21 @@ CREATE TABLE `category` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `category`
+--
+
+INSERT INTO `category` (`id`, `name`) VALUES
+(6, 'Acción'),
+(1, 'Comedia'),
+(7, 'Crecimiento personal'),
+(8, 'Enciclopedia'),
+(4, 'Fantasía'),
+(5, 'Historia'),
+(9, 'Normativo'),
+(2, 'Romance'),
+(3, 'Terror');
 
 -- --------------------------------------------------------
 
@@ -124,7 +168,16 @@ INSERT INTO `permisson` (`id`, `name`, `level`) VALUES
 (4, 'Préstamos', 'Admin'),
 (5, 'Estados de libros', 'Admin'),
 (6, 'Editor', 'Admin'),
-(7, 'Admin', 'Super');
+(8, 'Libros', 'Admin'),
+(9, 'Libros', 'Super'),
+(10, 'Lectores', 'Super'),
+(11, 'Categorías', 'Super'),
+(12, 'Estados de libros', 'Super'),
+(13, 'Editores', 'Super'),
+(14, 'Admin', 'Super'),
+(15, 'Préstamos', 'Super'),
+(16, '', 'Super'),
+(17, '', 'Super');
 
 -- --------------------------------------------------------
 
@@ -299,25 +352,25 @@ ALTER TABLE `user_level`
 -- AUTO_INCREMENT de la tabla `binnacle`
 --
 ALTER TABLE `binnacle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `book`
 --
 ALTER TABLE `book`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `book_category`
 --
 ALTER TABLE `book_category`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `category`
 --
 ALTER TABLE `category`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `loan`
@@ -329,7 +382,7 @@ ALTER TABLE `loan`
 -- AUTO_INCREMENT de la tabla `permisson`
 --
 ALTER TABLE `permisson`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `reader`

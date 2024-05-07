@@ -1,12 +1,13 @@
 import re 
 
-def ValidateLength(validations, data):
+def ValidateLength(validations, data, exactData = True):
     lengthOK = True
     for field, value in validations.items():
-        fieldLength = len(data[field])
-        if fieldLength > value['max'] or fieldLength < value['min']:
-            lengthOK = 'El campo {0} incumple el requisito mínimo o máximo de caracteres permitido'.format(field)
-            break
+        if exactData and field in data:
+            fieldLength = len(data[field])
+            if fieldLength > value['max'] or fieldLength < value['min']:
+                lengthOK = 'El campo {0} incumple el requisito mínimo o máximo de caracteres permitido'.format(field)
+                break
     
     return lengthOK
 
@@ -26,22 +27,23 @@ def HasSuspiciousCharacters(indexes, content):
     return suspiciousFound
 
     
-def HasEmptyFields(indexes, content):
+def HasEmptyFields(indexes, content, exactData = True):
     '''
     Recieves a list of indexes and a dict
     Check if at least one index is empty or not exists
     Return a dict with the requried indexes and their content
 
-    If optional is True, the function will ignore not found indexes
+    If exactData is True, not founded indexes will be ignored
     '''
     error = ''
     finalData = {}
     for index in indexes:
-        if index not in content:
+        if index not in content and exactData:
             error = '{0} No encontrado'.format(index)
             break
 
-        finalData[index] = content[index]
+        if index in content:
+            finalData[index] = content[index]
 
     return finalData if error == '' else error
 
@@ -54,34 +56,6 @@ def EmailIsOK(email):
         emailOK = True
 
     return emailOK
-
-
-def ValidateNoteData(recievedData):
-    error = ''
-    requiredFields = [
-        'titulo',
-        'contenido'
-    ]
-
-    cleanData = HasEmptyFields(requiredFields, recievedData)
-    if type(cleanData) is str:
-        error = cleanData
-
-    if error == '':
-        lengthOK = ValidateLength(noteLengthConfig, cleanData)
-        if lengthOK is not True:
-            error = lengthOK
-
-    if error == '':
-        suspicious = HasSuspiciousCharacters(['titulo', 'contenido'], cleanData)
-        if suspicious is not False:
-            error = suspicious
-    
-    if error == '':
-        result = cleanData
-    else:
-        result = error
-    return result
 
 
 def JsonExists(request):

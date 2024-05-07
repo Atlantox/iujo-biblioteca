@@ -107,5 +107,12 @@ def ValidateCategoryData(recievedData):
         lengthOK = ValidateLength(CATEGORY_LENGTH_CONFIG, cleanData)
         if lengthOK is not True:
             error = lengthOK
+
+    '''
+    if error == '':
+        suspicious = HasSuspiciousCharacters(['nickname'], cleanData)
+        if suspicious is not False:
+            error = suspicious
+    '''
     
     return cleanData if error == '' else error
