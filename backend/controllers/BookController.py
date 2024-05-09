@@ -85,8 +85,8 @@ def CreateBook():
             statusCode = 400
 
     if error == '':
-        stateExists = bookModel.StateExists(cleanData['state'])
-        if stateExists is False:
+        stateExists = bookModel.GetStateById(cleanData['state'])
+        if stateExists is None:
             error = 'El estado seleccionado no existe'
             statusCode = 400
     
@@ -96,7 +96,7 @@ def CreateBook():
             error = created
             statusCode = 500
         else:
-            action = 'Creó el Libro {0}'.format(cleanData['title'])
+            action = 'Creó el Libro "{0}"'.format(cleanData['title'])
             bookModel.CreateBinnacle(targetUser['id'], action)
             message = 'Libro creado correctamente'
 
@@ -140,7 +140,7 @@ def GetBookById(id):
 
     if targetBook is None:
         error = "Libro no encontrado"
-        statusCode = 400
+        statusCode = 404
     
     success = error == ''
     response['success'] = success
@@ -184,9 +184,10 @@ def UpdateBook(updateId):
             statusCode = 401  # Unauthorized
 
     if error == '':
-        if bookModel.GetBookById(updateId) is None:
+        targetBook = bookModel.GetBookById(updateId)
+        if targetBook is None:
             error = 'Libro no encontrado'
-            statusCode = 400
+            statusCode = 404
 
     if error == '' and 'categories' in cleanData:
         if cleanData['categories'] == []:
@@ -195,7 +196,6 @@ def UpdateBook(updateId):
 
     if error == '':
         if 'call_number' in cleanData:
-            bookModel = BookModel(connection)
             if bookModel.GetBookByCallNumber(cleanData['call_number']) is not None:
                 error = 'La cota ya está registrada'
                 statusCode = 400
@@ -209,8 +209,8 @@ def UpdateBook(updateId):
 
     if error == '':
         if 'state' in cleanData:
-            stateExists = bookModel.StateExists(cleanData['state'])
-            if stateExists is False:
+            stateExists = bookModel.GetStateById(cleanData['state'])
+            if stateExists is None:
                 error = 'El estado seleccionado no existe'
                 statusCode = 400
 
@@ -221,11 +221,16 @@ def UpdateBook(updateId):
     
     if error == '':
         updated = bookModel.UpdateBook(updateId, cleanData)
-        if type(updated) is str:
-            error = updated
+        if updated is False:
+            error = "Hubo un error al intentar actualizar el libro"
             statusCode = 500
         else:
-            action = 'Editó el Libro {0}'.format(updateId)
+            alteredColumns = ''
+            for key in cleanData.keys():
+                alteredColumns += '{0}, '.format(key)
+            alteredColumns = alteredColumns[0:-2]
+
+            action = 'Editó los campos: {0} del Libro de id {1}'.format(alteredColumns, updateId)
             bookModel.CreateBinnacle(targetUser['id'], action)
             message = 'Libro actualizado correctamente'
 
@@ -268,7 +273,7 @@ def DeleteBook(deleteId):
         targetBook = bookModel.GetBookById(deleteId)
         if targetBook is None:
             error = 'Libro no encontrado'
-            statusCode = 400
+            statusCode = 404
 
     if error == '':
         loanModel = LoanModel(connection)
@@ -284,7 +289,7 @@ def DeleteBook(deleteId):
             statusCode = 500
         else:
             message = 'Libro borrado correctamente'
-            action = 'Borró el libro {0}'.format(targetBook['title'])
+            action = 'Borró el libro "{0}" de id {1}'.format(targetBook['title'], targetBook['id'])
             bookModel.CreateBinnacle(targetUser['id'], action)
     
     if error != '':
@@ -308,15 +313,8 @@ def ValidateBookData(recievedData, exactData = True):
         error = cleanData
 
     if error == '':
-        lengthOK = ValidateLength(BOOK_LENGTH_CONFIG, cleanData, exactData)
+        lengthOK = ValidateLength(BOOK_LENGTH_CONFIG, cleanData)
         if lengthOK is not True:
             error = lengthOK
 
-    '''
-    if error == '':
-        suspicious = HasSuspiciousCharacters(['nickname'], cleanData)
-        if suspicious is not False:
-            error = suspicious
-    '''
-    
     return cleanData if error == '' else error

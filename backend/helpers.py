@@ -1,9 +1,9 @@
 import re 
 
-def ValidateLength(validations, data, exactData = True):
+def ValidateLength(validations, data):
     lengthOK = True
     for field, value in validations.items():
-        if exactData and field in data:
+        if field in data:
             fieldLength = len(data[field])
             if fieldLength > value['max'] or fieldLength < value['min']:
                 lengthOK = 'El campo {0} incumple el requisito mínimo o máximo de caracteres permitido'.format(field)
@@ -43,7 +43,7 @@ def HasEmptyFields(indexes, content, exactData = True):
             break
 
         if index in content:
-            finalData[index] = content[index]
+            finalData[index] = content[index].strip()
 
     return finalData if error == '' else error
 

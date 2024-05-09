@@ -14,13 +14,14 @@ class BaseModel():
             )
             VALUES
             (
-                {0},
-                '{1}'
+                %s,
+                %s
             )
-            '''.format(userId, action)
+            '''
+        args = (userId, action, )
         
         try:
-            cursor.execute(sql)
+            cursor.execute(sql, args)
             self.connection.connection.commit()
         except:
             created = False

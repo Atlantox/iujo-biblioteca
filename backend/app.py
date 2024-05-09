@@ -9,17 +9,24 @@ from controllers.BinnacleController import binnacleController
 from controllers.UserController import userController
 from controllers.BookController import bookController
 from controllers.CategoryController import categoryController
+from controllers.ReaderController import readerController
 
 
 app = Flask(__name__)
 CORS(app)
 connection = MySQL(app)
 
+CONTROLLERS = [
+    binnacleController,
+    userController,
+    bookController,
+    categoryController,
+    readerController
+]
+
 # Le pasamos la conexión de la base de datos a los blueprints / controladores
-binnacleController.connection = connection
-userController.connection = connection
-bookController.connection = connection
-categoryController.connection = connection
+for controller in CONTROLLERS:
+    controller.connection = connection
 
 def NotFound(error):
     return jsonify({'success': False, 'message': 'Ruta no encontrada'}), 404
@@ -30,8 +37,7 @@ if __name__ == '__main__':
     app.register_error_handler(404, NotFound)
 
     #Registrar los controladores / blueprints
-    app.register_blueprint(binnacleController)
-    app.register_blueprint(userController)
-    app.register_blueprint(bookController)
-    app.register_blueprint(categoryController)
+    for controller in CONTROLLERS:
+        app.register_blueprint(controller)
+
     app.run()

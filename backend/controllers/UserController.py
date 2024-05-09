@@ -169,14 +169,14 @@ def TryLogin():
     return jsonify(response), statusCode
 
 
-def ValidateUserData(recievedData):
+def ValidateUserData(recievedData, exactData = True):
     '''
     Recieves userData and validate them
     If the data has no issues, return the data cleaned
     '''
     error = ''
 
-    cleanData = HasEmptyFields(REQUIRED_FIELDS, recievedData)
+    cleanData = HasEmptyFields(REQUIRED_FIELDS, recievedData, exactData)
     if type(cleanData) is str:
         error = cleanData
 
@@ -184,10 +184,5 @@ def ValidateUserData(recievedData):
         lengthOK = ValidateLength(CREATE_USER_LENGTH_CONFIG, cleanData)
         if lengthOK is not True:
             error = lengthOK
-
-    if error == '':
-        suspicious = HasSuspiciousCharacters(['nickname'], cleanData)
-        if suspicious is not False:
-            error = suspicious
     
     return cleanData if error == '' else error

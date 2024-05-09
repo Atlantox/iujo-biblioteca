@@ -37,7 +37,7 @@ class UserModel(BaseModel):
         try:
             cursor.execute(sql)
             self.connection.connection.commit()
-        except Exception as err:
+        except:
             result = False
 
         return result

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.0
+-- version 5.0.4
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-05-2024 a las 23:44:52
--- Versión del servidor: 10.4.18-MariaDB
--- Versión de PHP: 8.0.3
+-- Tiempo de generación: 09-05-2024 a las 22:00:45
+-- Versión del servidor: 10.4.17-MariaDB
+-- Versión de PHP: 7.2.34
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -43,19 +43,30 @@ INSERT INTO `binnacle` (`id`, `user`, `action`, `date`) VALUES
 (2, 1, 'Atlantox7 Ha creado al usuario El pepito6', '2024-04-30 10:11:46'),
 (3, 1, 'Atlantox7 Ha creado al usuario El pepito7', '2024-04-30 10:12:11'),
 (4, 1, 'Atlantox7 Ha creado al usuario El pepito8', '2024-04-30 10:13:45'),
-(5, 1, 'Creó la categoría Acción', '2024-05-04 17:56:22'),
-(6, 1, 'Creó la categoría Ciencia ficción', '2024-05-04 17:56:38'),
-(7, 1, 'Creó la categoría Historia', '2024-05-04 17:56:44'),
-(8, 1, 'Creó la categoría Crecimiento personal', '2024-05-04 17:56:52'),
-(9, 1, 'Creó la categoría Fantasía', '2024-05-04 17:56:58'),
-(10, 1, 'Creó la categoría Clásico', '2024-05-04 17:57:03'),
-(11, 1, 'Creó la categoría Enciclopedia', '2024-05-04 17:57:20'),
-(12, 1, 'Creó la categoría Curso', '2024-05-04 17:57:28'),
-(13, 1, 'Creó la categoría Educativo', '2024-05-04 17:58:53'),
-(14, 1, 'Creó la categoría Manga', '2024-05-04 17:59:02'),
-(15, 1, 'Creó la categoría Cómic', '2024-05-04 17:59:06'),
-(16, 1, 'Creó la categoría Romance', '2024-05-04 17:59:15'),
-(17, 1, 'Creó la categoría Normativo', '2024-05-04 18:00:07');
+(5, 1, 'Creó la categoría Comedia', '2024-05-07 09:15:18'),
+(6, 1, 'Creó la categoría Romance', '2024-05-07 09:15:21'),
+(7, 1, 'Creó la categoría Terror', '2024-05-07 09:15:25'),
+(8, 1, 'Creó la categoría Fantasía', '2024-05-07 09:15:29'),
+(9, 1, 'Creó la categoría Historia', '2024-05-07 09:15:35'),
+(10, 1, 'Creó la categoría Acción', '2024-05-07 09:15:45'),
+(11, 1, 'Creó la categoría Crecimiento personal', '2024-05-07 09:15:50'),
+(12, 1, 'Creó la categoría Enciclopedia', '2024-05-07 09:15:58'),
+(13, 1, 'Creó la categoría Normativo', '2024-05-07 09:16:02'),
+(14, 1, 'Creó el Libro Berserk Vol. 1', '2024-05-07 09:18:06'),
+(15, 1, 'Creó el Libro Berserk Vol. 1', '2024-05-07 09:25:33'),
+(16, 1, 'Editó el Libro 1', '2024-05-07 09:28:29'),
+(17, 1, 'Editó el Libro 1', '2024-05-07 09:44:58'),
+(18, 1, 'Borró el libro Berserk Vol. 2', '2024-05-07 11:46:43'),
+(19, 1, 'Creó el Libro Berserk Vol. 3', '2024-05-09 08:07:56'),
+(20, 1, 'Creó el Libro Berserk Vol. 4', '2024-05-09 08:31:38'),
+(21, 1, 'Renombró la categoría \"Comedia\" por \"Comediante\" ', '2024-05-09 10:15:03'),
+(22, 1, 'Renombró la categoría \"{\'name\': \'Comediante\'}\" por \"Comedia\" ', '2024-05-09 10:16:21'),
+(23, 1, 'Creó la categoría Mamador', '2024-05-09 10:16:34'),
+(24, 1, 'Eliminó la categoría \"Comedia\"', '2024-05-09 10:29:53'),
+(25, 1, 'Creó la categoría comedia', '2024-05-09 10:30:11'),
+(26, 1, 'Creó la categoría Adult', '2024-05-09 14:30:27'),
+(27, 1, 'Creó al lector Gabriel Alberto de cédula 28019228', '2024-05-09 14:37:40'),
+(28, 1, 'Creó al lector Jessica de cédula 28672717', '2024-05-09 14:39:28');
 
 -- --------------------------------------------------------
 
@@ -81,8 +92,9 @@ CREATE TABLE `book` (
 --
 
 INSERT INTO `book` (`id`, `call_number`, `author`, `title`, `editorial`, `pages`, `shelf`, `description`, `created_at`, `state`) VALUES
-(1, 'ABS-42', 'Atlantox', 'Mi libro', 'El EteSechu', 89, 'A2', '', '2024-05-04 17:21:38', 2),
-(2, 'REW-42', 'Atlantox', 'Tales of Venslla', 'El EteSechu', 89, 'A2', '', '2024-05-04 17:29:36', 1);
+(2, 'BE-01', 'Kentaro Miura', 'Berserk Vol. 1', 'Shizuka', 26, 'A2', '', '2024-05-07 09:25:33', 2),
+(3, 'BE3-01', 'Kentaro Miura', 'Berserk Vol. 3', 'Shizuka', 25, 'A2', '', '2024-05-09 08:07:56', 2),
+(4, 'BE4-01', 'Kentaro Miura', 'Berserk Vol. 4', 'Shizuka', 22, 'A2', '', '2024-05-09 08:31:38', 2);
 
 -- --------------------------------------------------------
 
@@ -101,8 +113,9 @@ CREATE TABLE `book_category` (
 --
 
 INSERT INTO `book_category` (`id`, `book`, `category`) VALUES
-(3, 2, 1),
-(4, 2, 3);
+(4, 2, 3),
+(6, 3, 3),
+(8, 4, 3);
 
 -- --------------------------------------------------------
 
@@ -120,19 +133,17 @@ CREATE TABLE `category` (
 --
 
 INSERT INTO `category` (`id`, `name`) VALUES
-(7, 'Acción'),
-(8, 'Ciencia ficción'),
-(12, 'Clásico'),
-(17, 'Cómic'),
-(10, 'Crecimiento personal'),
-(14, 'Curso'),
-(15, 'Educativo'),
-(13, 'Enciclopedia'),
-(11, 'Fantasía'),
-(9, 'Historia'),
-(16, 'Manga'),
-(19, 'Normativo'),
-(18, 'Romance');
+(6, 'Acción'),
+(16, 'Adult'),
+(15, 'comedia'),
+(7, 'Crecimiento personal'),
+(8, 'Enciclopedia'),
+(4, 'Fantasía'),
+(5, 'Historia'),
+(14, 'Mamador'),
+(9, 'Normativo'),
+(2, 'Romance'),
+(3, 'Terror');
 
 -- --------------------------------------------------------
 
@@ -174,11 +185,14 @@ INSERT INTO `permisson` (`id`, `name`, `level`) VALUES
 (6, 'Editor', 'Admin'),
 (8, 'Libros', 'Admin'),
 (9, 'Libros', 'Super'),
-(10, 'Categorías', 'Super'),
-(11, 'Lectores', 'Super'),
-(12, 'Préstamos', 'Super'),
-(13, 'Estados de libros', 'Super'),
-(14, 'Editores', 'Super');
+(10, 'Lectores', 'Super'),
+(11, 'Categorías', 'Super'),
+(12, 'Estados de libros', 'Super'),
+(13, 'Editores', 'Super'),
+(14, 'Admin', 'Super'),
+(15, 'Préstamos', 'Super'),
+(16, '', 'Super'),
+(17, '', 'Super');
 
 -- --------------------------------------------------------
 
@@ -192,9 +206,17 @@ CREATE TABLE `reader` (
   `names` varchar(60) NOT NULL,
   `surnames` varchar(60) NOT NULL,
   `gender` char(1) NOT NULL,
-  `phone` varchar(11) NOT NULL,
-  `teacher` tinyint(1) NOT NULL
+  `phone` varchar(16) NOT NULL,
+  `is_teacher` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `reader`
+--
+
+INSERT INTO `reader` (`id`, `cedula`, `names`, `surnames`, `gender`, `phone`, `is_teacher`) VALUES
+(1, '28019228', 'Gabriel Alberto', 'Silva Montilla', 'M', '0416-356700', 0),
+(2, '28672717', 'Jessica', 'Ruíz', 'F', '0416-0509548', 0);
 
 -- --------------------------------------------------------
 
@@ -245,8 +267,7 @@ INSERT INTO `user` (`id`, `nickname`, `level`, `username`, `password`, `token`, 
 (6, 'El pepito5', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$jXGc7XJH4hQT3EOUnaG1uA$1x+TERIFqhg2mZshTx2l+mju0tkap4gSoJ1wFnu7j20', '$argon2id$v=19$m=65536,t=3,p=4$3ibE1pMM3ILiSFWS0bvLYg$Xq6xfDW7TdzXaGCd7KGQcMTclfiR6djZ0kZey/iKmsI', 'c6d08108-8771-46b0-adac-f5ce0c03f8ba-3972822d-3b25-4f54-9f43-c9f134eb266a', 1),
 (7, 'El pepito6', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$NqtGczl0CGAQlsjt55K79g$NdQWA4SWVJ/h+I14AA6CWZOJ0sBs6asyrNzPJpK8N0U', '$argon2id$v=19$m=65536,t=3,p=4$TMNXWRrkjSqdYirkW/q7DQ$1JXU038KTPR6PX0LBZuf9FtEbJ9P7J6a79NKi5tSoco', '1ccd1e8a-8272-49a9-a93b-af486ec03a8b-e33f60bc-38b5-4811-a889-04fec04acc4a', 1),
 (8, 'El pepito7', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$wkHf2sGs7rzpZr8NnxVpCg$qEP5Xdq2Ug2woLQZGgsVYr/ZcO7rm5jaP3SR0P37UGE', '$argon2id$v=19$m=65536,t=3,p=4$0oU/JC3TILOLMY8MHLgQbg$fa5pLqaom4IjiaL6In8wM0BTCYcBEW3yiN5JuKJ1ny0', 'bc7b23dd-63e4-4624-83d4-e2deeb0f3b05-ec23053e-925d-4e4f-ba67-6eff9ea464b3', 1),
-(9, 'El pepito8', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$vQfLmfv2+sGfhhFgruSzfA$PgYiH9XFyggzKsZA4P7tZozj32u8NXi0pPhpvd/RLtY', '$argon2id$v=19$m=65536,t=3,p=4$8vf2Q2qT5OoGFfOpMcCC1A$D9CvCFc2PBJI51YAW4uW8ZswGEgJZWVmCzy7VlLGi68', '45ec7c08-aca4-4c1a-9cdf-cbb9c54ff128-27f6b3b2-50c9-48ac-ba63-3103b995561c', 1),
-(10, 'ww', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$V3Dv/umBjCK5+GT3c0SW2w$UZfugZj9w1SPYKxwXLCgW0xgKkctXEw1tAfDO15pKRA', '$argon2id$v=19$m=65536,t=3,p=4$KIzh3qY9ee9NgMozb9JERg$rvge86T2vUIaT6SZ+yBwIoiT2i258Rh1rIb5S2/B8xE', 'fa64bd1c-55ce-4abf-a0e6-f534dd2e8269-0ea84c57-c894-4b79-bf4a-9851ea91aa0c', 1);
+(9, 'El pepito8', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$vQfLmfv2+sGfhhFgruSzfA$PgYiH9XFyggzKsZA4P7tZozj32u8NXi0pPhpvd/RLtY', '$argon2id$v=19$m=65536,t=3,p=4$8vf2Q2qT5OoGFfOpMcCC1A$D9CvCFc2PBJI51YAW4uW8ZswGEgJZWVmCzy7VlLGi68', '45ec7c08-aca4-4c1a-9cdf-cbb9c54ff128-27f6b3b2-50c9-48ac-ba63-3103b995561c', 1);
 
 -- --------------------------------------------------------
 
@@ -354,25 +375,25 @@ ALTER TABLE `user_level`
 -- AUTO_INCREMENT de la tabla `binnacle`
 --
 ALTER TABLE `binnacle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de la tabla `book`
 --
 ALTER TABLE `book`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `book_category`
 --
 ALTER TABLE `book_category`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `category`
 --
 ALTER TABLE `category`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `loan`
@@ -384,13 +405,13 @@ ALTER TABLE `loan`
 -- AUTO_INCREMENT de la tabla `permisson`
 --
 ALTER TABLE `permisson`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `reader`
 --
 ALTER TABLE `reader`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `state`
@@ -402,7 +423,7 @@ ALTER TABLE `state`
 -- AUTO_INCREMENT de la tabla `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Restricciones para tablas volcadas
