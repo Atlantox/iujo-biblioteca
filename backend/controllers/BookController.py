@@ -277,7 +277,7 @@ def DeleteBook(deleteId):
 
     if error == '':
         loanModel = LoanModel(connection)
-        if loanModel.GetLoansOfBook(deleteId) is not ():
+        if loanModel.GetLoansOfBook(deleteId) is not tuple():
             # The book has loans, then, the book can't be deleted
             error = 'El libro tiene préstamos registrados, por lo tanto, no puede ser borrado'
             statusCode = 400

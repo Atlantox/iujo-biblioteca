@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.4
+-- version 5.1.0
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 09-05-2024 a las 22:00:45
--- Versión del servidor: 10.4.17-MariaDB
--- Versión de PHP: 7.2.34
+-- Tiempo de generación: 10-05-2024 a las 00:39:09
+-- Versión del servidor: 10.4.18-MariaDB
+-- Versión de PHP: 8.0.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -66,7 +66,9 @@ INSERT INTO `binnacle` (`id`, `user`, `action`, `date`) VALUES
 (25, 1, 'Creó la categoría comedia', '2024-05-09 10:30:11'),
 (26, 1, 'Creó la categoría Adult', '2024-05-09 14:30:27'),
 (27, 1, 'Creó al lector Gabriel Alberto de cédula 28019228', '2024-05-09 14:37:40'),
-(28, 1, 'Creó al lector Jessica de cédula 28672717', '2024-05-09 14:39:28');
+(28, 1, 'Creó al lector Jessica de cédula 28672717', '2024-05-09 14:39:28'),
+(29, 1, 'Editó los campos phone del lector de id 1', '2024-05-09 17:45:26'),
+(30, 1, 'Borró al lector Gabriel Alberto de cédula 28019228 y id 1', '2024-05-09 18:06:05');
 
 -- --------------------------------------------------------
 
@@ -157,7 +159,9 @@ CREATE TABLE `loan` (
   `reader` int(11) NOT NULL,
   `observation` text NOT NULL,
   `deliver_date` datetime NOT NULL,
-  `return_date` datetime DEFAULT NULL
+  `return_date` datetime DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `active` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -215,7 +219,6 @@ CREATE TABLE `reader` (
 --
 
 INSERT INTO `reader` (`id`, `cedula`, `names`, `surnames`, `gender`, `phone`, `is_teacher`) VALUES
-(1, '28019228', 'Gabriel Alberto', 'Silva Montilla', 'M', '0416-356700', 0),
 (2, '28672717', 'Jessica', 'Ruíz', 'F', '0416-0509548', 0);
 
 -- --------------------------------------------------------
@@ -375,7 +378,7 @@ ALTER TABLE `user_level`
 -- AUTO_INCREMENT de la tabla `binnacle`
 --
 ALTER TABLE `binnacle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT de la tabla `book`

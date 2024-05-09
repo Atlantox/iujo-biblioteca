@@ -84,19 +84,32 @@ class ReaderModel(BaseModel):
         arrayValues = []
         sql = "UPDATE reader SET "
         for column, value in readerData.items():
-            sql += "%s = %s,"
-            arrayValues.append(column)
+            sql += "{0} = %s,".format(column)
             arrayValues.append(value)
         
         sql = sql[0:-1] + " WHERE id = %s"
         arrayValues.append(readerId)
         args = tuple(arrayValues)
-        print(sql)
+        
         try:
             cursor.execute(sql, args)
             self.connection.connection.commit()
-        except Exception as e:
-            print(e)
+        except:
+            result = False
+        
+        return result
+    
+    def DeleteReader(self, readerId):
+        result = True
+        cursor = self.connection.connection.cursor()
+        result = True
+        
+        sql = "DELETE FROM reader WHERE id = %s"
+        args = (readerId,)
+        try:
+            cursor.execute(sql, args)
+            self.connection.connection.commit()
+        except:
             result = False
         
         return result

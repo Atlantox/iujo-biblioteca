@@ -186,8 +186,7 @@ class BookModel(BaseModel):
         arrayValues = []
         sql = "UPDATE book SET "
         for column, value in bookData.items():
-            sql += "%s = %s,"
-            arrayValues.append(column)
+            sql += "{0} = %s,".format(column)
             arrayValues.append(value)
         
         sql = sql[0:-1] + " WHERE id = %s"

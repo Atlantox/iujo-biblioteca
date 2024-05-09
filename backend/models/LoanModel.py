@@ -27,3 +27,32 @@ class LoanModel(BaseModel):
         cursor.execute(sql)
         return cursor.fetchall()
         
+    def GetLoansOfReader(self, readerId):
+        cursor = self.connection.connection.cursor()
+        sql = '''
+            SELECT
+            loan.id as loan_id,
+            book.title,
+            loan.book as book_id,
+            loan.observation,
+            loan.deliver_date,
+            loan.return_date,
+            loan.created_at,
+            loan.active
+            FROM
+            loan
+            INNER JOIN book ON book.id = loan.book
+            WHERE
+            loan.reader = %s
+            '''
+        args = (readerId,)
+
+        try:
+            cursor.execute(sql, args)
+            loans = cursor.fetchall()
+            if loans is tuple():
+                loans = []
+        except:
+            loans = []
+        
+        return loans

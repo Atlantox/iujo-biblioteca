@@ -3,6 +3,7 @@ from flask_cors import cross_origin
 
 from models.UserModel import UserModel
 from models.ReaderModel import ReaderModel
+from models.LoanModel import LoanModel
 
 from helpers import *
 
@@ -243,6 +244,60 @@ def UpdateReader(readerId):
             action = 'Editó los campos {0} del lector de id {1}'.format(alteredColumns, readerId)
             readerModel.CreateBinnacle(targetUser['id'], action)
             message = 'Lector actualizado correctamente'
+
+    if error != '':
+        message = error
+        
+    success = error == ''
+    return jsonify({'success': success, 'message': message}), statusCode
+
+
+@readerController.route('/readers/<int:readerId>', methods=['DELETE'])
+def DeleteReader(readerId):
+    connection = GetConnection()
+    userModel = UserModel(connection)
+    readerModel = ReaderModel(connection)
+    error = ''
+    statusCode = 200
+    
+    token = GetTokenOfRequest(request)
+    if token is None:
+        error = 'Acceso denegado. Autenticación requerida'
+        statusCode = 401
+
+    if error == '':
+        targetUser = userModel.GetUserByToken(token)
+        if type(targetUser) is str:
+            error = targetUser
+            statusCode = 400
+    
+    if error == '':
+        if userModel.UserHasPermisson(targetUser['id'], 'Lectores') is False:
+            error = 'Acción denegada'
+            statusCode = 401  # Unauthorized
+
+    if error == '':
+        targetReader = readerModel.GetReaderById(readerId)
+        if targetReader is None:
+            error = 'Lector no encontrado'
+            statusCode = 404
+
+    if error == '':
+        loanModel = LoanModel(connection)
+        loansOfReader = loanModel.GetLoansOfReader(readerId)
+        if loansOfReader != []:
+            error = 'No se puede borrar el lector porque este tiene préstamos registrados.'
+            statusCode = 400
+    
+    if error == '':
+        deleted = readerModel.DeleteReader(readerId)
+        if deleted is False:
+            error = 'Hubo un error al intentar eliminar al lector'
+            statusCode = 500
+        else:
+            action = 'Borró al lector {0} de cédula {1} y id {2}'.format(targetReader['names'], targetReader['cedula'], targetReader['id'])
+            readerModel.CreateBinnacle(targetUser['id'], action)
+            message = 'Lector eliminado correctamente'
 
     if error != '':
         message = error
