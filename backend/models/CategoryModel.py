@@ -10,9 +10,11 @@ class CategoryModel(BaseModel):
     def CreateCategory(self, categoryData):
         name = categoryData['name']
         cursor = self.connection.connection.cursor()
-        sql = "INSERT INTO category (name) VALUES (`{0}`)".format(name)
+        #sql = "INSERT INTO category (name) VALUES (`{0}`)".format(name)
+        sql = "INSERT INTO category (name) VALUES (%s)"
+        args = (name,)
         try:
-            cursor.execute(sql)
+            cursor.execute(sql, args)
             self.connection.connection.commit()
             result = True
         except Exception as e:
@@ -22,8 +24,10 @@ class CategoryModel(BaseModel):
     
     def GetCategoryByName(self, name):
         cursor = self.connection.connection.cursor()
-        sql = "SELECT * FROM category WHERE name = '{0}'".format(name)
-        cursor.execute(sql)
+        #sql = "SELECT * FROM category WHERE name = '{0}'".format(name)
+        sql = "SELECT * FROM category WHERE name = %s"
+        args = (name,)
+        cursor.execute(sql, args)
         return cursor.fetchone()
     
     def GetCategoryById(self, id):
