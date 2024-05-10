@@ -10,7 +10,7 @@ from controllers.UserController import userController
 from controllers.BookController import bookController
 from controllers.CategoryController import categoryController
 from controllers.ReaderController import readerController
-
+from controllers.LoanController import loanController
 
 app = Flask(__name__)
 CORS(app)
@@ -21,7 +21,8 @@ CONTROLLERS = [
     userController,
     bookController,
     categoryController,
-    readerController
+    readerController,
+    loanController
 ]
 
 # Le pasamos la conexión de la base de datos a los blueprints / controladores

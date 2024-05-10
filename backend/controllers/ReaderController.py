@@ -81,7 +81,7 @@ def CreateReader():
     if error == '':
         created = readerModel.CreateReader(cleanData)
         if created is False:
-            error = created
+            error = 'Hubo un error al intentar crear al lector'
             statusCode = 500
         else:
             action = 'Creó al lector {0} de cédula {1}'.format(cleanData['names'], cleanData['cedula'])

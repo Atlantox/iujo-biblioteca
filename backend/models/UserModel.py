@@ -5,8 +5,8 @@ from .BaseModel import BaseModel
 
 class UserModel(BaseModel):
     def CreateUser(self, userData):
-        result = True
         cursor = self.connection.connection.cursor()
+        result = True
         newToken = self.GetNewToken()
         hasher = PasswordHasher()
         sql = '''

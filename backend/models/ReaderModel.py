@@ -11,7 +11,6 @@ class ReaderModel(BaseModel):
         cursor = self.connection.connection.cursor()
         result = True
 
-        cursor = self.connection.connection.cursor()
         sql = '''
             INSERT INTO
             reader

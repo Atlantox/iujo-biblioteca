@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.0
+-- version 5.0.4
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-05-2024 a las 03:53:51
--- Versión del servidor: 10.4.18-MariaDB
--- Versión de PHP: 8.0.3
+-- Tiempo de generación: 10-05-2024 a las 19:20:23
+-- Versión del servidor: 10.4.17-MariaDB
+-- Versión de PHP: 7.2.34
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -68,7 +68,10 @@ INSERT INTO `binnacle` (`id`, `user`, `action`, `date`) VALUES
 (27, 1, 'Creó al lector Gabriel Alberto de cédula 28019228', '2024-05-09 14:37:40'),
 (28, 1, 'Creó al lector Jessica de cédula 28672717', '2024-05-09 14:39:28'),
 (29, 1, 'Editó los campos phone del lector de id 1', '2024-05-09 17:45:26'),
-(30, 1, 'Borró al lector Gabriel Alberto de cédula 28019228 y id 1', '2024-05-09 18:06:05');
+(30, 1, 'Borró al lector Gabriel Alberto de cédula 28019228 y id 1', '2024-05-09 18:06:05'),
+(31, 1, 'Creó un préstamo 1 al lector 2 y el libro 2', '2024-05-10 09:31:43'),
+(32, 1, 'Creó un préstamo 2 al lector 2 y el libro 3', '2024-05-10 09:50:33'),
+(33, 1, 'Se devolvió el libro 2 del lector 2 del préstamo 1', '2024-05-10 11:13:10');
 
 -- --------------------------------------------------------
 
@@ -86,7 +89,7 @@ CREATE TABLE `book` (
   `shelf` varchar(10) DEFAULT NULL,
   `description` text NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `state` int(11) NOT NULL DEFAULT 1
+  `state` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -94,9 +97,9 @@ CREATE TABLE `book` (
 --
 
 INSERT INTO `book` (`id`, `call_number`, `author`, `title`, `editorial`, `pages`, `shelf`, `description`, `created_at`, `state`) VALUES
-(2, 'BE-01', 'Kentaro Miura', 'Berserk Vol. 1', 'Shizuka', 26, 'A2', '', '2024-05-07 09:25:33', 2),
-(3, 'BE3-01', 'Kentaro Miura', 'Berserk Vol. 3', 'Shizuka', 25, 'A2', '', '2024-05-09 08:07:56', 2),
-(4, 'BE4-01', 'Kentaro Miura', 'Berserk Vol. 4', 'Shizuka', 22, 'A2', '', '2024-05-09 08:31:38', 2);
+(2, 'BE-01', 'Kentaro Miura', 'Berserk Vol. 1', 'Shizuka', 26, 'A2', '', '2024-05-07 09:25:33', 'En biblioteca'),
+(3, 'BE3-01', 'Kentaro Miura', 'Berserk Vol. 3', 'Shizuka', 25, 'A2', '', '2024-05-09 08:07:56', 'Prestado'),
+(4, 'BE4-01', 'Kentaro Miura', 'Berserk Vol. 4', 'Shizuka', 22, 'A2', '', '2024-05-09 08:31:38', 'En biblioteca');
 
 -- --------------------------------------------------------
 
@@ -164,6 +167,14 @@ CREATE TABLE `loan` (
   `active` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Volcado de datos para la tabla `loan`
+--
+
+INSERT INTO `loan` (`id`, `book`, `reader`, `observation`, `deliver_date`, `return_date`, `created_at`, `active`) VALUES
+(1, 2, 2, '', '2024-01-10 00:00:00', '2024-05-10 11:13:10', '2024-05-10 09:31:43', 0),
+(2, 3, 2, 'Será usado para una clase', '2024-01-10 00:00:00', NULL, '2024-05-10 09:50:33', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -228,7 +239,6 @@ INSERT INTO `reader` (`id`, `cedula`, `names`, `surnames`, `gender`, `phone`, `i
 --
 
 CREATE TABLE `state` (
-  `id` int(11) NOT NULL,
   `name` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -236,10 +246,10 @@ CREATE TABLE `state` (
 -- Volcado de datos para la tabla `state`
 --
 
-INSERT INTO `state` (`id`, `name`) VALUES
-(3, 'En biblioteca'),
-(1, 'Extraviado'),
-(2, 'Prestado');
+INSERT INTO `state` (`name`) VALUES
+('En biblioteca'),
+('Extraviado'),
+('Prestado');
 
 -- --------------------------------------------------------
 
@@ -351,7 +361,6 @@ ALTER TABLE `reader`
 -- Indices de la tabla `state`
 --
 ALTER TABLE `state`
-  ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
 
 --
@@ -378,7 +387,7 @@ ALTER TABLE `user_level`
 -- AUTO_INCREMENT de la tabla `binnacle`
 --
 ALTER TABLE `binnacle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT de la tabla `book`
@@ -402,7 +411,7 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT de la tabla `loan`
 --
 ALTER TABLE `loan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `permisson`
@@ -415,12 +424,6 @@ ALTER TABLE `permisson`
 --
 ALTER TABLE `reader`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT de la tabla `state`
---
-ALTER TABLE `state`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `user`
@@ -442,7 +445,7 @@ ALTER TABLE `binnacle`
 -- Filtros para la tabla `book`
 --
 ALTER TABLE `book`
-  ADD CONSTRAINT `book_state` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `book_state` FOREIGN KEY (`state`) REFERENCES `state` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `book_category`

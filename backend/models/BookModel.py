@@ -2,9 +2,24 @@ from .BaseModel import BaseModel
 from .CategoryModel import CategoryModel
 
 class BookModel(BaseModel):
+    BOOK_SELECT_TEMPLATE = '''
+            SELECT
+            id,
+            call_number,
+            title,
+            author,
+            editorial,
+            pages,
+            description,
+            shelf,
+            state
+            FROM
+            book 
+            '''
+    
     def CreateBook(self, bookData):
-        error = ''
         cursor = self.connection.connection.cursor()
+        error = ''
         sql = '''
             INSERT INTO
             book
@@ -66,23 +81,7 @@ class BookModel(BaseModel):
     
     def GetAllBooks(self):
         cursor = self.connection.connection.cursor()
-        sql = '''
-            SELECT
-            book.id,
-            book.call_number,
-            book.title,
-            book.author,
-            book.editorial,
-            book.pages,
-            book.description,
-            book.shelf,
-            state.name as state
-            FROM
-            book
-            INNER JOIN state ON state.id = book.state
-            ORDER BY
-            book.title
-            '''
+        sql = self.BOOK_SELECT_TEMPLATE + 'ORDER BY book.title'
         
         cursor.execute(sql)
         books = cursor.fetchall()
@@ -99,25 +98,7 @@ class BookModel(BaseModel):
     
     def GetBookById(self, id):
         cursor = self.connection.connection.cursor()
-        sql = '''
-            SELECT
-            book.id,
-            book.call_number,
-            book.title,
-            book.author,
-            book.editorial,
-            book.pages,
-            book.description,
-            book.shelf,
-            state.name as state
-            FROM
-            book
-            INNER JOIN state ON state.id = book.state
-            WHERE
-            book.id = %s
-            ORDER BY
-            book.title            
-            '''
+        sql = self.BOOK_SELECT_TEMPLATE + 'WHERE id = %s ORDER BY title'
         
         args = (id,)
         cursor.execute(sql, args)
@@ -134,25 +115,7 @@ class BookModel(BaseModel):
     
     def GetBookByCallNumber(self, callNumber):
         cursor = self.connection.connection.cursor()
-        sql = '''
-            SELECT
-            book.id,
-            book.call_number,
-            book.title,
-            book.author,
-            book.editorial,
-            book.pages,
-            book.description,
-            book.shelf,
-            state.name as state
-            FROM
-            book
-            INNER JOIN state ON state.id = book.state
-            WHERE
-            book.call_number = %s
-            ORDER BY
-            book.title            
-            '''
+        sql = self.BOOK_SELECT_TEMPLATE + 'WHERE call_number = %s ORDER BY title '
 
         args = (callNumber,)
         cursor.execute(sql, args)
@@ -167,10 +130,10 @@ class BookModel(BaseModel):
         
         return result
     
-    def GetStateById(self, stateId):
+    def GetStateByName(self, name):
         cursor = self.connection.connection.cursor()
-        sql = "SELECT * FROM state WHERE id = %s"
-        args = (stateId,)
+        sql = "SELECT * FROM state WHERE name = %s"
+        args = (name,)
 
         try:
             cursor.execute(sql, args)

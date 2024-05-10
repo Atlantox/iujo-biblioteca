@@ -85,7 +85,7 @@ def CreateBook():
             statusCode = 400
 
     if error == '':
-        stateExists = bookModel.GetStateById(cleanData['state'])
+        stateExists = bookModel.GetStateByName(cleanData['state'])
         if stateExists is None:
             error = 'El estado seleccionado no existe'
             statusCode = 400
