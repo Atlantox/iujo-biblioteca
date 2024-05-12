@@ -2,12 +2,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import HomeView from '../views/HomeView.vue'
 import SeeBookView from '../views/SeeBookView.vue'
-import BookFormView from '../views/BookFormView.vue'
-import LoanFormView from '../views/LoanFormView.vue'
-import SearchLoanView from '../views/SearchLoanView.vue'
+import BookFormView from '../views/forms/BookFormView.vue'
+import LoanFormView from '../views/forms/LoanFormView.vue'
+import SearchLoanView from '../views/tables/SearchLoanView.vue'
 import SeeLoanView from '../views/SeeLoanView.vue'
-import ReaderFormView from '../views/ReaderFormView.vue'
-import SearchReadersView from '../views/SearchReadersView.vue'
+import ReaderFormView from '../views/forms/ReaderFormView.vue'
+import SearchReadersView from '../views/tables/SearchReadersView.vue'
 import SeeReaderView from '../views/SeeReaderView.vue'
 
 const router = createRouter({

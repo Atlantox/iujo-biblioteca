@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted } from 'vue'
-import LoanForm from '@/components/LoanForm.vue'
+import LoanForm from '@/components/forms/LoanForm.vue'
 
 import useBookStore from '@/stores/books.js'
 import useReaderStore from '@/stores/readers.js'

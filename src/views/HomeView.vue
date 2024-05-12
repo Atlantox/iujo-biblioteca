@@ -3,7 +3,7 @@ import { ref, onMounted, inject } from 'vue'
 import { Modal } from 'bootstrap'
 import useBookStore from '@/stores/books.js'
 
-import BooksTable from '@/components/BooksTable.vue'
+import BooksTable from '@/components/tables/BooksTable.vue'
 
 const myModal = ref('')
 const swal = inject('$swal')

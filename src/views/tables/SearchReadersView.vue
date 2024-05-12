@@ -1,14 +1,14 @@
 <script setup>
 import { onMounted } from 'vue'
-import useLoanStore from '@/stores/loans.js'
-import LoanTable from '@/components/LoanTable.vue'
+import useReaderStore from '@/stores/readers.js'
+import ReaderTable from '@/components/tables/ReaderTable.vue'
 
-const loanStore = useLoanStore()
-const loans = loanStore.loans
+const readerStore = useReaderStore()
+const readers = readerStore.readers
 
 
 onMounted(()  => {
-  loanStore.FetchLoans()
+  readerStore.FetchReaders()
 })
 
 
@@ -29,7 +29,7 @@ const HideModal = (() => {
 </script>
 
 <template>
-  <LoanTable
-  :loans="loans"
+  <ReaderTable
+  :readers="readers"
   />
 </template>

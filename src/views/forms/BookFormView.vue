@@ -1,5 +1,5 @@
 <script setup>
-import BookForm from '@/components/BookForm.vue'
+import BookForm from '@/components/forms/BookForm.vue'
 </script>
 
 <template>
