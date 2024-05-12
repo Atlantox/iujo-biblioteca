@@ -19,11 +19,13 @@ class ReaderModel(BaseModel):
                 names,
                 surnames,
                 gender,
+                birthdate,
                 phone,
                 is_teacher
             )
             VALUES
             (
+                %s,
                 %s,
                 %s,
                 %s,
@@ -37,6 +39,7 @@ class ReaderModel(BaseModel):
             readerData['names'],
             readerData['surnames'],
             readerData['gender'],
+            readerData['birthdate'],
             readerData['phone'],
             readerData['is_teacher']
         )

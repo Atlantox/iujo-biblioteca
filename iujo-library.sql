@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.4
+-- version 5.1.0
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-05-2024 a las 19:20:23
--- Versión del servidor: 10.4.17-MariaDB
--- Versión de PHP: 7.2.34
+-- Tiempo de generación: 12-05-2024 a las 19:33:41
+-- Versión del servidor: 10.4.18-MariaDB
+-- Versión de PHP: 8.0.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -71,7 +71,19 @@ INSERT INTO `binnacle` (`id`, `user`, `action`, `date`) VALUES
 (30, 1, 'Borró al lector Gabriel Alberto de cédula 28019228 y id 1', '2024-05-09 18:06:05'),
 (31, 1, 'Creó un préstamo 1 al lector 2 y el libro 2', '2024-05-10 09:31:43'),
 (32, 1, 'Creó un préstamo 2 al lector 2 y el libro 3', '2024-05-10 09:50:33'),
-(33, 1, 'Se devolvió el libro 2 del lector 2 del préstamo 1', '2024-05-10 11:13:10');
+(33, 1, 'Se devolvió el libro 2 del lector 2 del préstamo 1', '2024-05-10 11:13:10'),
+(34, 1, 'Creó un préstamo 3 al lector 2 y el libro 2', '2024-05-12 10:41:25'),
+(35, 1, 'Creó al lector Gabriel Alberto de cédula 28019228', '2024-05-12 11:39:37'),
+(36, 1, 'Creó al lector Pepito Fracisco de cédula 7474747', '2024-05-12 11:40:54'),
+(37, 1, 'Creó al lector Magda de cédula 85967412', '2024-05-12 11:57:47'),
+(38, 1, 'Creó el Libro \"¿Cómo ser tu propio jefe?\"', '2024-05-12 12:15:27'),
+(39, 1, 'Creó la categoría Curso', '2024-05-12 12:17:29'),
+(40, 1, 'Creó el Libro \"Curso de PHP 2\"', '2024-05-12 12:17:59'),
+(41, 1, 'Creó un préstamo 4 al lector 5 y el libro 6', '2024-05-12 12:20:45'),
+(42, 1, 'Creó un préstamo 5 al lector 5 y el libro 5', '2024-05-12 12:20:53'),
+(43, 1, 'Creó un préstamo 6 al lector 4 y el libro 4', '2024-05-12 12:34:34'),
+(44, 1, 'Se devolvió el libro 4 del lector 4 del préstamo 6', '2024-05-12 12:56:46'),
+(45, 1, 'Creó al lector Jaime Pedro de cédula 12345678', '2024-05-12 13:10:10');
 
 -- --------------------------------------------------------
 
@@ -97,9 +109,11 @@ CREATE TABLE `book` (
 --
 
 INSERT INTO `book` (`id`, `call_number`, `author`, `title`, `editorial`, `pages`, `shelf`, `description`, `created_at`, `state`) VALUES
-(2, 'BE-01', 'Kentaro Miura', 'Berserk Vol. 1', 'Shizuka', 26, 'A2', '', '2024-05-07 09:25:33', 'En biblioteca'),
+(2, 'BE-01', 'Kentaro Miura', 'Berserk Vol. 1', 'Shizuka', 26, 'A2', '', '2024-05-07 09:25:33', 'Prestado'),
 (3, 'BE3-01', 'Kentaro Miura', 'Berserk Vol. 3', 'Shizuka', 25, 'A2', '', '2024-05-09 08:07:56', 'Prestado'),
-(4, 'BE4-01', 'Kentaro Miura', 'Berserk Vol. 4', 'Shizuka', 22, 'A2', '', '2024-05-09 08:31:38', 'En biblioteca');
+(4, 'BE4-01', 'Kentaro Miura', 'Berserk Vol. 4', 'Shizuka', 22, 'A2', '', '2024-05-09 08:31:38', 'En biblioteca'),
+(5, 'IFA-115', 'Atlantox', '¿Cómo ser tu propio jefe?', 'El EteSechu', 409, 'A6', 'Trata sobre como estafar personas sin que estas se den cuenta así mismo explica como lidiar con los clientes difíciles dándoles una muerte inmediata y secreta', '2024-05-12 12:15:27', 'Prestado'),
+(6, 'PHP2-1', 'Nadie', 'Curso de PHP 2', 'Editorial vieja', 596, 'A2', '', '2024-05-12 12:17:59', 'Prestado');
 
 -- --------------------------------------------------------
 
@@ -120,7 +134,10 @@ CREATE TABLE `book_category` (
 INSERT INTO `book_category` (`id`, `book`, `category`) VALUES
 (4, 2, 3),
 (6, 3, 3),
-(8, 4, 3);
+(8, 4, 3),
+(9, 5, 6),
+(10, 5, 8),
+(11, 6, 17);
 
 -- --------------------------------------------------------
 
@@ -142,6 +159,7 @@ INSERT INTO `category` (`id`, `name`) VALUES
 (16, 'Adult'),
 (15, 'comedia'),
 (7, 'Crecimiento personal'),
+(17, 'Curso'),
 (8, 'Enciclopedia'),
 (4, 'Fantasía'),
 (5, 'Historia'),
@@ -173,7 +191,11 @@ CREATE TABLE `loan` (
 
 INSERT INTO `loan` (`id`, `book`, `reader`, `observation`, `deliver_date`, `return_date`, `created_at`, `active`) VALUES
 (1, 2, 2, '', '2024-01-10 00:00:00', '2024-05-10 11:13:10', '2024-05-10 09:31:43', 0),
-(2, 3, 2, 'Será usado para una clase', '2024-01-10 00:00:00', NULL, '2024-05-10 09:50:33', 1);
+(2, 3, 2, 'Será usado para una clase', '2024-01-10 00:00:00', NULL, '2024-05-10 09:50:33', 1),
+(3, 2, 2, 'Ninguna', '2024-05-10 00:00:00', NULL, '2024-05-12 10:41:25', 1),
+(4, 6, 5, '', '2024-05-12 00:00:00', NULL, '2024-05-12 12:20:45', 1),
+(5, 5, 5, '', '2024-05-12 00:00:00', NULL, '2024-05-12 12:20:53', 1),
+(6, 4, 4, '', '2024-05-08 00:00:00', '2024-05-12 12:56:46', '2024-05-12 12:34:34', 1);
 
 -- --------------------------------------------------------
 
@@ -221,6 +243,7 @@ CREATE TABLE `reader` (
   `names` varchar(60) NOT NULL,
   `surnames` varchar(60) NOT NULL,
   `gender` char(1) NOT NULL,
+  `birthdate` date NOT NULL,
   `phone` varchar(16) NOT NULL,
   `is_teacher` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -229,8 +252,12 @@ CREATE TABLE `reader` (
 -- Volcado de datos para la tabla `reader`
 --
 
-INSERT INTO `reader` (`id`, `cedula`, `names`, `surnames`, `gender`, `phone`, `is_teacher`) VALUES
-(2, '28672717', 'Jessica', 'Ruíz', 'F', '0416-0509548', 0);
+INSERT INTO `reader` (`id`, `cedula`, `names`, `surnames`, `gender`, `birthdate`, `phone`, `is_teacher`) VALUES
+(2, '28672717', 'Jessica', 'Ruíz', 'F', '2001-08-12', '0416-0509548', 0),
+(3, '28019228', 'Gabriel Alberto', 'Silva Montilla', 'M', '2001-03-02', '04163567008', 0),
+(4, '7474747', 'Pepito Fracisco', 'Gallegos Arroyo', 'M', '2014-03-02', '04163567008', 0),
+(5, '85967412', 'Magda', 'Perozo', 'F', '1989-04-09', '04163567008', 1),
+(6, '12345678', 'Jaime Pedro', 'Altozano Rajoy', 'M', '1975-08-26', '04168759225', 0);
 
 -- --------------------------------------------------------
 
@@ -387,31 +414,31 @@ ALTER TABLE `user_level`
 -- AUTO_INCREMENT de la tabla `binnacle`
 --
 ALTER TABLE `binnacle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT de la tabla `book`
 --
 ALTER TABLE `book`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `book_category`
 --
 ALTER TABLE `book_category`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `category`
 --
 ALTER TABLE `category`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `loan`
 --
 ALTER TABLE `loan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `permisson`
@@ -423,7 +450,7 @@ ALTER TABLE `permisson`
 -- AUTO_INCREMENT de la tabla `reader`
 --
 ALTER TABLE `reader`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `user`

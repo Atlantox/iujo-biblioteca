@@ -12,7 +12,12 @@ from helpers import *
 
 LOAN_LENGTH_CONFIG = {
     'observation': {'min': 0, 'max':1000, 'optional': True},
-    'deliver_date': {'min': 10, 'max':10}
+    'deliver_date': {'min': 8, 'max':10}
+}
+
+DATES_LENGTH_CONFIG = {
+    'initial_date': {'min': 8, 'max': 10},
+    'final_date': {'min': 8, 'max': 10}
 }
 
 REQUIRED_FIELDS = [
@@ -73,12 +78,15 @@ def CreateLoan():
             statusCode = 404
     
     if error == '':
-        year, month, day = cleanData['deliver_date'].split('-')
-        deliverDate = datetime(int(year), int(month), int(day))
-        now = datetime.now()
-        if deliverDate > now:
-            error = 'La fecha de entrega no puede superar el día actual'
+        deliverDate = StringToDatetime(cleanData['deliver_date'])
+        if deliverDate is False:
+            error = 'Fecha inválida'
             statusCode = 400
+        else:
+            now = datetime.now()
+            if deliverDate > now:
+                error = 'La fecha de entrega no puede superar el día actual'
+                statusCode = 400
     
     if error == '':
         if targetBook['state'] != 'En biblioteca':
@@ -131,6 +139,81 @@ def GetActiveLoans():
     if error == '':
        loanModel = LoanModel(connection)
        loans = loanModel.GetActiveLoans()
+
+    response['success'] = error == ''
+
+    if error == '':
+        response['loans'] = loans
+    else:
+        response['message'] = error
+
+    return jsonify(response), statusCode
+
+@loanController.route('/loans/pendings', methods=['GET'])
+def GetPendingLoans():
+    connection = GetConnection()
+    userModel = UserModel(connection)
+    error = ''
+    response = {}
+    statusCode = 200
+
+    token = GetTokenOfRequest(request)
+    if token is None:
+        error = 'Acceso denegado. Autenticación requerida'
+        statusCode = 401
+
+    if error == '':
+        targetUser = userModel.GetUserByToken(token)
+        if type(targetUser) is str:
+            error = targetUser
+            statusCode = 400
+
+    if error == '':
+        if userModel.UserHasPermisson(targetUser['id'], 'Préstamos') is False:
+            error = 'Acción denegada'
+            statusCode = 401  # Unauthorized
+
+    if error == '':
+       loanModel = LoanModel(connection)
+       loans = loanModel.GetPendingLoans()
+
+    response['success'] = error == ''
+
+    if error == '':
+        response['loans'] = loans
+    else:
+        response['message'] = error
+
+    return jsonify(response), statusCode
+
+
+@loanController.route('/loans/finished', methods=['GET'])
+def GetFinishedLoans():
+    connection = GetConnection()
+    userModel = UserModel(connection)
+    error = ''
+    response = {}
+    statusCode = 200
+
+    token = GetTokenOfRequest(request)
+    if token is None:
+        error = 'Acceso denegado. Autenticación requerida'
+        statusCode = 401
+
+    if error == '':
+        targetUser = userModel.GetUserByToken(token)
+        if type(targetUser) is str:
+            error = targetUser
+            statusCode = 400
+
+    if error == '':
+        if userModel.UserHasPermisson(targetUser['id'], 'Préstamos') is False:
+            error = 'Acción denegada'
+            statusCode = 401  # Unauthorized
+
+    if error == '':
+       loanModel = LoanModel(connection)
+       loans = loanModel.GetFinishedLoans()
 
     response['success'] = error == ''
 
@@ -286,6 +369,133 @@ def DeactivateLoan(loanId):
     return jsonify(response), statusCode
 
 # TODO Obtener estadísticas basadas en el género, categorías, profesores, etc
+@loanController.route('/loans/by_gender', methods=['POST'])
+def GetLoansByGender():
+    connection = GetConnection()
+    userModel = UserModel(connection)
+    response = {}
+
+    recievedData, error, statusCode = JsonExists(request)
+    token = GetTokenOfRequest(request)
+    if token is None:
+        error = 'Acceso denegado. Autenticación requerida'
+        statusCode = 401
+
+    if error == '':
+        targetUser = userModel.GetUserByToken(token)
+        if type(targetUser) is str:
+            error = targetUser
+            statusCode = 400
+
+    if error == '':
+        cleanData = ValidateStatisticsDate(recievedData)
+        if type(cleanData) is str:
+            error = cleanData
+            statusCode = 400    
+
+    if error == '':
+        if userModel.UserHasPermisson(targetUser['id'], 'Préstamos') is False:
+            error = 'Acción denegada'
+            statusCode = 401  # Unauthorized
+
+    if error == '':
+        loanModel = LoanModel(connection)
+        loansByGender = loanModel.GetLoansQuantityByGenderBetweenDates(cleanData['initial_date'], cleanData['final_date'])
+
+    response['success'] = error == ''
+
+    if error == '':
+        response['loans'] = loansByGender
+    else:
+        response['message'] = error
+
+    return jsonify(response), statusCode
+
+
+@loanController.route('/loans/by_teacher', methods=['POST'])
+def GetLoansByTeacher():
+    connection = GetConnection()
+    userModel = UserModel(connection)
+    response = {}
+
+    recievedData, error, statusCode = JsonExists(request)
+    token = GetTokenOfRequest(request)
+    if token is None:
+        error = 'Acceso denegado. Autenticación requerida'
+        statusCode = 401
+
+    if error == '':
+        targetUser = userModel.GetUserByToken(token)
+        if type(targetUser) is str:
+            error = targetUser
+            statusCode = 400
+    
+    if error == '':
+        cleanData = ValidateStatisticsDate(recievedData)
+        if type(cleanData) is str:
+            error = cleanData
+            statusCode = 400
+
+    if error == '':
+        if userModel.UserHasPermisson(targetUser['id'], 'Préstamos') is False:
+            error = 'Acción denegada'
+            statusCode = 401  # Unauthorized
+
+    if error == '':
+        loanModel = LoanModel(connection)
+        loansByGender = loanModel.GetLoansQuantityByTeacherBetweenDates(cleanData['initial_date'], cleanData['final_date'])
+
+    response['success'] = error == ''
+
+    if error == '':
+        response['loans'] = loansByGender
+    else:
+        response['message'] = error
+
+    return jsonify(response), statusCode
+
+
+@loanController.route('/loans/by_categories', methods=['POST'])
+def GetLoansByCategories():
+    connection = GetConnection()
+    userModel = UserModel(connection)
+    response = {}
+
+    recievedData, error, statusCode = JsonExists(request)
+    token = GetTokenOfRequest(request)
+    if token is None:
+        error = 'Acceso denegado. Autenticación requerida'
+        statusCode = 401
+
+    if error == '':
+        targetUser = userModel.GetUserByToken(token)
+        if type(targetUser) is str:
+            error = targetUser
+            statusCode = 400
+    
+    if error == '':
+        cleanData = ValidateStatisticsDate(recievedData)
+        if type(cleanData) is str:
+            error = cleanData
+            statusCode = 400
+
+    if error == '':
+        if userModel.UserHasPermisson(targetUser['id'], 'Préstamos') is False:
+            error = 'Acción denegada'
+            statusCode = 401  # Unauthorized
+
+    if error == '':
+        loanModel = LoanModel(connection)
+        loansByGender = loanModel.GetLoansQuantityByCategoriesBetweenDates(cleanData['initial_date'], cleanData['final_date'])
+
+    response['success'] = error == ''
+
+    if error == '':
+        response['loans'] = loansByGender
+    else:
+        response['message'] = error
+
+    return jsonify(response), statusCode
 
 def ValidateLoanData(recievedData, exactData = True):
     error = ''
@@ -298,5 +508,31 @@ def ValidateLoanData(recievedData, exactData = True):
         lengthOK = ValidateLength(LOAN_LENGTH_CONFIG, cleanData)
         if lengthOK is not True:
             error = lengthOK
+    
+    return cleanData if error == '' else error
+
+def ValidateStatisticsDate(data):
+    error = ''
+
+    cleanData = HasEmptyFields(['initial_date', 'final_date'], data)
+    if type(cleanData) is str:
+        error = cleanData
+
+    if error == '':
+        lengthOK = ValidateLength(DATES_LENGTH_CONFIG, cleanData)
+        if lengthOK is not True:
+            error = lengthOK
+
+    if error == '':
+        if StringToDatetime(cleanData['initial_date']) is False:
+            error = 'Fecha de inicio inválida'
+
+        if StringToDatetime(cleanData['final_date']) is False:
+            error = 'Fecha de fin inválida'
+    
+    if error == '':
+        datesOk = ValidateDateRange(cleanData['initial_date'], cleanData['final_date'])
+        if datesOk is False:
+            error = 'La fecha de inicio debe ser más temprana que la de fin'
     
     return cleanData if error == '' else error

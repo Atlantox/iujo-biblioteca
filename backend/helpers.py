@@ -1,4 +1,5 @@
 import re 
+from datetime import datetime
 
 def ValidateLength(validations, data):
     lengthOK = True
@@ -43,7 +44,10 @@ def HasEmptyFields(indexes, content, exactData = True):
             break
 
         if index in content:
-            finalData[index] = content[index].strip()
+            if type(content[index]) is str:
+                finalData[index] = content[index].strip()
+            else:
+                finalData[index] = content[index]
 
     return finalData if error == '' else error
 
@@ -57,6 +61,33 @@ def EmailIsOK(email):
 
     return emailOK
 
+
+def StringToDatetime(strDate):
+    result = False
+
+    try:
+        year, month, day = strDate.split('-')
+        deliverDate = datetime(int(year), int(month), int(day))
+        result = deliverDate 
+    except:
+        pass
+
+    return result
+
+
+def ValidateDateRange(initialDate, finalDate):
+    result = True
+    try:
+        year, month, day = initialDate.split('-')
+        initial = datetime(int(year), int(month), int(day))
+
+        year, month, day = finalDate.split('-')
+        final = datetime(int(year), int(month), int(day))
+        result = final > initial
+    except:
+        result = False
+
+    return result
 
 def JsonExists(request):
     recievedData = None

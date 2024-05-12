@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Blueprint, request, jsonify
 from flask_cors import cross_origin
 
@@ -12,6 +14,7 @@ READER_LENGTH_CONFIG = {
     'names': {'min': 2, 'max':60},
     'surnames': {'min': 2, 'max':60},
     'gender': {'min': 1, 'max':1},
+    'birthdate': {'min':8, 'max':10},
     'phone': {'min': 7, 'max':15},
     'is_teacher': {'min': 1, 'max':1}
 }
@@ -21,6 +24,7 @@ REQUIRED_FIELDS = [
     'names',
     'surnames',
     'gender',
+    'birthdate',
     'phone',
     'is_teacher'
 ]
@@ -78,6 +82,23 @@ def CreateReader():
             error = 'Campo es profesor inválido'
             statusCode = 400
     
+    if error == '':
+        birthdate = StringToDatetime(cleanData['birthdate'])
+        if birthdate is False:
+            error = 'Fecha inválida'
+            statusCode = 400
+        else:
+            now = datetime.now()
+            if birthdate >= now:
+                error = 'La fecha de nacimiento no puede ser posterior a la fecha actual'
+                statusCode = 400
+    
+    if error == '':
+        diff = abs((now - birthdate).days)
+        if diff < 365 * 10:
+            error = 'El lector no cumple con la edad mínima para realziar el préstamo (10 años)'
+            statusCode = 400
+
     if error == '':
         created = readerModel.CreateReader(cleanData)
         if created is False:

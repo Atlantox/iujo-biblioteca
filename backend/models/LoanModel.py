@@ -65,7 +65,49 @@ class LoanModel(BaseModel):
     
     def GetActiveLoans(self):
         cursor = self.connection.connection.cursor()
-        sql = self.LOAN_SELECT_TEMPLATE + "WHERE loan.active = 1"
+        sql = self.LOAN_SELECT_TEMPLATE + "WHERE loan.active = 1 ORDER BY loan.deliver_date"
+
+        try:
+            cursor.execute(sql)
+            loans = cursor.fetchall()
+            if loans == tuple():
+                loans = []
+        except:
+            loans = []
+        
+        return loans
+
+    def GetAllLoans(self):
+        cursor = self.connection.connection.cursor()
+        sql = self.LOAN_SELECT_TEMPLATE + "ORDER BY loan.deliver_date"
+
+        try:
+            cursor.execute(sql)
+            loans = cursor.fetchall()
+            if loans == tuple():
+                loans = []
+        except:
+            loans = []
+        
+        return loans
+    
+    def GetPendingLoans(self):
+        cursor = self.connection.connection.cursor()
+        sql = self.LOAN_SELECT_TEMPLATE + "WHERE return_date IS NULL ORDER BY loan.deliver_date"
+
+        try:
+            cursor.execute(sql)
+            loans = cursor.fetchall()
+            if loans == tuple():
+                loans = []
+        except:
+            loans = []
+        
+        return loans
+    
+    def GetFinishedLoans(self):
+        cursor = self.connection.connection.cursor()
+        sql = self.LOAN_SELECT_TEMPLATE + "WHERE return_date IS NOT NULL ORDER BY loan.deliver_date"
 
         try:
             cursor.execute(sql)
@@ -118,6 +160,81 @@ class LoanModel(BaseModel):
         except:
             loans = []
         
+        return loans
+    
+    def GetLoansQuantityByGenderBetweenDates(self, initialDate, finalDate):
+        cursor = self.connection.connection.cursor()
+        sql = '''
+            SELECT 
+            reader.gender,
+            COUNT(loan.id) as quantity
+            FROM
+            loan
+            INNER JOIN reader ON reader.id = loan.reader
+            WHERE
+            loan.active = 1 AND
+            loan.deliver_date BETWEEN %s AND %s
+            GROUP BY
+            reader.gender
+            '''
+        args = (initialDate, finalDate,)
+    
+        try:
+            cursor.execute(sql, args)
+            loans = cursor.fetchall()
+        except:
+            loans = []
+        return loans
+    
+    def GetLoansQuantityByTeacherBetweenDates(self, initialDate, finalDate):
+        cursor = self.connection.connection.cursor()
+        sql = '''
+            SELECT 
+            reader.is_teacher,
+            COUNT(loan.id) as quantity
+            FROM
+            loan
+            INNER JOIN reader ON reader.id = loan.reader
+            WHERE
+            loan.active = 1 AND
+            loan.deliver_date BETWEEN %s AND %s
+            GROUP BY
+            reader.is_teacher
+            '''
+        
+        args = (initialDate, finalDate,)
+    
+        try:
+            cursor.execute(sql, args)
+            loans = cursor.fetchall()
+        except:
+            loans = []
+        return loans
+    
+    def GetLoansQuantityByCategoriesBetweenDates(self, initialDate, finalDate):
+        cursor = self.connection.connection.cursor()
+        sql = '''
+            SELECT 
+            category.name as category,
+            COUNT(loan.id) as quantity
+            FROM
+            loan
+            INNER JOIN book_category ON book_category.book = loan.book
+            INNER JOIN category ON category.id = book_category.category
+            WHERE
+            loan.active = 1 AND
+            loan.deliver_date BETWEEN %s AND %s
+            GROUP BY
+            category.name
+            '''
+        
+        args = (initialDate, finalDate,)
+    
+        try:
+            cursor.execute(sql, args)
+            loans = cursor.fetchall()
+        except:
+            loans = []
         return loans
 
     def ReturnLoan(self, id):
