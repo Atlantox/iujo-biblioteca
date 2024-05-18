@@ -15,20 +15,45 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav ms-auto py-0">
-                    <a href="index.html" class="nav-item nav-link fs-5">Home</a>
-                    <a href="about.html" class="nav-item nav-link fs-5">About</a>
-                    <a href="service.html" class="nav-item nav-link fs-5">Services</a>
+                    <!--
+                    <router-link class="nav-item nav-link fs-5 text-white text-decoration-none fs-4" :to="{name:'add_book'}">
+                        Añadir libro
+                    </router-link>
+                    -->                    
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle fs-5" data-bs-toggle="dropdown">Pages</a>
+                        <a href="#" class="nav-link dropdown-toggle fs-5" data-bs-toggle="dropdown">Libros</a>
                         <div class="dropdown-menu m-0">
-                            <a href="appointment.html" class="dropdown-item fs-6">Appointment</a>
-                            <a href="feature.html" class="dropdown-item fs-6">Features</a>
-                            <a href="blog.html" class="dropdown-item fs-6">Our Blog</a>
-                            <a href="team.html" class="dropdown-item fs-6">Our Team</a>
-                            <a href="testimonial.html" class="dropdown-item fs-6">Testimonial</a>
+                            <router-link class="dropdown-item fs-6 text-decoration-none fs-4" :to="{name:'home'}">
+                                Ver listado
+                            </router-link>
+                            <router-link class="dropdown-item fs-6 text-decoration-none fs-4" :to="{name:'add_book'}">
+                                Crear nuevo
+                            </router-link>
                         </div>
                     </div>
-                    <a href="contact.html" class="nav-item nav-link fs-5">Contact Us</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle fs-5" data-bs-toggle="dropdown">Préstamos</a>
+                        <div class="dropdown-menu m-0">
+                            <router-link class="dropdown-item fs-6 text-decoration-none fs-4" :to="{name:'search_loans'}">
+                                Ver listado
+                            </router-link>
+                            <router-link class="dropdown-item fs-6 text-decoration-none fs-4" :to="{name:'add_loan'}">
+                                Crear nuevo
+                            </router-link>
+                        </div>
+                    </div>
+
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle fs-5" data-bs-toggle="dropdown">Lectores</a>
+                        <div class="dropdown-menu m-0">
+                            <router-link class="dropdown-item fs-6 text-decoration-none fs-4" :to="{name:'search_loans'}">
+                                Ver listado
+                            </router-link>
+                            <router-link class="dropdown-item fs-6 text-decoration-none fs-4" :to="{name:'add_loan'}">
+                                Crear nuevo
+                            </router-link>
+                        </div>
+                    </div>
                 </div>
             </div>
         </nav>

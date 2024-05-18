@@ -6,11 +6,11 @@ import NavbarMenu from '@/components/NavbarMenu.vue'
 </script>
 
 <template>
-  <div class="row m-0 p-0 h6 align-items-start" style="height:1500px">
-    <section class="row m-0 p-0 col-12">
+  <div class="row m-0 p-0 h6 align-items-start">
+    <section class="row m-0 p-0 col-12 mb-5">
       <NavbarMenu/>
     </section>
-    <section class="row m-0 px-4 py-5 col-12 align-items-start">
+    <section class="row m-0 px-4 py-5 mt-5 col-12 align-items-start">
       <router-view></router-view>  
     </section>
   </div>

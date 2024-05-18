@@ -35,9 +35,7 @@ const ValidateForm = ((e) => {
         'title': {'max': 50, 'min': 4},
         'title': {'max': 50, 'min': 4}, 
         'description': {'max': 1000, 'min': 4}
-    }
-
-    
+    }    
     
 })
 </script>
@@ -46,7 +44,7 @@ const ValidateForm = ((e) => {
     <div class="row m-0 p-0">
         <form class="col-12 row m-0 p-2 fs-4 myForm shadowed-l rounded lb-bg-terciary-dark" @submit.prevent="ValidateForm">
             <div class="row col-12 m-0 p-0 justify-content-center my-4">
-                <h1 class="fw-bold text-center col-6 m-0 rounded-pill lb-bg-terciary-l text-white shadowed-l">
+                <h1 class="fw-bold text-center col-11 col-lg-6 m-0 rounded-pill lb-bg-terciary-l text-white shadowed-l">
                     Nuevo libro
                 </h1>
             </div>
