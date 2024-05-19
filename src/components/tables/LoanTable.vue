@@ -56,4 +56,8 @@ onMounted(() => {
 tr, td{
   border: 1px rgba(66, 66, 66, 0.445) solid
 }
+
+a{
+    color:black;
+}
 </style>

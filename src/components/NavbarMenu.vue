@@ -3,13 +3,14 @@
 </script>
 
 <template>
+    <!-- Designed by Atlantox https://atlantox.pythonanywhere.com/ -->
     <div class="container-fluid position-relative p-0">
-        <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0 shadowed-l lb-bg-primary">
-            <a href="index.html" class="navbar-brand p-0">
-              <figure class="col-7">
-                <img class="w-50" src="" alt="upp logo">
+        <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0 shadowed-l lb-bg-primary bottom-bordered">
+            <router-link class="navbar-brand p-0 m-0 h-100" :to="{name:'home'}">
+              <figure class="w-100 m-0 h-100 text-center">
+                <img class="navbar-logo w-100" src="@/assets/iujo_logo.png" alt="iujo logo">
               </figure>
-            </a>
+            </router-link>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="fa fa-bars"></span>
             </button>
@@ -46,10 +47,10 @@
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle fs-5" data-bs-toggle="dropdown">Lectores</a>
                         <div class="dropdown-menu m-0">
-                            <router-link class="dropdown-item fs-6 text-decoration-none fs-4" :to="{name:'search_loans'}">
+                            <router-link class="dropdown-item fs-6 text-decoration-none fs-4" :to="{name:'search_readers'}">
                                 Ver listado
                             </router-link>
-                            <router-link class="dropdown-item fs-6 text-decoration-none fs-4" :to="{name:'add_loan'}">
+                            <router-link class="dropdown-item fs-6 text-decoration-none fs-4" :to="{name:'add_reader'}">
                                 Crear nuevo
                             </router-link>
                         </div>

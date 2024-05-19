@@ -14,7 +14,7 @@ $.each(sectionArray, function(index, value){
         
          if ( docScroll1 >= offsetSection ){
              $('.navbar-nav .nav-item .nav-link').removeClass('active');
-             $('.navbar-nav .nav-item .nav-link:link').addClass('inactive');  
+             //$('.navbar-nav .nav-item .nav-link:link').addClass('inactive');  
              $('.navbar-nav .nav-item .nav-link').eq(index).addClass('active');
              $('.navbar-nav .nav-item .nav-link').eq(index).removeClass('inactive');
          }
@@ -32,7 +32,7 @@ $.each(sectionArray, function(index, value){
 });
 
 $(document).ready(function(){
-    $('.navbar-nav .nav-item .nav-link:link').addClass('inactive');    
+    //$('.navbar-nav .nav-item .nav-link:link').addClass('inactive');    
     $('.navbar-nav .nav-item .nav-link').eq(0).addClass('active');
-    $('.navbar-nav .nav-item .nav-link:link').eq(0).removeClass('inactive');
+    //$('.navbar-nav .nav-item .nav-link:link').eq(0).removeClass('inactive');
 });

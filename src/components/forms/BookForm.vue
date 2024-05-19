@@ -2,6 +2,7 @@
 import { ref, onMounted, inject } from 'vue'
 import Select2Initializer from '@/utils/Select2Initializer'
 import FormValidator from '@/utils/FormValidator'
+import PageTitleView from '../PageTitleView.vue'
 import { Modal } from 'bootstrap'
 
 const myModal = ref('')
@@ -10,6 +11,8 @@ const swal = inject('$swal')
 const formErrors = ref([])
 const categories = ref([{id:1, name:'Ficción'}, {id:2, name:'Acción'}, {id:3, name:'Fantasía'}])
 const states = ref([{id:1, name:'En biblioteca'}, {id:2, name:'Extraviado'}, {id:3, name:'Prestado'}])
+
+const edit = ref(false)
 
 const bookTitle = ref('')
 const bookCallNumber = ref('')
@@ -21,10 +24,10 @@ const bookDescription = ref('')
 const bookState = ref('')
 
 onMounted(() => {
-    const edit = false
+    edit.value = true
     const s2Initializer = new Select2Initializer()
 
-    if (edit === false) bookState.value = '1'
+    if (edit.value === false) bookState.value = '1'
 })
 
 const ValidateForm = ((e) => {
@@ -43,11 +46,9 @@ const ValidateForm = ((e) => {
 <template>
     <div class="row m-0 p-0">
         <form class="col-12 row m-0 p-2 fs-4 myForm shadowed-l rounded lb-bg-terciary-dark" @submit.prevent="ValidateForm">
-            <div class="row col-12 m-0 p-0 justify-content-center my-4">
-                <h1 class="fw-bold text-center col-11 col-lg-6 m-0 rounded-pill lb-bg-terciary-l text-white shadowed-l">
-                    Nuevo libro
-                </h1>
-            </div>
+            <PageTitleView
+            :title="(edit ? 'Modificar ' : 'Registrar nuevo ') + 'libro'"
+            />
             
             <div class="row m-0 p-0 justify-content-center my-2">
                 <div class="row m-0 p-0 col-3">

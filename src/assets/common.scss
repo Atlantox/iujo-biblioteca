@@ -1,6 +1,7 @@
 @import 'animations.css';
 
 $primary: #71E580;
+$primary-l: #DBF8DF;
 $primary-dark: #68d37620;
 
 $secondary: #719CE5;
@@ -316,4 +317,9 @@ input[type="file"] {
 
 .myBtn:hover{
     transform:scale(1.1);
+}
+
+.bottom-bordered{
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
 }

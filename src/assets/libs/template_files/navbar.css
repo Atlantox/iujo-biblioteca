@@ -207,7 +207,7 @@
 
 .sticky-top.navbar-light .navbar-nav .nav-link {
   padding: 20px 0;
-  color: var(--dark) !important;
+  /* color: var(--dark) !important; */
 }
 
 .navbar-light .navbar-nav .nav-link:hover,
@@ -216,7 +216,7 @@
 }
 
 .navbar-light .navbar-brand img {
-  max-height: 50px;
+  /* max-height: 50px; */
   transition: .5s;
 }
 
@@ -242,7 +242,7 @@
       transform: rotateX(-75deg);
       transform-origin: 0% 0%;
       border: 0;
-      border-radius: 10px;
+      
       transition: .5s;
       opacity: 0;
   }

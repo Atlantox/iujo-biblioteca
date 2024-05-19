@@ -2,6 +2,7 @@
 import { onMounted } from 'vue'
 import useReaderStore from '@/stores/readers.js'
 import ReaderTable from '@/components/tables/ReaderTable.vue'
+import PageTitleView from '@/components/PageTitleView.vue';
 
 const readerStore = useReaderStore()
 const readers = readerStore.readers
@@ -29,6 +30,9 @@ const HideModal = (() => {
 </script>
 
 <template>
+  <PageTitleView
+  :title="'Listado de los lectores'"
+  />
   <ReaderTable
   :readers="readers"
   />

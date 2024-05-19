@@ -2,6 +2,7 @@
 import { onMounted } from 'vue'
 import useLoanStore from '@/stores/loans.js'
 import LoanTable from '@/components/tables/LoanTable.vue'
+import PageTitleView from '@/components/PageTitleView.vue';
 
 const loanStore = useLoanStore()
 const loans = loanStore.loans
@@ -29,6 +30,9 @@ const HideModal = (() => {
 </script>
 
 <template>
+  <PageTitleView
+  :title="'Lista de préstamos'"
+  />
   <LoanTable
   :loans="loans"
   />

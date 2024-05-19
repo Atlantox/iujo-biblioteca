@@ -1,17 +1,22 @@
 <script setup>
 import SidebarMenu from '@/components/SidebarMenu.vue'
 import NavbarMenu from '@/components/NavbarMenu.vue'
+import Footer from '@/components/Footer.vue'
 
 
 </script>
 
 <template>
+  <!-- Designed by Atlantox https://atlantox.pythonanywhere.com/ -->
   <div class="row m-0 p-0 h6 align-items-start">
     <section class="row m-0 p-0 col-12 mb-5">
       <NavbarMenu/>
     </section>
     <section class="row m-0 px-4 py-5 mt-5 col-12 align-items-start">
       <router-view></router-view>  
+    </section>
+    <section class="row m-0 px-4 py-5 mt-5 col-12 align-items-start">
+      <Footer/>
     </section>
   </div>
 </template>
