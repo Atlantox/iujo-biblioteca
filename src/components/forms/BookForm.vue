@@ -2,7 +2,7 @@
 import { ref, onMounted, inject } from 'vue'
 import Select2Initializer from '@/utils/Select2Initializer'
 import FormValidator from '@/utils/FormValidator'
-import PageTitleView from '../PageTitleView.vue'
+import PageTitleView from '../PageTitle.vue'
 import { Modal } from 'bootstrap'
 
 const myModal = ref('')

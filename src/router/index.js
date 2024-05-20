@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import HomeView from '../views/HomeView.vue'
+import SearchBooksView from '../views/tables/SearchBooksView.vue'
 import SeeBookView from '../views/SeeBookView.vue'
 import BookFormView from '../views/forms/BookFormView.vue'
 import LoanFormView from '../views/forms/LoanFormView.vue'
@@ -19,7 +20,12 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/book/:id',
+      path: '/books',
+      name: 'search_books',
+      component: SearchBooksView
+    },
+    {
+      path: '/books/:id',
       name: 'see_book',
       component: SeeBookView
     },

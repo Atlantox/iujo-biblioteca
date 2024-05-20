@@ -248,14 +248,15 @@
 }
 
 .dropdown .dropdown-menu a:hover {
-    background: var(--bs-primary);
-    color: var(--bs-white);
+    font-weight: bold;
+    color: black;
+    letter-spacing: 1px;
+    transition:0.3s;
 }
 
 .navbar .nav-item:hover .dropdown-menu {
     transform: rotateX(0deg);
     visibility: visible;
-    background: rgb(219,248,223) !important;
     background: linear-gradient(0deg, rgba(219,248,223,1) 0%, rgba(113,229,128,1) 100%) !important;
     transition: .5s;
     opacity: 1;

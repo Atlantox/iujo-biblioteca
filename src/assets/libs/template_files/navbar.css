@@ -249,7 +249,7 @@
 }
 
 .dropdown .dropdown-menu a:hover {
-  background: var(--bs-primary);
+  
   color: var(--bs-white);
 }
 
@@ -257,7 +257,7 @@
   width: 250px;
   transform: rotateX(0deg);
   visibility: visible;
-  background: var(--bs-light) !important;
+  
   transition: .5s;
   opacity: 1;
 }

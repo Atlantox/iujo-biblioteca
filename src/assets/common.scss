@@ -323,3 +323,8 @@ input[type="file"] {
     border-bottom-left-radius: 30px;
     border-bottom-right-radius: 30px;
 }
+
+.hide-up{
+    opacity:0;
+    transform:translateY(-50px)
+}

@@ -1,46 +1,49 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import ApiConfig from '@/stores/config.js'
+import useSessionStore from '@/stores/session.js'
+
+const apiConfig = new ApiConfig()
 
 const useBookStore = defineStore('books', {
     state: () => {
         return {
-            books: ref([])
+            books: ref([]),
+            errorMessage: ref(''),
         }
     },
     actions:{
-        FetchActiveBooks(){
-            // TODO request            
-            this.books.value = [
-                {
-                    id: 1,
-                    title: 'titulo 1',
-                    author: 'autor 1',
-                    pageNumber: 400
-                },
-                {
-                    id: 2,
-                    title: 'titulo 2',
-                    author: 'autor 2',
-                    pageNumber: 200
-                },
-                {
-                    id: 3,
-                    title: 'titulo 3',
-                    author: 'autor 3',
-                    pageNumber: 350
-                },
-                {
-                    id: 4,
-                    title: 'titulo 4',
-                    author: 'autor 4',
-                    pageNumber: 560
+        async FetchBooks(){
+            const sessionStore = new useSessionStore()
+            try{
+                let url = apiConfig.base_url + '/books'
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
                 }
-            ]
-        },
 
-        GetAllBooks(){
+                if (sessionStore.token !== '')
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
 
+                let fetchConfig = {
+                    method: 'GET',
+                    headers: fetchHeaders
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                let result = await json
+                if(result.success)
+                    this.books.value = result.books
+                else{
+                    this.errorMessage =  result.message
+                }
+            }
+            catch(error){
+                this.errorMessage = 'Error: '
+            }
         }
+
     }
 })
 

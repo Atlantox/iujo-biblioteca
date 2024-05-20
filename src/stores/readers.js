@@ -1,6 +1,9 @@
 import { ref } from 'vue'
+import useSessionStore from '@/stores/session.js'
+import ApiConfig from '@/stores/config.js'
 import { defineStore } from 'pinia'
 
+const apiConfig = new ApiConfig()
 const useReaderStore = defineStore('readers', {
     state: () => {
         return {
@@ -8,34 +11,34 @@ const useReaderStore = defineStore('readers', {
         }
     },
     actions:{
-        FetchReaders(){
-            // TODO request            
-            this.readers.value = [
-                {
-                    id: 1,
-                    cedula: '12345678',
-                    names: 'Karolina',
-                    surnames: 'Pérez'
-                },
-                {
-                    id: 2,
-                    cedula: '87654321',
-                    names: 'Iris',
-                    surnames: 'Mendoza'
-                },
-                {
-                    id: 3,
-                    cedula: '18273645',
-                    names: 'Pedro',
-                    surnames: 'Rajoy'
-                },
-                {
-                    id: 4,
-                    cedula: '54637281',
-                    names: 'Sandro',
-                    surnames: 'Castañeda'
+        async FetchReaders(){
+            const sessionStore = new useSessionStore()
+            try{
+                let url = apiConfig.base_url + '/readers'
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
                 }
-            ]
+
+                if (sessionStore.token !== '')
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'GET',
+                    headers: fetchHeaders
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                let result = await json
+                if(result.success)
+                    this.books.value = result.books
+                else
+                    this.errorMessage =  result.message
+            }
+            catch(error){
+                this.errorMessage = 'Error: ' + error
+            }
         },
     }
 })

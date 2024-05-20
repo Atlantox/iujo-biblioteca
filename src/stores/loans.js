@@ -1,45 +1,47 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
+import ApiConfig from '@/stores/config.js'
+import useSessionStore from '@/stores/session.js'
+
+const apiConfig = new ApiConfig()
+
 const useLoanStore = defineStore('loans', {
     state: () => {
         return {
-            loans: ref([])
+            loans: ref([]),
+            errorMessage: ref('')
         }
     },
     actions:{
-        FetchLoans(){
-            // TODO request            
-            this.loans.value = [
-                {
-                    id: 1,
-                    lectorId: '1',
-                    fullName: 'Karolina Pérez',
-                    bookId: '1',
-                    bookInfo: 'Autor1: Título1'
-                },
-                {
-                    id: 2,
-                    lectorId: '1',
-                    fullName: 'Karolina Pérez',
-                    bookId: '3',
-                    bookInfo: 'Autor3: Título3'
-                },
-                {
-                    id: 3,
-                    lectorId: '2',
-                    fullName: 'Iris Mendoza',
-                    bookId: '2',
-                    bookInfo: 'Autor2: Título2'
-                },
-                {
-                    id: 4,
-                    lectorId: '4',
-                    fullName: 'Sandro Castañeda',
-                    bookId: '5',
-                    bookInfo: 'Autor5: Título5'
+        async FetchPendingLoans(){
+            const sessionStore = new useSessionStore()
+            try{
+                let url = apiConfig.base_url + '/loans'
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
                 }
-            ]
+
+                if (sessionStore.token !== '')
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'GET',
+                    headers: fetchHeaders
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                let result = await json
+                if(result.success)
+                    this.books.value = result.books
+                else
+                    this.errorMessage =  result.message
+            }
+            catch(error){
+                this.errorMessage = 'Error: ' + error
+            }
         },
     }
 })

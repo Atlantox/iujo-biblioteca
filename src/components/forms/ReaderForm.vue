@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import Select2Initializer from '@/utils/Select2Initializer'
 import FormValidator from '@/utils/FormValidator'
-import PageTitleView from '../PageTitleView.vue';
+import PageTitleView from '../PageTitle.vue';
 
 const formErrors = ref([])
 

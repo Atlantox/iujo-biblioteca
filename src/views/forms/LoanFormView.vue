@@ -12,7 +12,7 @@ const books = bookStore.books
 const readers = readerStore.readers
 
 onMounted(() => {
-  bookStore.FetchActiveBooks()
+  bookStore.FetchBooks()
   readerStore.FetchReaders()
 })
 </script>

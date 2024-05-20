@@ -1,39 +1,38 @@
 <script setup>
 import { onMounted } from 'vue'
 import useReaderStore from '@/stores/readers.js'
+import useSessionStore from '@/stores/session.js'
 import ReaderTable from '@/components/tables/ReaderTable.vue'
-import PageTitleView from '@/components/PageTitleView.vue';
+import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue'
+import PageTitleView from '@/components/PageTitle.vue';
 
 const readerStore = useReaderStore()
+const sessionStore = useSessionStore()
 const readers = readerStore.readers
 
 
-onMounted(()  => {
-  readerStore.FetchReaders()
+onMounted(async ()  => {
+  await readerStore.FetchReaders()
+
+  if(readerStore.errorMessage !== ''){
+    sessionStore.ShowModal('Error', readerStore.errorMessage, 'error')
+  }
 })
 
-
-/*
-//myModal.value = new Modal('#exampleModalLong')
-const ShowModal = (() => {
-  swal.fire({
-    title: 'Titulaso',
-    icon:'warning'
-  })
-  //myModal.value.show()
-})
-
-const HideModal = (() => {
-  myModal.value.hide()
-})
-*/
 </script>
 
 <template>
   <PageTitleView
   :title="'Listado de los lectores'"
   />
-  <ReaderTable
-  :readers="readers"
-  />
+  <div class="row m-0 p-0 col-12 py-4 shadowed-l rounded lb-bg-terciary-dark">
+    <template
+    v-if="readers.value === undefined">
+      <LoadingGadget/>
+    </template>
+    <template v-else>
+        <ReaderTable
+          :readers="readers.value"/>
+    </template>
+  </div>
 </template>

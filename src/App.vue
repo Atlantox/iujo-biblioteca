@@ -15,7 +15,7 @@ import Footer from '@/components/Footer.vue'
     <section class="row m-0 px-4 py-5 mt-5 col-12 align-items-start">
       <router-view></router-view>  
     </section>
-    <section class="row m-0 px-4 py-5 mt-5 col-12 align-items-start">
+    <section class="row m-0 col-12 align-items-start">
       <Footer/>
     </section>
   </div>
