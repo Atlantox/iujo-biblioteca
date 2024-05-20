@@ -5,7 +5,7 @@ import useSessionStore from '@/stores/session.js'
 import DataTableInitializer from '@/utils/DataTableInitializer';
 import OnAppearAnimation from '@/utils/ElegantDisplayer.js'
 
-const sessionStore = new useSessionStore()
+const sessionStore = useSessionStore()
 const props = defineProps({
     books: Array
 })
@@ -27,9 +27,13 @@ onMounted(() => {
             <th class="text-center lb-bg-terciary border-1 border-white">Editorial</th>
             <th class="text-center lb-bg-terciary border-1 border-white">Estado</th>
             <th class="text-center lb-bg-terciary border-1 border-white">Páginas</th>
-            <th v-if="sessionStore.token !== ''" class="text-center lb-bg-terciary border-1 border-white">Cota</th>
-            <th v-if="sessionStore.token !== ''" class="text-center lb-bg-terciary border-1 border-white">Estante</th>
-            <th class="text-center lb-bg-terciary border-1 border-white">Acción</th>
+            <template v-if="sessionStore.authenticated === true">
+                <template v-if="'Libros' in sessionStore.userData.permissons">
+                    <th class="text-center lb-bg-terciary border-1 border-white">Cota</th>
+                    <th class="text-center lb-bg-terciary border-1 border-white">Estante</th>                        
+                </template>
+            </template>
+            <th class="text-center lb-bg-terciary border-1 border-white">Ver</th>
         </tr>
         </thead>
         <tbody class="fs-5">
@@ -41,9 +45,12 @@ onMounted(() => {
             <td>{{ book.editorial }}</td>
             <td class="text-center">{{ book.state }}</td>
             <td class="text-center">{{ book.pages }}</td>
-
-            <td v-if="sessionStore.token !== ''" >{{ book.call_number }}</td>
-            <td v-if="sessionStore.token !== ''" >{{ book.shelf }}</td>
+            <template v-if="sessionStore.authenticated === true">
+                <template v-if="'Libros' in sessionStore.userData.permissons">
+                    <td>{{ book.call_number }}</td>
+                    <td>{{ book.shelf }}</td>
+                </template>
+            </template>
             <td>
                 <div class="row m-0 p-0 text-center justify-content-center">
                     <div class="row m-0 p-1 col-3 fs-3">

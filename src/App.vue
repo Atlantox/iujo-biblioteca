@@ -1,5 +1,4 @@
 <script setup>
-import SidebarMenu from '@/components/SidebarMenu.vue'
 import NavbarMenu from '@/components/NavbarMenu.vue'
 import Footer from '@/components/Footer.vue'
 

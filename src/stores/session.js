@@ -1,6 +1,5 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { Modal } from 'bootstrap'
 import Swal from 'sweetalert2/dist/sweetalert2.all.js'
 const myModal = ref('')
 
@@ -8,6 +7,7 @@ const myModal = ref('')
 const useSessionStore = defineStore('session', {
   state: () => {
     return {
+      authenticated: false,
       token: '',
       userData: {}
     }
@@ -15,6 +15,8 @@ const useSessionStore = defineStore('session', {
   actions:{
     DestroySession(){
       this.token = ''
+      this.authenticated = false
+      this.userData = {}
       window.location.href = '/'
     },
 
@@ -24,10 +26,6 @@ const useSessionStore = defineStore('session', {
         text: content,
         icon: type,
       })
-      /*
-      myModal.value = new Modal('#exampleModalLong')
-      myModal.value.show()
-      */
     }
   }
 })

@@ -23,7 +23,7 @@ const useLoanStore = defineStore('loans', {
                     'Content-Type': 'application/json',
                 }
 
-                if (sessionStore.token !== '')
+                if (sessionStore.authenticated === true)
                     fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
 
                 let fetchConfig = {
