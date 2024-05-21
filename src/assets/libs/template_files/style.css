@@ -270,8 +270,9 @@
 
     .navbar.navbar-expand-lg .navbar-toggler {
         padding: 10px 20px;
-        border: 1px solid var(--bs-primary);
-        color: var(--bs-primary);
+        border: 3px solid white;
+        font-size:25px;
+        color: white;
     }
 
     .navbar-light .navbar-collapse {

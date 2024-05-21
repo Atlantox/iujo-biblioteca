@@ -6,7 +6,7 @@ const sessionStore = useSessionStore()
 <template>
     <!-- Designed by Atlantox https://atlantox.pythonanywhere.com/ -->
     <div class="container-fluid position-relative p-0">
-        <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0 shadowed-l lb-bg-primary bottom-bordered">
+        <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0 shadowed-n lb-bg-primary bottom-bordered">
             <figure class="navbar-brand m-0 text-right text-md-center ms-5">
                 <router-link class="" :to="{name:'home'}">
                     <img class="navbar-logo w-100" src="@/assets/iujo_logo.png" alt="iujo logo">
@@ -16,7 +16,7 @@ const sessionStore = useSessionStore()
                 <span class="fa fa-bars"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
-                
+
                 <div class="navbar-nav ms-auto py-0">   
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle fs-5" data-bs-toggle="dropdown">Libros</a>

@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import useSessionStore from '@/stores/session.js'
 
 import HomeView from '../views/HomeView.vue'
+import LoginFormView from '../views/forms/LoginFormView.vue'
 import SearchBooksView from '../views/tables/SearchBooksView.vue'
 import SeeBookView from '../views/SeeBookView.vue'
 import BookFormView from '../views/forms/BookFormView.vue'
@@ -19,62 +20,102 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView,
-      meta:{ requireAuthentication: false }
+      component: HomeView
+    },
+    {
+      path: '/admin_login',
+      name: 'admin_login',
+      component: LoginFormView,
+      meta:{ requireNotAuth: true }
     },
     {
       path: '/books',
       name: 'search_books',
-      component: SearchBooksView,
-      meta:{ requireAuthentication: false }
+      component: SearchBooksView
     },
     {
       path: '/books/:id',
       name: 'see_book',
-      component: SeeBookView,
-      meta:{ requireAuthentication: false }
+      component: SeeBookView
     },
     {
       path: '/add_book/:id?',
       name: 'add_book',
       component: BookFormView,
-      meta:{ requireAuthentication: true, permisson: 'Libros' }
+      meta:{ requireAuth: true, bookPermisson: true }
     },
     {
       path: '/add_loan/:id?',
       name: 'add_loan',
       component: LoanFormView,
-      meta:{ requireAuthentication: true, permisson: 'Préstamos' }
+      meta:{ requireAuth: true, loanPermisson: true }
     },
     {
       path: '/search_loans',
       name: 'search_loans',
       component: SearchLoanView,
-      meta:{ requireAuthentication: true, permisson: 'Préstamos' }
+      meta:{ requireAuth: true, loanPermisson: true }
     },
     {
       path: '/see_loan/:id',
       name: 'see_loan',
       component: SeeLoanView,
-      meta:{ requireAuthentication: true, permisson: 'Préstamos' }
+      meta:{ requireAuth: true, loanPermisson: true }
     },
     {
       path: '/add_reader/:id?',
       name: 'add_reader',
-      meta:{ requireAuthentication: true, permisson: 'Lectores' }
+      component: ReaderFormView,
+      meta:{ requireAuth: true, readerPermisson: true }
     },
     {
       path: '/search_readers',
       name: 'search_readers',
-      meta:{ requireAuthentication: true, permisson: 'Lectores' }
+      component: SearchReadersView,
+      meta:{ requireAuth: true, readerPermisson: true }
     },
     {
       path: '/see_reader/:id',
       name: 'see_reader',
       component: SeeReaderView,
-      meta:{ requireAuthentication: true, permisson: 'Lectores' }
+      meta:{ requireAuth: true, readerPermisson: true }
     },
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  const sessionStore = useSessionStore()
+  var routeOk = true
+
+  if(to.meta.requireAuth){
+    if(!sessionStore.authenticated)
+      routeOk = false
+    else{
+      if(to.meta.bookPermisson && !('Libros' in sessionStore.userData.permissons)){
+        routeOk = false
+      }
+
+      if(to.meta.loanPermisson && !('Préstamos' in sessionStore.userData.permissons)){
+        routeOk = false
+      }
+
+      if(to.meta.readerPermisson && !('Lectores' in sessionStore.userData.permissons)){
+        routeOk = false
+      }
+    }
+  }
+  else{
+    if(sessionStore.authenticated){
+      if(to.meta.requireNotAuth)
+        routeOk = false
+    }
+  }
+
+  if(routeOk === true)
+    next()
+  else
+    next('/')
+
 })
 
 export default router

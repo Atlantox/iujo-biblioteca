@@ -109,7 +109,7 @@ const ValidateForm = ((e) => {
             <div class="row m-0 p-0 justify-content-center my-2 mt-5">
                 <div class="row m-0 p-0 col-12 justify-content-center">
                     <button class="col-2 myBtn terciary-btn shadowed-l h3">
-                        Enviar
+                        {{ edit ? 'Modificar ' : 'Registrar ' }}
                     </button>
                 </div>
             </div>

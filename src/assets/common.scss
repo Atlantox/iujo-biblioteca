@@ -6,10 +6,10 @@ $primary-dark: #68d37620;
 
 $secondary: #719CE5;
 
-$terciary: #E571D6;
-$terciary-dark: #E571D620;
-$terciary-l:#EB94E0;
-$terciary-ul: #fae9f8;
+$terciary: #71B9E5;
+$terciary-dark: #003b5e;
+$terciary-l:#add1e6;
+$terciary-ul: #dcf2ff;
 
 $quartary: #E5BA71;
 
@@ -180,11 +180,9 @@ $quartary: #E5BA71;
     border-radius: 5px;
     padding: 2px;
     align-self:center;
-    border: $terciary-l solid 1px;
+    border: $terciary-dark solid 1px;
     outline: none;
-    transition: 0.25s;
-
-    
+    transition: 0.25s;    
 }   
 
 .primary-btn{
@@ -193,7 +191,7 @@ $quartary: #E5BA71;
 
 .terciary-btn{
     background-color: $terciary;
-    border: 1px $terciary-l solid;
+    border: 1px $terciary-dark solid;
     border-radius: 15px;
     color:white !important;
 }
