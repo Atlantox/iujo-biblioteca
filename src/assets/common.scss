@@ -317,6 +317,12 @@ input[type="file"] {
     transform:scale(1.1);
 }
 
+.error-displayer{
+    color:#f12424;
+    font-weight: bold;
+    animation: grow 0.6s;
+}
+
 .bottom-bordered{
     border-bottom-left-radius: 30px;
     border-bottom-right-radius: 30px;
@@ -325,4 +331,12 @@ input[type="file"] {
 .hide-up{
     opacity:0;
     transform:translateY(-50px)
+}
+
+.odd{
+    background:white !important;
+}
+
+.even{
+    background-color: #e0e0e0 !important;
 }

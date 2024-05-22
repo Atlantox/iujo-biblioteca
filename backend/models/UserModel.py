@@ -82,7 +82,33 @@ class UserModel(BaseModel):
         sql = 'SELECT id, nickname, level, active FROM user WHERE token = %s'
         
         cursor.execute(sql, (token,))
-        return cursor.fetchone()
+        targetUser = cursor.fetchone()
+        targetUser['permissons'] = self.GetUserPermissons(token)
+        return targetUser
+    
+    def GetUserPermissons(self, token):
+        cursor = self.connection.connection.cursor()
+        sql = '''
+            SELECT
+            permisson.name
+            FROM
+            permisson
+            INNER JOIN user ON user.level = permisson.level
+            WHERE
+            user.token = %s
+
+        '''
+        
+        cursor.execute(sql, (token,))
+        permissons = cursor.fetchall()
+
+        result = []
+        if permissons is not None:
+            for permisson in permissons:
+                result.append(permisson['name'])
+        else:
+            result = None
+        return result
 
     def UsernameExists(self, recievedUsername):
         cursor = self.connection.connection.cursor()

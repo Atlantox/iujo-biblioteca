@@ -22,18 +22,18 @@ onMounted(() => {
     <table class="col-12 shadowed h6 hide-up" id="normal-dt">
         <thead>
         <tr class="text-white">
-            <th class="text-center lb-bg-terciary border-1 border-white">Título</th>
-            <th class="text-center lb-bg-terciary border-1 border-white">Autor</th>
-            <th class="text-center lb-bg-terciary border-1 border-white">Editorial</th>
-            <th class="text-center lb-bg-terciary border-1 border-white">Estado</th>
-            <th class="text-center lb-bg-terciary border-1 border-white">Páginas</th>
+            <th class="text-center lb-bg-terciary border-1 border-white fs-4">Título</th>
+            <th class="text-center lb-bg-terciary border-1 border-white fs-4">Autor</th>
+            <th class="text-center lb-bg-terciary border-1 border-white fs-4">Editorial</th>
+            <th class="text-center lb-bg-terciary border-1 border-white fs-4">Estado</th>
+            <th class="text-center lb-bg-terciary border-1 border-white fs-4">Páginas</th>
             <template v-if="sessionStore.authenticated === true">
                 <template v-if="'Libros' in sessionStore.userData.permissons">
-                    <th class="text-center lb-bg-terciary border-1 border-white">Cota</th>
-                    <th class="text-center lb-bg-terciary border-1 border-white">Estante</th>                        
+                    <th class="text-center lb-bg-terciary border-1 border-white fs-4">Cota</th>
+                    <th class="text-center lb-bg-terciary border-1 border-white fs-4">Estante</th>                        
                 </template>
             </template>
-            <th class="text-center lb-bg-terciary border-1 border-white">Ver</th>
+            <th class="text-center lb-bg-terciary border-1 border-white fs-4">Ver</th>
         </tr>
         </thead>
         <tbody class="fs-5">

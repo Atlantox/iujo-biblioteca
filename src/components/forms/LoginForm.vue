@@ -1,55 +1,82 @@
 <script setup>
-import { ref, inject } from 'vue'
-import Select2Initializer from '@/utils/Select2Initializer'
-import FormValidator from '@/utils/FormValidator'
+import { ref } from 'vue'
+import router from '@/router';
+import LoadingGadget from '../myGadgets/LoadingGadget.vue';
+import useSessionStore from '@/stores/session.js'
 import PageTitleView from '../PageTitle.vue'
 
-const swal = inject('$swal')
+const sessionStore = useSessionStore()
 
 const formErrors = ref([])
+const waitingResponse = ref(false)
 
-const user = ref('')
+const username = ref('')
 const password = ref('')
 
-const ValidateForm = ((e) => {
-    const myForm = e.srcElement
-    const validator = new FormValidator()
-        // General validations
-        const bookLengthConfig = {
-        'username': {'min': 6, 'max': 25},
-        'password': {'min': 10, 'max': 25},
-    }    
-    
+const ValidateForm = (async (e) => {
+    if(username.value === '') formErrors.value.push('Usuario vacío')
+    if(password.value === '') formErrors.value.push('Contraseña vacío')
+
+    if(formErrors.value.length === 0){
+        waitingResponse.value = true
+        await sessionStore.TryLogin(username.value, password.value)
+        waitingResponse.value = false
+        if(sessionStore.errorMessage === ''){
+            router.push('/')
+        }
+        else{
+            sessionStore.ShowModal('Error', sessionStore.errorMessage, 'error')
+        }
+    }
+
 })
 </script>
 
 <template>
     <div class="row m-0 p-0 justify-content-center">
-        <form class="col-12 col-lg-9 row m-0 p-2 fs-4 myForm shadowed-n rounded lb-bg-terciary-l" @submit.prevent="ValidateForm">
+        <form class="col-12 col-lg-9 row m-0 p-2 fs-4 myForm shadowed-n rounded lb-bg-terciary-ul" @submit.prevent="ValidateForm">
             <PageTitleView :title="'Login administrativo'"/>
-            
-            <div class="row m-0 p-0 justify-content-center my-2">
-                <div class="row m-0 p-0 col-10 col-lg-3">
-                    <label class="text-center text-lg-end" for="username">Usuario</label>
-                </div>
-                <div class="row m-0 p-0 col-10 col-lg-7">
-                    <div class="row col-12 col-lg-7">
-                        <input type="password" class="myInput" maxlength="25" minlength="6" id="username" autofocus v-model="username">
+
+            <template v-if="waitingResponse">
+                <LoadingGadget/>
+            </template>
+            <template v-else>
+                <div class="row m-0 p-0 justify-content-center my-2">
+                    <div class="row m-0 p-0 col-10 col-lg-3">
+                        <label class="text-center text-lg-end" for="username">Usuario</label>
+                    </div>
+                    <div class="row m-0 p-0 col-10 col-lg-7">
+                        <div class="row col-12 col-lg-7">
+                            <input type="password" class="myInput" maxlength="50" minlength="6" id="username" autofocus v-model="username">
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="row m-0 p-0 justify-content-center my-2">
-                <div class="row m-0 p-0 col-10 col-lg-3">
-                    <label class="text-center text-lg-end" for="password">Contraseña</label>
-                </div>
-                <div class="row m-0 p-0 col-10 col-lg-7">
-                    <div class="row col-12 col-lg-7">
-                        <input type="password" class="myInput" maxlength="25" minlength="10" id="password" v-model="password">
+    
+                <div class="row m-0 p-0 justify-content-center my-2">
+                    <div class="row m-0 p-0 col-10 col-lg-3">
+                        <label class="text-center text-lg-end" for="password">Contraseña</label>
+                    </div>
+                    <div class="row m-0 p-0 col-10 col-lg-7">
+                        <div class="row col-12 col-lg-7">
+                            <input type="password" class="myInput" maxlength="50" minlength="8" id="password" v-model="password">
+                        </div>
                     </div>
                 </div>
-            </div>
-
+    
+                <template v-if="formErrors.length > 0">
+                    <div class="row m-0 p-0 justify-content-center my-2 mb-0">
+                        <div class="row m-0 p-0 col-12 justify-content-center">
+                            <ul class="row col-6 m-0 p-0 text-center list-unstyled error-displayer">
+                                <li
+                                v-for="error, index in formErrors"
+                                :key="index">
+                                    {{ error }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>                    
+                </template>
+            </template>
 
             <div class="row m-0 p-0 justify-content-center my-2 mt-5">
                 <div class="row m-0 p-0 col-12 justify-content-center">

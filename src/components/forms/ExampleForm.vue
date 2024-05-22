@@ -34,7 +34,7 @@ const ValidateForm = ((e) => {
 
 <template>
     <div class="row m-0 p-0">
-        <form action="" class="col-12 row m-0 p-2 fs-4 myForm shadowed-l rounded lb-bg-terciary-dark" @submit.prevent="ValidateForm">
+        <form action="" class="col-12 row m-0 p-2 fs-4 myForm shadowed-l rounded lb-bg-terciary-ul" @submit.prevent="ValidateForm">
             <div class="row m-0 p-0 justify-content-center my-2">
                 <div class="row m-0 p-0 col-3">
                     <label class="text-end" for="text">Text input</label>

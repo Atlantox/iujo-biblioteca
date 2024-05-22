@@ -16,7 +16,6 @@ const sessionStore = useSessionStore()
                 <span class="fa fa-bars"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
-
                 <div class="navbar-nav ms-auto py-0">   
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle fs-5" data-bs-toggle="dropdown">Libros</a>
@@ -72,7 +71,21 @@ const sessionStore = useSessionStore()
                                 Estadísticas
                             </router-link>
                         </template>
-                    </template>                
+                    </template>    
+                    
+                    <template v-if="sessionStore.authenticated === true">
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle fs-5" data-bs-toggle="dropdown">{{ sessionStore.userData.nickname }}</a>
+                            <div class="dropdown-menu m-0">
+                                <router-link class="dropdown-item text-decoration-none fs-4" :to="{name:'search_readers'}">
+                                    Mi cuenta
+                                </router-link>
+                                <a class="dropdown-item text-decoration-none fs-4" @click="sessionStore.DestroySession">
+                                    Cerrar sesión
+                                </a>
+                            </div>
+                        </div>
+                    </template>    
                     
                 </div>
             </div>

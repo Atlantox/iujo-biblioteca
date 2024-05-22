@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <div class="row w-100 h-100 justify-content-center align-items-center p-5 loader-container">
+    <div class="row w-100 h-auto justify-content-center align-items-center p-5 loader-container">
         <div class="loader m-auto"></div>
     </div>
 </template>

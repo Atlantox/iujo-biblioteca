@@ -45,7 +45,7 @@ const ValidateForm = ((e) => {
 
 <template>
     <div class="row m-0 p-0">
-        <form class="col-12 row m-0 p-2 fs-4 myForm shadowed-l rounded lb-bg-terciary-dark" @submit.prevent="ValidateForm">
+        <form class="col-12 row m-0 p-2 fs-4 myForm shadowed-l rounded lb-bg-terciary-ul" @submit.prevent="ValidateForm">
             <PageTitleView
             :title="(edit ? 'Modificar ' : 'Registrar nuevo ') + 'libro'"
             />

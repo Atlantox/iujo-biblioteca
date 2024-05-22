@@ -6,7 +6,7 @@ from helpers import *
 
 REGISTER_USER_LENGTH_CONFIG = {
     'nickname': {'max': 50, 'min':4},
-    'username': {'max': 50, 'min':8},
+    'username': {'max': 50, 'min':6},
     'password': {'max': 50, 'min':8}
 }
 
@@ -122,7 +122,6 @@ def TryLogin():
 
     if error == '':
         token = GetTokenOfRequest(request)
-        print(token)
         if token is not None:
             error = 'Usted ya está autenticado'
             statusCode = 401  # Unauthorized

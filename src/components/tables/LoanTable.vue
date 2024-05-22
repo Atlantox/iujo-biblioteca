@@ -18,12 +18,12 @@ onMounted(() => {
         <table class="col-12 shadowed h6" id="normal-dt">
             <thead>
             <tr class="text-white">
-                <th class="text-center lb-bg-terciary border-1 border-white">Lector</th>
-                <th class="text-center lb-bg-terciary border-1 border-white">Libro</th>
-                <th class="text-center lb-bg-terciary border-1 border-white">Fecha de entrega</th>
-                <th class="text-center lb-bg-terciary border-1 border-white">Fecha de devolución</th>
-                <th class="text-center lb-bg-terciary border-1 border-white">Observación</th>
-                <th class="text-center lb-bg-terciary border-1 border-white">Acción</th>
+                <th class="text-center lb-bg-terciary border-1 border-white fs-4">Lector</th>
+                <th class="text-center lb-bg-terciary border-1 border-white fs-4">Libro</th>
+                <th class="text-center lb-bg-terciary border-1 border-white fs-4">Fecha de entrega</th>
+                <th class="text-center lb-bg-terciary border-1 border-white fs-4">Fecha de devolución</th>
+                <th class="text-center lb-bg-terciary border-1 border-white fs-4">Observación</th>
+                <th class="text-center lb-bg-terciary border-1 border-white fs-4">Acción</th>
             </tr>
             </thead>
             <tbody>

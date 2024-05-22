@@ -1,9 +1,4 @@
 class FormValidator{
-
-    FieldsAreEmpty(data, keys){
-
-    }
-
     FieldsAreNumber(data, keys){
 
     }

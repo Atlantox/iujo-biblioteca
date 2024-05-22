@@ -1,7 +1,8 @@
-import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import Swal from 'sweetalert2/dist/sweetalert2.all.js'
-const myModal = ref('')
+import Apiconfig from '@/stores/config.js'
+
+const apiConfig = new Apiconfig()
 
 
 const useSessionStore = defineStore('session', {
@@ -9,10 +10,51 @@ const useSessionStore = defineStore('session', {
     return {
       authenticated: false,
       token: '',
-      userData: {}
+      userData: {},
+      errorMesage: ''
     }
   },
   actions:{
+    async TryLogin(username, password){
+      const sessionStore = useSessionStore()
+      try{
+          let url = apiConfig.base_url + '/login'
+          var fetchHeaders = {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+          }
+
+          if (sessionStore.authenticated === true)
+              fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+          let fetchConfig = {
+              method: 'POST',
+              headers: fetchHeaders,
+              body:JSON.stringify({
+                'username': username,
+                'password': password
+              })
+          }
+
+          let response = await fetch(url, fetchConfig)
+          let json = await response.json()
+          let result = await json
+          if(result.success){
+            this.authenticated = true
+            this.token = result.token
+            this.userData = result.userData
+            this.errorMessage =  ''
+          }
+          else{
+              this.errorMessage =  result.message
+          }
+      }
+      catch(error){
+          
+          this.errorMessage = 'Error: ' + error.message
+      }
+    },
+
     DestroySession(){
       this.token = ''
       this.authenticated = false
@@ -27,7 +69,8 @@ const useSessionStore = defineStore('session', {
         icon: type,
       })
     }
-  }
+  },
+  persit: true
 })
 
 export default useSessionStore

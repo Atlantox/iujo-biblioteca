@@ -40,7 +40,7 @@ const useBookStore = defineStore('books', {
                 }
             }
             catch(error){
-                this.errorMessage = 'Error: '
+                this.errorMessage = 'Error: ' + error
             }
         }
 

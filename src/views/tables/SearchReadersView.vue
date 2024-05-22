@@ -25,7 +25,7 @@ onMounted(async ()  => {
   <PageTitleView
   :title="'Listado de los lectores'"
   />
-  <div class="row m-0 p-0 col-12 py-4 shadowed-l rounded lb-bg-terciary-dark">
+  <div class="row m-0 p-0 col-12 py-4 shadowed-l rounded lb-bg-terciary-ul">
     <template
     v-if="readers.value === undefined">
       <LoadingGadget/>

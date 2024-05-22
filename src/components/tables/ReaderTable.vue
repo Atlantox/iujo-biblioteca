@@ -18,12 +18,12 @@ onMounted(() => {
         <table class="col-12 shadowed h6" id="normal-dt">
             <thead>
             <tr class="text-white">
-                <th class="text-center lb-bg-terciary border-1 border-white">Cédula</th>
-                <th class="text-center lb-bg-terciary border-1 border-white">Nombre</th>
-                <th class="text-center lb-bg-terciary border-1 border-white">Género</th>
-                <th class="text-center lb-bg-terciary border-1 border-white">Teléfono</th>
-                <th class="text-center lb-bg-terciary border-1 border-white">Es docente</th>
-                <th class="text-center lb-bg-terciary border-1 border-white">Acción</th>
+                <th class="text-center lb-bg-terciary border-1 border-white fs-4">Cédula</th>
+                <th class="text-center lb-bg-terciary border-1 border-white fs-4">Nombre</th>
+                <th class="text-center lb-bg-terciary border-1 border-white fs-4">Género</th>
+                <th class="text-center lb-bg-terciary border-1 border-white fs-4">Teléfono</th>
+                <th class="text-center lb-bg-terciary border-1 border-white fs-4">Es docente</th>
+                <th class="text-center lb-bg-terciary border-1 border-white fs-4">Acción</th>
             </tr>
             </thead>
             <tbody>
