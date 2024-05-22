@@ -18,14 +18,18 @@ const ValidateForm = (async (e) => {
     if(password.value === '') formErrors.value.push('Contraseña vacío')
 
     if(formErrors.value.length === 0){
+        const loginResult = sessionStore.loginResult
         waitingResponse.value = true
         await sessionStore.TryLogin(username.value, password.value)
         waitingResponse.value = false
-        if(sessionStore.errorMessage === ''){
-            router.push('/')
+        if(loginResult.value.success === true){            
+            sessionStore.authenticated = true
+            sessionStore.token = loginResult.value.token
+            sessionStore.userData = loginResult.value.userData
+            window.location.href = '/'
         }
         else{
-            sessionStore.ShowModal('Error', sessionStore.errorMessage, 'error')
+            sessionStore.ShowModal('Error', loginResult.value.message, 'error')
         }
     }
 

@@ -35,7 +35,7 @@ const useLoanStore = defineStore('loans', {
                 let json = await response.json()
                 let result = await json
                 if(result.success)
-                    this.books.value = result.books
+                    this.loans.value = result.loans
                 else
                     this.errorMessage =  result.message
             }

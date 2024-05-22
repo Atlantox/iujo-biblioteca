@@ -322,7 +322,7 @@
       width: calc(100% - 2px);
       height: 3px;
       left: 1px;
-      background-color: #E571D6;
+      background-color: #3b8abb;
   }
 
   .navbar-light .navbar-nav .nav-link.nav-contact::before {

@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue'
 import { onMounted } from 'vue'
 import useLoanStore from '@/stores/loans.js'
 import useSessionStore from '@/stores/session.js'
@@ -13,9 +14,9 @@ const loans = loanStore.loans
 
 onMounted(async ()  => {
   await loanStore.FetchPendingLoans()
+  
   if (loanStore.errorMessage !== '')
     sessionStore.ShowModal('Error', loanStore.errorMessage, 'error')
-
 })
 
 </script>

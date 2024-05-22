@@ -1,3 +1,4 @@
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import Swal from 'sweetalert2/dist/sweetalert2.all.js'
 import Apiconfig from '@/stores/config.js'
@@ -11,7 +12,7 @@ const useSessionStore = defineStore('session', {
       authenticated: false,
       token: '',
       userData: {},
-      errorMesage: ''
+      loginResult: ref({})
     }
   },
   actions:{
@@ -39,6 +40,8 @@ const useSessionStore = defineStore('session', {
           let response = await fetch(url, fetchConfig)
           let json = await response.json()
           let result = await json
+          this.loginResult.value = result
+          /*
           if(result.success){
             this.authenticated = true
             this.token = result.token
@@ -48,10 +51,11 @@ const useSessionStore = defineStore('session', {
           else{
               this.errorMessage =  result.message
           }
+          */
       }
       catch(error){
-          
-          this.errorMessage = 'Error: ' + error.message
+          this.loginResult.value = 'Error: ' + error.message
+          //this.errorMessage = 'Error: ' + error.message
       }
     },
 
@@ -70,7 +74,8 @@ const useSessionStore = defineStore('session', {
       })
     }
   },
-  persit: true
+  
+  persist: true,
 })
 
 export default useSessionStore

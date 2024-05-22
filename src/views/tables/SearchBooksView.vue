@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, inject } from 'vue'
+import { onMounted } from 'vue'
 
 import useBookStore from '@/stores/books.js'
 import useSessionStore from '@/stores/session'

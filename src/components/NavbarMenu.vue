@@ -24,7 +24,7 @@ const sessionStore = useSessionStore()
                                 Ver listado
                             </router-link>
                             <template v-if="sessionStore.authenticated === true">
-                                <template v-if="'Libros' in sessionStore.userData.permissons">
+                                <template v-if="sessionStore.userData.permissons.includes('Libros')">
                                     <router-link class="dropdown-item fs-6 text-decoration-none fs-4" :to="{name:'add_book'}">
                                         Crear nuevo
                                     </router-link>
@@ -34,7 +34,7 @@ const sessionStore = useSessionStore()
                     </div>
                     
                     <template v-if="sessionStore.authenticated === true">
-                        <template v-if="'Préstamos' in sessionStore.userData.permissons">
+                        <template v-if="sessionStore.userData.permissons.includes('Préstamos')">
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle fs-5" data-bs-toggle="dropdown">Préstamos</a>
                                 <div class="dropdown-menu m-0">
@@ -50,7 +50,7 @@ const sessionStore = useSessionStore()
                     </template>
 
                     <template v-if="sessionStore.authenticated === true">
-                        <template v-if="'Lectores' in sessionStore.userData.permissons">
+                        <template v-if="sessionStore.userData.permissons.includes('Lectores')">
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle fs-5" data-bs-toggle="dropdown">Lectores</a>
                                 <div class="dropdown-menu m-0">
@@ -79,6 +79,9 @@ const sessionStore = useSessionStore()
                             <div class="dropdown-menu m-0">
                                 <router-link class="dropdown-item text-decoration-none fs-4" :to="{name:'search_readers'}">
                                     Mi cuenta
+                                </router-link>
+                                <router-link class="dropdown-item text-decoration-none fs-4" :to="{name:'dashboard'}">
+                                    Dashboard
                                 </router-link>
                                 <a class="dropdown-item text-decoration-none fs-4" @click="sessionStore.DestroySession">
                                     Cerrar sesión

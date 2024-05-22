@@ -4,6 +4,7 @@ import useSessionStore from '@/stores/session.js'
 
 import HomeView from '../views/HomeView.vue'
 import LoginFormView from '../views/forms/LoginFormView.vue'
+import DashboardView from '../views/DashboardView.vue'
 import SearchBooksView from '../views/tables/SearchBooksView.vue'
 import SeeBookView from '../views/SeeBookView.vue'
 import BookFormView from '../views/forms/BookFormView.vue'
@@ -27,6 +28,12 @@ const router = createRouter({
       name: 'admin_login',
       component: LoginFormView,
       meta:{ requireNotAuth: true }
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: DashboardView,
+      meta:{ requireAuth: true }
     },
     {
       path: '/books',
@@ -91,15 +98,15 @@ router.beforeEach((to, from, next) => {
     if(!sessionStore.authenticated)
       routeOk = false
     else{
-      if(to.meta.bookPermisson && !('Libros' in sessionStore.userData.permissons)){
+      if(to.meta.bookPermisson && !(sessionStore.userData.permissons.includes('Libros'))){
         routeOk = false
       }
 
-      if(to.meta.loanPermisson && !('Préstamos' in sessionStore.userData.permissons)){
+      if(to.meta.loanPermisson && !(sessionStore.userData.permissons.includes('Préstamos'))){
         routeOk = false
       }
 
-      if(to.meta.readerPermisson && !('Lectores' in sessionStore.userData.permissons)){
+      if(to.meta.readerPermisson && !(sessionStore.userData.permissons.includes('Lectores'))){
         routeOk = false
       }
     }
