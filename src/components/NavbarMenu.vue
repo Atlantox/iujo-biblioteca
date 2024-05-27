@@ -17,73 +17,35 @@ const sessionStore = useSessionStore()
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav ms-auto py-0">   
+                    <!--
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle fs-5" data-bs-toggle="dropdown">Libros</a>
+                        <a href="#" class="nav-link dropdown-toggle fs-5" data-bs-toggle="dropdown">dropdown template</a>
                         <div class="dropdown-menu m-0">
-                            <router-link class="dropdown-item fs-6 text-decoration-none fs-4 bg-none" :to="{name:'search_books'}">
-                                Ver listado
+                            <router-link class="dropdown-item fs-6 text-decoration-none fs-4 hover-bold hover-spacing">
+                                option1
                             </router-link>
-                            <template v-if="sessionStore.authenticated === true">
-                                <template v-if="sessionStore.userData.permissons.includes('Libros')">
-                                    <router-link class="dropdown-item fs-6 text-decoration-none fs-4" :to="{name:'add_book'}">
-                                        Crear nuevo
-                                    </router-link>
-                                </template>          
-                            </template>
+                            <router-link class="dropdown-item fs-6 text-decoration-none fs-4 hover-bold hover-spacing">
+                                option2
+                            </router-link>
                         </div>
                     </div>
-                    
-                    <template v-if="sessionStore.authenticated === true">
-                        <template v-if="sessionStore.userData.permissons.includes('Préstamos')">
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle fs-5" data-bs-toggle="dropdown">Préstamos</a>
-                                <div class="dropdown-menu m-0">
-                                    <router-link class="dropdown-item fs-6 text-decoration-none fs-4" :to="{name:'search_loans'}">
-                                        Ver listado
-                                    </router-link>
-                                    <router-link class="dropdown-item fs-6 text-decoration-none fs-4" :to="{name:'add_loan'}">
-                                        Crear nuevo
-                                    </router-link>
-                                </div>
-                            </div>
-                        </template>
-                    </template>
+                    -->
 
-                    <template v-if="sessionStore.authenticated === true">
-                        <template v-if="sessionStore.userData.permissons.includes('Lectores')">
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle fs-5" data-bs-toggle="dropdown">Lectores</a>
-                                <div class="dropdown-menu m-0">
-                                    <router-link class="dropdown-item text-decoration-none fs-4" :to="{name:'search_readers'}">
-                                        Ver listado
-                                    </router-link>
-                                    <router-link class="dropdown-item text-decoration-none fs-4" :to="{name:'add_reader'}">
-                                        Crear nuevo
-                                    </router-link>
-                                </div>
-                            </div>
-                        </template>
-                    </template>
-
-                    <template v-if="sessionStore.authenticated === true">
-                        <template v-if="'Estadísticas' in sessionStore.userData.permissons">
-                            <router-link class="nav-item nav-link text-white text-decoration-none fs-5" :to="{name:'add_book'}">
-                                Estadísticas
-                            </router-link>
-                        </template>
-                    </template>    
+                    <router-link class="nav-item nav-link text-white text-decoration-none fs-5" :to="{name:'search_books'}">
+                        Libros
+                    </router-link>
                     
                     <template v-if="sessionStore.authenticated === true">
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle fs-5" data-bs-toggle="dropdown">{{ sessionStore.userData.nickname }}</a>
                             <div class="dropdown-menu m-0">
-                                <router-link class="dropdown-item text-decoration-none fs-4" :to="{name:'search_readers'}">
+                                <router-link class="dropdown-item text-decoration-none fs-4 hover-bold hover-spacing" :to="{name:'search_readers'}">
                                     Mi cuenta
                                 </router-link>
-                                <router-link class="dropdown-item text-decoration-none fs-4" :to="{name:'dashboard'}">
+                                <router-link class="dropdown-item text-decoration-none fs-4 hover-bold hover-spacing" :to="{name:'dashboard'}">
                                     Dashboard
                                 </router-link>
-                                <a class="dropdown-item text-decoration-none fs-4" @click="sessionStore.DestroySession">
+                                <a class="dropdown-item text-decoration-none fs-4 hover-bold hover-spacing" @click="sessionStore.DestroySession">
                                     Cerrar sesión
                                 </a>
                             </div>

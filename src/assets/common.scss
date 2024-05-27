@@ -90,6 +90,14 @@ $quartary: #E5BA71;
     text-shadow: none;
 }
 
+.text-black{
+    color: black;
+}
+
+.text-grey{
+    color:rgb(109, 109, 109);
+}
+
 .shadow-deep-h{
     box-shadow: inset 0 0 60px 15px black;
 }
@@ -173,6 +181,18 @@ $quartary: #E5BA71;
 
 .sorting::before, .sorting::after{
     color:black !important;
+}
+
+.hover-bold, .hover-spacing{
+    transition:0.3s;
+}
+
+.hover-bold:hover{
+    font-weight: bold;
+}
+
+.hover-spacing:hover{
+    letter-spacing: 1px;    
 }
 
 /*  F O R M S  */

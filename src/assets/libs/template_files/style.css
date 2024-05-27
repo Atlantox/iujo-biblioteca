@@ -248,10 +248,7 @@
 }
 
 .dropdown .dropdown-menu a:hover {
-    font-weight: bold;
     color: black;
-    letter-spacing: 1px;
-    transition:0.3s;
 }
 
 .navbar .nav-item:hover .dropdown-menu {
@@ -265,7 +262,8 @@
 @media (max-width: 991.98px) {
     .sticky-top.navbar-light {
         position: relative;
-        background: var(--bs-white);
+        background: #71E580;
+        box-shadow: rgba(0, 0, 0, 0.6) 0px 0px 10px 1px !important;
     }
 
     .navbar.navbar-expand-lg .navbar-toggler {

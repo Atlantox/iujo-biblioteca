@@ -60,7 +60,6 @@ class UserModel(BaseModel):
             result = 'Authenticación requerida'
         
         return result
-
     
     def GetNewToken(self):
         tentativeToken = '{0}-{1}'.format(uuid4(), uuid4())
@@ -129,6 +128,17 @@ class UserModel(BaseModel):
                     break
                 except Exception as err:
                     pass
+
+        return found
+    
+    def NicknameExists(self, nickname):
+        cursor = self.connection.connection.cursor()
+
+        sql = "SELECT nickname FROM user WHERE nickname = %s"
+        args = (nickname,)
+        cursor.execute(sql, args)
+        targetUser = cursor.fetchone()
+        found = targetUser is not None
 
         return found
     

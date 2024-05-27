@@ -96,6 +96,11 @@ def RegisterUser():
         if userModel.UsernameExists(cleanData['username']) is True:
             error = 'Usuario ya registrado'
             statusCode = 400
+
+    if error == '':
+        if userModel.NicknameExists(cleanData['nickname']) is True:
+            error = 'Nick ya registrado'
+            statusCode = 400
     
     if error == '':
         created = userModel.CreateUser(cleanData)
