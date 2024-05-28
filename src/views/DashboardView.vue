@@ -199,7 +199,7 @@ const linkTextStyle = 'text-grey col-10 fs-5 w-auto hover-bold hover-spacing'
       <div class="row col-12 justify-content-center col-lg-4 p-3">
         <div class="row w-100 m-0 p-0 justify-content-around h-100 py-3 shadowed-l rounded lb-bg-terciary-ul my-3">
           <h3 class="fw-bold col-12 text-center">Los últimos 30 días se realizaron...</h3>
-            <article class="col-12 col-lg-5 row m-0 p-0 border-bottom align-middle">
+            <article class="col-12 col-lg-5 row m-0 p-0 border-bottom align-middle p-3 p-lg-0">
                 <div class="col-12 d-flex align-items-center bg-white rounded shadowed-l">
                     <h4 class="h4 m-0 text-center w-100 p-2">
                       <strong>0</strong>
@@ -208,7 +208,7 @@ const linkTextStyle = 'text-grey col-10 fs-5 w-auto hover-bold hover-spacing'
                 </div>
             </article>
 
-            <article class="col-12 col-lg-5 row m-0 p-0 border-bottom align-middle">
+            <article class="col-12 col-lg-5 row m-0 p-0 border-bottom align-middle p-3 p-lg-0">
                 <div class="col-12 d-flex align-items-center bg-white rounded shadowed-l">
                     <h4 class="h4 m-0 text-center w-100 p-2">
                       <strong>0</strong>

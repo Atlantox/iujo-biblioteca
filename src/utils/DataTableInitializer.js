@@ -1,6 +1,7 @@
 class DataTableInitializer{
     constructor(){
         $('#normal-dt').DataTable( {
+            
             "language": {
                 paginate: {
                   previous: '<i class="bi bi-caret-left-fill text-white datatable-navigation"></i>',

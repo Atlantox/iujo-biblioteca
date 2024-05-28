@@ -32,9 +32,15 @@ onMounted(async ()  => {
       <LoadingGadget/>
     </template>
     <template v-else>
+      <div class="w-100 m-0 p-0 table-container">
         <BooksTable
           :books="books.value"/>
+      </div>
     </template>
   </div>
 
 </template>
+
+<style scoped>
+
+</style>
