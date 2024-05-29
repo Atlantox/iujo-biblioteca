@@ -7,7 +7,8 @@ const apiConfig = new ApiConfig()
 const useReaderStore = defineStore('readers', {
     state: () => {
         return {
-            readers: ref([])
+            readers: ref([]),
+            errorMessage: ref('')
         }
     },
     actions:{

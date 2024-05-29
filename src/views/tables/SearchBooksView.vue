@@ -8,16 +8,18 @@ import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue'
 import BooksTable from '@/components/tables/BooksTable.vue'
 import PageTitleView from '@/components/PageTitle.vue'
 
+import OnAppearAnimation from '@/utils/ElegantDisplayer.js'
+
 const bookStore = useBookStore()
 const sessionStore = useSessionStore()
 const books = bookStore.books
 
 onMounted(async ()  => {
-  await bookStore.FetchBooks()
+  await bookStore.FetchBooks()   
+  OnAppearAnimation('table-container', 'hide-up') 
 
-  if (bookStore.errorMessage !== ''){
+  if (bookStore.errorMessage !== '')
     sessionStore.ShowModal('Error', bookStore.errorMessage, 'error')
-  }
 })
 
 </script>
@@ -32,7 +34,7 @@ onMounted(async ()  => {
       <LoadingGadget/>
     </template>
     <template v-else>
-      <div class="w-100 m-0 p-0 table-container">
+      <div class="w-100 m-0 p-3 px-5 table-container hide-up" id="table-container">
         <BooksTable
           :books="books.value"/>
       </div>
@@ -40,7 +42,3 @@ onMounted(async ()  => {
   </div>
 
 </template>
-
-<style scoped>
-
-</style>

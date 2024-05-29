@@ -58,7 +58,7 @@ const router = createRouter({
       meta:{ requireAuth: true, loanPermisson: true }
     },
     {
-      path: '/search_loans',
+      path: '/loans',
       name: 'search_loans',
       component: SearchLoanView,
       meta:{ requireAuth: true, loanPermisson: true }
@@ -76,7 +76,7 @@ const router = createRouter({
       meta:{ requireAuth: true, readerPermisson: true }
     },
     {
-      path: '/search_readers',
+      path: '/readers',
       name: 'search_readers',
       component: SearchReadersView,
       meta:{ requireAuth: true, readerPermisson: true }

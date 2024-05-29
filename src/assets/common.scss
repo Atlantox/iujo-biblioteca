@@ -124,11 +124,7 @@ $quartary: #E5BA71;
 }
 
 .dataTable{
-    margin-top:50px !important;
-    border:none;
-    border-radius: 20px !important;
     overflow: hidden;
-    box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 10px 1px; /* shadowed-l */
 }
 
 .dt-buttons{
@@ -174,6 +170,10 @@ $quartary: #E5BA71;
 .dataTables_paginate span{
     color:white;
 }
+
+.table-container{
+    transition:1s;
+  }
 
 .current{
     border: none !important;
@@ -354,9 +354,24 @@ input[type="file"] {
 }
 
 .odd{
-    background:white !important;
+    background:rgba(255, 255, 255, 0.74) !important;
 }
 
 .even{
-    background-color: #e0e0e0 !important;
+    background-color: #e7e7e7b2 !important;
+}
+
+.dataTable{
+    border-bottom-left-radius: 20px !important;
+    border-bottom-right-radius: 20px !important;
+    overflow: hidden;
+    
+}
+
+.dt-scroll-headInner{
+    .dataTable{
+        border-radius:0 !important;
+        border-top-left-radius: 20px !important;
+        border-top-right-radius: 20px !important;
+    }
 }

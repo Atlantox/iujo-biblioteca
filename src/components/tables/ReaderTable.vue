@@ -13,10 +13,8 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="row m-0 p-0 col-12">
-        <!-- <h1 v-if="props.books.length > 0">Mostrando libros</h1> -->
-        <table class="col-12 shadowed h6" id="normal-dt">
-            <thead>
+    <table class="w-100 h6 m-0" id="normal-dt">
+        <thead>
             <tr class="text-white">
                 <th class="text-center lb-bg-terciary border-1 border-white fs-4">Cédula</th>
                 <th class="text-center lb-bg-terciary border-1 border-white fs-4">Nombre</th>
@@ -25,17 +23,17 @@ onMounted(() => {
                 <th class="text-center lb-bg-terciary border-1 border-white fs-4">Es docente</th>
                 <th class="text-center lb-bg-terciary border-1 border-white fs-4">Acción</th>
             </tr>
-            </thead>
-            <tbody>
+        </thead>
+        <tbody>
             <tr 
             v-for="reader in props.readers.value"
             :key="reader.id">
-                <td>{{ reader.cedula }}</td>
-                <td>{{ reader.names + ' ' + reader.surnames }}</td>
-                <td>{{ reader.gender }}</td>
-                <td>{{ reader.phone }}</td>
-                <td>{{ reader.teacher }}</td>
-                <td>
+                <td class="border-1">{{ reader.cedula }}</td>
+                <td class="border-1">{{ reader.names + ' ' + reader.surnames }}</td>
+                <td class="border-1">{{ reader.gender }}</td>
+                <td class="border-1">{{ reader.phone }}</td>
+                <td class="border-1">{{ reader.teacher }}</td>
+                <td class="border-1">
                     <div class="row m-0 p-0 text-center justify-content-center">
                         <div class="row m-0 p-1 col-3 fs-3">
                             <div class="w-100 lb-bg-primary rounded shadowed-l shake-on-hover text-center m-0 p-0">
@@ -47,17 +45,6 @@ onMounted(() => {
                     </div>
                 </td>
             </tr>
-            </tbody>
-        </table>
-    </div>
+        </tbody>
+    </table>
 </template>
-
-<style scoped>
-tr, td{
-  border: 1px rgba(66, 66, 66, 0.445) solid
-}
-
-a{
-    color:black;
-}
-</style>

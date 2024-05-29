@@ -7,6 +7,8 @@ import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue'
 import LoanTable from '@/components/tables/LoanTable.vue'
 import PageTitleView from '@/components/PageTitle.vue';
 
+import OnAppearAnimation from '@/utils/ElegantDisplayer.js'
+
 const loanStore = useLoanStore()
 const sessionStore = useSessionStore()
 const loans = loanStore.loans
@@ -14,6 +16,7 @@ const loans = loanStore.loans
 
 onMounted(async ()  => {
   await loanStore.FetchPendingLoans()
+  OnAppearAnimation('table-container', 'hide-up') 
   
   if (loanStore.errorMessage !== '')
     sessionStore.ShowModal('Error', loanStore.errorMessage, 'error')
@@ -31,8 +34,10 @@ onMounted(async ()  => {
       <LoadingGadget/>
     </template>
     <template v-else>
+      <div class="w-100 m-0 p-3 px-5 table-container hide-up" id="table-container">
         <LoanTable
           :loans="loans.value"/>
+      </div>
     </template>
   </div>
 </template>

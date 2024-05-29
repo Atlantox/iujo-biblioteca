@@ -1,7 +1,8 @@
 class DataTableInitializer{
     constructor(){
+        var even = true
         $('#normal-dt').DataTable( {
-            
+            scrollX: true,
             "language": {
                 paginate: {
                   previous: '<i class="bi bi-caret-left-fill text-white datatable-navigation"></i>',
@@ -24,6 +25,13 @@ class DataTableInitializer{
                 "infoFiltered": "(filtrado de _MAX_ registros totales)",
                 "emptyTable": "No se encontraron resultados",
                 "zeroRecords": "No se encontraron coincidencias"
+            },
+            createdRow: (row, data, index) => {
+                if(even === false)
+                    row.classList.add('odd')
+                else
+                    row.classList.add('even')
+                even = !even
             }
         });
     }
