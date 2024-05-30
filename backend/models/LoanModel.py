@@ -38,7 +38,7 @@ class LoanModel(BaseModel):
                 %s,
                 %s,
                 %s,
-                %s
+                ADDTIME(DATE(%s), CURRENT_TIME)
             )
             '''
         args = (
@@ -161,6 +161,47 @@ class LoanModel(BaseModel):
             loans = []
         
         return loans
+    
+    def GetLoansBetweenDaysAndToday(self, days):
+        cursor = self.connection.connection.cursor()
+        sql = self.LOAN_SELECT_TEMPLATE + 'WHERE loan.deliver_date BETWEEN DATE_SUB(loan.deliver_date, INTERVAL %s DAY) AND NOW() LIMIT 6'
+        args = (days,)
+
+        try:
+            cursor.execute(sql, args)
+            loans = cursor.fetchall()
+            if loans is tuple():
+                loans = []
+        except:
+            loans = []
+        return loans
+    
+
+    def GetLoansDeliveredAndReturnedCountBetweenDaysAndToday(self, days):
+        cursor = self.connection.connection.cursor()
+        sql = '''
+            SELECT 
+            COUNT(deliver_date) as delivered,
+            COUNT(return_date) as returned
+            FROM
+            loan
+            WHERE
+            deliver_date BETWEEN DATE_SUB(deliver_date, INTERVAL %s DAY) AND NOW() OR
+            return_date BETWEEN DATE_SUB(return_date, INTERVAL %s DAY) AND NOW()
+        '''
+        args = (days,days,)
+        try:
+            cursor.execute(sql, args)
+            counters = cursor.fetchall()
+            if counters is tuple():
+                counters = []
+            else:
+                counters = {'delivered': counters[0]['delivered'], 'returned': counters[0]['returned']}
+        except:
+            counters = []
+            
+        return counters
+
     
     def GetLoansQuantityByGenderBetweenDates(self, initialDate, finalDate):
         cursor = self.connection.connection.cursor()

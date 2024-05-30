@@ -368,7 +368,84 @@ def DeactivateLoan(loanId):
 
     return jsonify(response), statusCode
 
-# TODO Obtener estadísticas basadas en el género, categorías, profesores, etc
+
+@loanController.route('/loans/latest/<int:days>', methods=['GET'])
+def GetLoansBetweenDaysAndNow(days):
+    connection = GetConnection()
+    userModel = UserModel(connection)
+    response = {}
+    error = ''
+    statusCode = 200
+    
+    token = GetTokenOfRequest(request)
+    if token is None:
+        error = 'Acceso denegado. Autenticación requerida'
+        statusCode = 401
+
+    if error == '':
+        targetUser = userModel.GetUserByToken(token)
+        if type(targetUser) is str:
+            error = targetUser
+            statusCode = 400 
+
+    if error == '':
+        if userModel.UserHasPermisson(targetUser['id'], 'Préstamos') is False:
+            error = 'Acción denegada'
+            statusCode = 401  # Unauthorized
+
+    if error == '':
+        loanModel = LoanModel(connection)
+        loans = loanModel.GetLoansBetweenDaysAndToday(days)
+
+    response['success'] = error == ''
+
+    if error == '':
+        response['loans'] = loans
+    else:
+        response['message'] = error
+
+    return jsonify(response), statusCode
+
+
+@loanController.route('/loans/latest_count/<int:days>', methods=['GET'])
+def GetLoansCountBetweenDateAndNow(days):
+    connection = GetConnection()
+    userModel = UserModel(connection)
+    response = {}
+    error = ''
+    statusCode = 200
+    
+    token = GetTokenOfRequest(request)
+    if token is None:
+        error = 'Acceso denegado. Autenticación requerida'
+        statusCode = 401
+
+    if error == '':
+        targetUser = userModel.GetUserByToken(token)
+        if type(targetUser) is str:
+            error = targetUser
+            statusCode = 400 
+
+    if error == '':
+        if userModel.UserHasPermisson(targetUser['id'], 'Préstamos') is False:
+            error = 'Acción denegada'
+            statusCode = 401  # Unauthorized
+
+    if error == '':
+        loanModel = LoanModel(connection)
+        counts = loanModel.GetLoansDeliveredAndReturnedCountBetweenDaysAndToday(days)
+
+
+    response['success'] = error == ''
+
+    if error == '':
+        response['counts'] = counts
+    else:
+        response['message'] = error
+
+    return jsonify(response), statusCode
+
+
 @loanController.route('/loans/by_gender', methods=['POST'])
 def GetLoansByGender():
     connection = GetConnection()

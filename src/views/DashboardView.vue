@@ -1,8 +1,11 @@
 <script setup>
+import { onMounted } from 'vue'
 import PageTitle from '@/components/PageTitle.vue';
-import useSessionStore from '@/stores/session';
 
-const sessionStore = useSessionStore()
+import useSessionStore from '@/stores/session';
+import useLoanStore from '@/stores/loans';
+
+import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue';
 
 const articleStyle = 'col-12 my-4 rounded bg-white shadowed-l'
 const articleWrappedStyle = 'row col-12 m-0 p-0 justify-content-start shadowed p-2 px-4'
@@ -12,6 +15,22 @@ const linkElementStyle = 'col-12 col-lg-4'
 const routerLinkStyle = 'w-100 justify-content-start align-items-center p-1'
 const iconStyle = 'text-black col-1 panel-icon fs-5'
 const linkTextStyle = 'text-grey col-10 fs-5 w-auto hover-bold hover-spacing'
+
+const sessionStore = useSessionStore()
+const loanStore = useLoanStore()
+const recentLoans = loanStore.loans
+const loansCount = loanStore.counts
+
+onMounted( async () => {
+  await loanStore.FetchLatestLoans()
+
+  if (loanStore.errorMessage !== '')
+    sessionStore.ShowModal('Error', loanStore.errorMessage, 'error')
+
+  await loanStore.FetchLoansRecentCount()
+  if (loanStore.errorMessage !== '')
+    sessionStore.ShowModal('Error', loanStore.errorMessage, 'error')
+})
 </script>
 
 <template>
@@ -199,27 +218,36 @@ const linkTextStyle = 'text-grey col-10 fs-5 w-auto hover-bold hover-spacing'
       <div class="row col-12 justify-content-center col-lg-4 p-3">
         <div class="row w-100 m-0 p-0 justify-content-around h-100 py-3 shadowed-l rounded lb-bg-terciary-ul my-3">
           <h3 class="fw-bold col-12 text-center">Los últimos 30 días se realizaron...</h3>
+          <template v-if="loansCount.value === undefined">
+            <LoadingGadget/>
+          </template>
+          <template v-else>
             <article class="col-12 col-lg-5 row m-0 p-0 border-bottom align-middle p-3 p-lg-0">
                 <div class="col-12 d-flex align-items-center bg-white rounded shadowed-l">
                     <h4 class="h4 m-0 text-center w-100 p-2">
-                      <strong>0</strong>
-                        Préstamos
+                      <strong>{{ loansCount.value['delivered'] }}</strong>
+                      Préstamo{{ loansCount.value['delivered'] > 1 ? 's' : '' }}
                     </h4>
                 </div>
             </article>
-
+  
             <article class="col-12 col-lg-5 row m-0 p-0 border-bottom align-middle p-3 p-lg-0">
                 <div class="col-12 d-flex align-items-center bg-white rounded shadowed-l">
                     <h4 class="h4 m-0 text-center w-100 p-2">
-                      <strong>0</strong>
-                        Devoluciones
+                      <strong>{{ loansCount.value['returned'] }}</strong>
+                        {{ loansCount.value['returned'] > 1 ? 'Devoluciones' : 'Devolución' }}
                     </h4>
                 </div>
             </article>
+          </template>
         </div>
 
         <div class="row w-100 m-0 p-0 justify-content-around h-100 py-3 shadowed-l rounded lb-bg-terciary-ul my-3">
           <h3 class="fw-bold col-12 text-center">Préstamos recientes</h3>
+          <template v-if="recentLoans.value === undefined">
+            <LoadingGadget/>
+          </template>
+          <template v-else>
             <table class="col-10 text-center">
               <thead>
                 <tr class="border-bottom">
@@ -229,38 +257,29 @@ const linkTextStyle = 'text-grey col-10 fs-5 w-auto hover-bold hover-spacing'
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>Luis Alvarado</td>
-                  <td>Berserk Vol. 1</td>
-                  <td>27/05/2024</td>
-                </tr>
-                <tr>
-                  <td>Luis Alvarado</td>
-                  <td>Berserk Vol. 1</td>
-                  <td>27/05/2024</td>
-                </tr>
-                <tr>
-                  <td>Luis Alvarado</td>
-                  <td>Berserk Vol. 1</td>
-                  <td>27/05/2024</td>
-                </tr>
-                <tr>
-                  <td>Luis Alvarado</td>
-                  <td>Berserk Vol. 1</td>
-                  <td>27/05/2024</td>
-                </tr>
-                <tr>
-                  <td>Luis Alvarado</td>
-                  <td>Berserk Vol. 1</td>
-                  <td>27/05/2024</td>
-                </tr>
-                <tr>
-                  <td>Luis Alvarado</td>
-                  <td>Berserk Vol. 1</td>
-                  <td>27/05/2024</td>
+                <tr 
+                v-for="loan in recentLoans.value"
+                :key="loan.id"
+                >
+                  <td>
+                    <router-link class="text-black" :to="{name:'see_book', params: {id: loan.reader_id}}">
+                      {{ loan.fullname }}
+                    </router-link>
+                  </td>
+                  <td>
+                    <router-link class="text-black" :to="{name:'see_book', params: {id: loan.book_id}}">
+                      {{ loan.title }}
+                    </router-link>
+                  </td>
+                  <td>
+                    <router-link class="text-black" :to="{name:'see_book', params: {id: loan.loan_id}}">
+                      {{ new Date(loan.deliver_date).toLocaleDateString('es-ES', { hour: '2-digit', minute: '2-digit', timeZone: 'GMT'}) }}
+                    </router-link>
+                  </td>
                 </tr>
               </tbody>
             </table>
+          </template>
         </div>
       </div>
   </section>

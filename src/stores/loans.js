@@ -10,7 +10,8 @@ const useLoanStore = defineStore('loans', {
     state: () => {
         return {
             loans: ref([]),
-            errorMessage: ref('')
+            errorMessage: ref(''),
+            counts: ref([]),
         }
     },
     actions:{
@@ -34,8 +35,10 @@ const useLoanStore = defineStore('loans', {
                 let response = await fetch(url, fetchConfig)
                 let json = await response.json()
                 let result = await json
-                if(result.success)
+                if(result.success){
+                    this.errorMessage = ''
                     this.loans.value = result.loans
+                }
                 else
                     this.errorMessage =  result.message
             }
@@ -43,6 +46,68 @@ const useLoanStore = defineStore('loans', {
                 this.errorMessage = 'Error: ' + error
             }
         },
+
+        async FetchLatestLoans(days = 30){
+            const sessionStore = new useSessionStore()
+            try{
+                let url = apiConfig.base_url + '/loans/latest/' + days
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+
+                if (sessionStore.authenticated === true)
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'GET',
+                    headers: fetchHeaders
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                let result = await json
+                if(result.success){
+                    this.errorMessage = ''
+                    this.loans.value = result.loans
+                }
+                else
+                    this.errorMessage =  result.message
+            }
+            catch(error){
+                this.errorMessage = 'Error: ' + error
+            }
+        },
+
+        async FetchLoansRecentCount(days = 30){
+            const sessionStore = new useSessionStore()
+            try{
+                let url = apiConfig.base_url + '/loans/latest_count/' + days
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+
+                if (sessionStore.authenticated === true)
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'GET',
+                    headers: fetchHeaders
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                let result = await json
+                if(result.success)
+                    this.counts.value = result.counts
+                else
+                    this.errorMessage =  result.message
+            }
+            catch(error){
+                this.errorMessage = 'Error: ' + error
+            }
+        }
     }
 })
 

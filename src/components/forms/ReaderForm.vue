@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import Select2Initializer from '@/utils/Select2Initializer'
 import FormValidator from '@/utils/FormValidator'
 import PageTitleView from '../PageTitle.vue';
+import BackButtonGadget from '../myGadgets/BackButtonGadget.vue'
 
 const formErrors = ref([])
 
@@ -28,7 +29,10 @@ const ValidateForm = ((e) => {
 
 <template>
     <div class="row m-0 p-0">
-        <form action="" class="col-12 row m-0 p-2 fs-4 myForm shadowed-l rounded lb-bg-terciary-ul" @submit.prevent="ValidateForm">
+        <div class="row m-0 p-0 justify-content-center justify-content-lg-start">
+            <BackButtonGadget :back_to="'dashboard'"/>
+        </div>
+        <form action="" class="col-12 row m-0 p-2 mt-4 fs-4 myForm shadowed-l rounded lb-bg-terciary-ul" @submit.prevent="ValidateForm">
             <PageTitleView
             :title="(edit ? 'Modificar ' : 'Registrar nuevo ') + 'lector'"
             />
