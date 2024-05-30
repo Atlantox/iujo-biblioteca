@@ -3,6 +3,7 @@ class DataTableInitializer{
         var even = true
         $('#normal-dt').DataTable( {
             scrollX: true,
+            order: false,
             "language": {
                 paginate: {
                   previous: '<i class="bi bi-caret-left-fill text-white datatable-navigation"></i>',

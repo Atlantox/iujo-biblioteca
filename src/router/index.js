@@ -3,16 +3,20 @@ import { createRouter, createWebHistory } from 'vue-router'
 import useSessionStore from '@/stores/session.js'
 
 import HomeView from '../views/HomeView.vue'
-import LoginFormView from '../views/forms/LoginFormView.vue'
 import DashboardView from '../views/DashboardView.vue'
-import SearchBooksView from '../views/tables/SearchBooksView.vue'
-import SeeBookView from '../views/SeeBookView.vue'
+
+import LoginFormView from '../views/forms/LoginFormView.vue'
 import BookFormView from '../views/forms/BookFormView.vue'
 import LoanFormView from '../views/forms/LoanFormView.vue'
-import SearchLoanView from '../views/tables/SearchLoanView.vue'
-import SeeLoanView from '../views/SeeLoanView.vue'
 import ReaderFormView from '../views/forms/ReaderFormView.vue'
+
+import SearchBooksView from '../views/tables/SearchBooksView.vue'
+import SearchLoanView from '../views/tables/SearchLoanView.vue'
 import SearchReadersView from '../views/tables/SearchReadersView.vue'
+import SearchCategoryView from '@/views/tables/SearchCategoryView.vue'
+
+import SeeBookView from '../views/SeeBookView.vue'
+import SeeLoanView from '../views/SeeLoanView.vue'
 import SeeReaderView from '../views/SeeReaderView.vue'
 
 const router = createRouter({
@@ -36,8 +40,8 @@ const router = createRouter({
       meta:{ requireAuth: true }
     },
     {
-      path: '/books',
-      name: 'search_books',
+      path: '/search_books',
+      name: 'books',
       component: SearchBooksView
     },
     {
@@ -52,14 +56,20 @@ const router = createRouter({
       meta:{ requireAuth: true, bookPermisson: true }
     },
     {
+      path: '/search_categories',
+      name: 'categories',
+      component: SearchCategoryView,
+      meta:{ requireAuth: true, categoryPermisson: true }
+    },
+    {
       path: '/add_loan/:id?',
       name: 'add_loan',
       component: LoanFormView,
       meta:{ requireAuth: true, loanPermisson: true }
     },
     {
-      path: '/loans',
-      name: 'search_loans',
+      path: '/search_loans',
+      name: 'loans',
       component: SearchLoanView,
       meta:{ requireAuth: true, loanPermisson: true }
     },
@@ -76,8 +86,8 @@ const router = createRouter({
       meta:{ requireAuth: true, readerPermisson: true }
     },
     {
-      path: '/readers',
-      name: 'search_readers',
+      path: '/search_readers',
+      name: 'readers',
       component: SearchReadersView,
       meta:{ requireAuth: true, readerPermisson: true }
     },
@@ -107,6 +117,10 @@ router.beforeEach((to, from, next) => {
       }
 
       if(to.meta.readerPermisson && !(sessionStore.userData.permissons.includes('Lectores'))){
+        routeOk = false
+      }
+
+      if(to.meta.categoryPermisson && !(sessionStore.userData.permissons.includes('Categorías'))){
         routeOk = false
       }
     }

@@ -80,16 +80,18 @@ def GetCategories():
     statusCode = 200
 
     categories = categoryModel.GetCategories()
+    '''
     categoriesAsArray = []
     if categories is None:
         categoriesAsArray = []
     else:
         for category in categories:
             categoriesAsArray.append(category['name'])
+    '''
 
     response = {
-        'status': True,
-        'categories': categoriesAsArray
+        'success': True,
+        'categories': categories
     }
 
     return jsonify(response), statusCode

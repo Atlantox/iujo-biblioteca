@@ -1,9 +1,12 @@
 <script setup>
-import { ref } from 'vue'
 import { onMounted } from 'vue'
+
 import useLoanStore from '@/stores/loans.js'
 import useSessionStore from '@/stores/session.js'
+
 import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue'
+import BackButtonGadget from '@/components/myGadgets/BackButtonGadget.vue'
+
 import LoanTable from '@/components/tables/LoanTable.vue'
 import PageTitleView from '@/components/PageTitle.vue';
 
@@ -13,18 +16,21 @@ const loanStore = useLoanStore()
 const sessionStore = useSessionStore()
 const loans = loanStore.loans
 
-
 onMounted(async ()  => {
   await loanStore.FetchPendingLoans()
-  OnAppearAnimation('table-container', 'hide-up') 
   
   if (loanStore.errorMessage !== '')
     sessionStore.ShowModal('Error', loanStore.errorMessage, 'error')
+  else
+    OnAppearAnimation('table-container', 'hide-up') 
 })
 
 </script>
 
 <template>
+  <div class="row m-0 p-0 justify-content-center justify-content-lg-start">
+      <BackButtonGadget :back_to="'dashboard'"/>
+  </div>
   <PageTitleView
   :title="'Lista de préstamos'"
   />

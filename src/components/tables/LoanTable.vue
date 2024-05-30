@@ -28,16 +28,16 @@ onMounted(() => {
         <tr 
         v-for="loan in props.loans"
         :key="loan.id">
-            <td class="border-1">({{ loan.cedula }}) {{ loan.fullname }}</td>
+            <td class="border-1"><strong>({{ loan.cedula }})</strong> {{ loan.fullname }}</td>
             <td class="border-1">{{ loan.title }}</td>
-            <td class="border-1">{{ loan.deliver_date }}</td>
-            <td class="border-1">{{ loan.return_date }}</td>
+            <td class="border-1 text-center">{{ new Date(loan.deliver_date).toLocaleDateString() }}</td>
+            <td class="border-1 text-center">{{ loan.return_date === null ? 'N/A' : new Date(loan.return_date).toLocaleDateString() }}</td>
             <td class="border-1">{{ loan.observation }}</td>
             <td class="border-1">
                 <div class="row m-0 p-0 text-center justify-content-center">
-                    <div class="row m-0 p-1 col-3 fs-3">
-                        <div class="w-100 lb-bg-primary rounded shadowed-l shake-on-hover text-center m-0 p-0">
-                            <router-link :to="{name:'see_loan', params: {id: loan.loan_id}}">
+                    <div class="row col-12 m-0 p-1 col-3 fs-2">
+                        <div class="w-100 shake-on-hover text-center m-0 p-0">
+                            <router-link :to="{name:'see_book', params: {id: loan.loan_id}}">
                                 <i class="text-black bi bi-eye text-center m-0 p-0"></i>
                             </router-link>
                         </div>

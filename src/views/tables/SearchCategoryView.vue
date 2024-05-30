@@ -1,26 +1,26 @@
 <script setup>
 import { onMounted } from 'vue'
 
-import useReaderStore from '@/stores/readers.js'
+import useCategoryStore from '@/stores/categories.js'
 import useSessionStore from '@/stores/session.js'
 
 import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue'
 import BackButtonGadget from '@/components/myGadgets/BackButtonGadget.vue'
 
-import ReaderTable from '@/components/tables/ReaderTable.vue'
+import CategoryTable from '@/components/tables/CategoryTable.vue'
 import PageTitleView from '@/components/PageTitle.vue';
 
 import OnAppearAnimation from '@/utils/ElegantDisplayer.js'
 
-const readerStore = useReaderStore()
+const categoryStore = useCategoryStore()
 const sessionStore = useSessionStore()
-const readers = readerStore.readers
+const categories = categoryStore.categories
 
 onMounted(async ()  => {
-  await readerStore.FetchReaders()
+  await categoryStore.FetchCategories()
 
-  if(readerStore.errorMessage !== '')
-    sessionStore.ShowModal('Error', readerStore.errorMessage, 'error')
+  if(categoryStore.errorMessage !== '')
+    sessionStore.ShowModal('Error', categoryStore.errorMessage, 'error')
   else
     OnAppearAnimation('table-container', 'hide-up') 
 })
@@ -32,17 +32,17 @@ onMounted(async ()  => {
       <BackButtonGadget :back_to="'dashboard'"/>
   </div>
   <PageTitleView
-  :title="'Listado de los lectores'"
+  :title="'Listado de categorías'"
   />
   <div class="row m-0 p-0 col-12 py-4 shadowed-l rounded lb-bg-terciary-ul">
     <template
-    v-if="readers.value === undefined">
+    v-if="categories.value === undefined">
       <LoadingGadget/>
     </template>
     <template v-else>
       <div class="w-100 m-0 p-3 px-5 table-container hide-up" id="table-container">
-        <ReaderTable
-          :readers="readers.value"/>
+        <CategoryTable
+          :categories="categories.value"/>
       </div>
     </template>
   </div>

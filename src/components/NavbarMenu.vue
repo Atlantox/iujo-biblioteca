@@ -31,7 +31,7 @@ const sessionStore = useSessionStore()
                     </div>
                     -->
 
-                    <router-link class="nav-item nav-link text-white text-decoration-none fs-5" :to="{name:'search_books'}">
+                    <router-link class="nav-item nav-link text-white text-decoration-none fs-5" :to="{name:'books'}">
                         Libros
                     </router-link>
                     
@@ -39,7 +39,7 @@ const sessionStore = useSessionStore()
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle fs-5" data-bs-toggle="dropdown">{{ sessionStore.userData.nickname }}</a>
                             <div class="dropdown-menu m-0">
-                                <router-link class="dropdown-item text-decoration-none fs-4 hover-bold hover-spacing" :to="{name:'search_readers'}">
+                                <router-link class="dropdown-item text-decoration-none fs-4 hover-bold hover-spacing" :to="{name:'books'}">
                                     Mi cuenta
                                 </router-link>
                                 <router-link class="dropdown-item text-decoration-none fs-4 hover-bold hover-spacing" :to="{name:'dashboard'}">

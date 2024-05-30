@@ -30,7 +30,7 @@ const linkTextStyle = 'text-grey col-10 fs-5 w-auto hover-bold hover-spacing'
                 </h4>
                 <div :class="linkContainersStyle">
                   <div :class="linkElementStyle">
-                    <router-link :class="routerLinkStyle" :to="{name: 'search_books'}">
+                    <router-link :class="routerLinkStyle" :to="{name: 'add_loan'}">
                       <i :class="'fa fa-plus text-success ' + iconStyle" ></i>
                       <span :class="linkTextStyle">
                         Nuevo préstamo
@@ -38,7 +38,7 @@ const linkTextStyle = 'text-grey col-10 fs-5 w-auto hover-bold hover-spacing'
                     </router-link>
                   </div>
                   <div :class="linkElementStyle">
-                    <router-link :class="routerLinkStyle" :to="{name: 'search_books'}">
+                    <router-link :class="routerLinkStyle" :to="{name: 'loans'}">
                       <i :class="'fa fa-file ' + iconStyle" ></i>
                       <span :class="linkTextStyle">
                         Ver préstamos
@@ -58,7 +58,7 @@ const linkTextStyle = 'text-grey col-10 fs-5 w-auto hover-bold hover-spacing'
                 </h4>
                 <div :class="linkContainersStyle">
                   <div :class="linkElementStyle">
-                    <router-link :class="routerLinkStyle" :to="{name: 'search_books'}">
+                    <router-link :class="routerLinkStyle" :to="{name: 'add_book'}">
                       <i :class="'fa fa-plus text-success ' + iconStyle" ></i>
                       <span :class="linkTextStyle">
                         Nuevo libro
@@ -66,7 +66,7 @@ const linkTextStyle = 'text-grey col-10 fs-5 w-auto hover-bold hover-spacing'
                     </router-link>
                   </div>
                   <div :class="linkElementStyle">
-                    <router-link :class="routerLinkStyle" :to="{name: 'search_books'}">
+                    <router-link :class="routerLinkStyle" :to="{name: 'books'}">
                       <i :class="'fa fa-book ' + iconStyle" ></i>
                       <span :class="linkTextStyle">
                         Ver libros
@@ -75,7 +75,7 @@ const linkTextStyle = 'text-grey col-10 fs-5 w-auto hover-bold hover-spacing'
                   </div>
                   <template v-if="sessionStore.userData.permissons.includes('Estados de libros')">
                     <div :class="linkElementStyle">
-                      <router-link :class="routerLinkStyle" :to="{name: 'search_books'}">
+                      <router-link :class="routerLinkStyle" :to="{name: 'books'}">
                         <i :class="'fa fa-inbox ' + iconStyle" ></i>
                         <span :class="linkTextStyle">
                           Ver estados de libros
@@ -96,7 +96,7 @@ const linkTextStyle = 'text-grey col-10 fs-5 w-auto hover-bold hover-spacing'
                 </h4>
                 <div :class="linkContainersStyle">
                   <div :class="linkElementStyle">
-                    <router-link :class="routerLinkStyle" :to="{name: 'search_books'}">
+                    <router-link :class="routerLinkStyle" :to="{name: 'books'}">
                       <i :class="'fa fa-plus text-success ' + iconStyle" ></i>
                       <span :class="linkTextStyle">
                         Nueva categoría
@@ -104,7 +104,7 @@ const linkTextStyle = 'text-grey col-10 fs-5 w-auto hover-bold hover-spacing'
                     </router-link>
                   </div>
                   <div :class="linkElementStyle">
-                    <router-link :class="routerLinkStyle" :to="{name: 'search_books'}">
+                    <router-link :class="routerLinkStyle" :to="{name: 'categories'}">
                       <i :class="'fa fa-tag ' + iconStyle" ></i>
                       <span :class="linkTextStyle">
                         Ver categorías
@@ -124,7 +124,7 @@ const linkTextStyle = 'text-grey col-10 fs-5 w-auto hover-bold hover-spacing'
                 </h4>
                 <div :class="linkContainersStyle">
                   <div :class="linkElementStyle">
-                    <router-link :class="routerLinkStyle" :to="{name: 'search_books'}">
+                    <router-link :class="routerLinkStyle" :to="{name: 'add_reader'}">
                       <i :class="'fa fa-plus text-success ' + iconStyle" ></i>
                       <span :class="linkTextStyle">
                         Nuevo lector
@@ -132,7 +132,7 @@ const linkTextStyle = 'text-grey col-10 fs-5 w-auto hover-bold hover-spacing'
                     </router-link>
                   </div>
                   <div :class="linkElementStyle">
-                    <router-link :class="routerLinkStyle" :to="{name: 'search_books'}">
+                    <router-link :class="routerLinkStyle" :to="{name: 'readers'}">
                       <i :class="'fa fa-eye ' + iconStyle" ></i>
                       <span :class="linkTextStyle">
                         Ver lectores
@@ -152,7 +152,7 @@ const linkTextStyle = 'text-grey col-10 fs-5 w-auto hover-bold hover-spacing'
                 </h4>
                 <div :class="linkContainersStyle">
                   <div :class="linkElementStyle">
-                    <router-link :class="routerLinkStyle" :to="{name: 'search_books'}">
+                    <router-link :class="routerLinkStyle" :to="{name: 'books'}">
                       <i :class="'fa fa-plus text-success ' + iconStyle" ></i>
                       <span :class="linkTextStyle">
                         Nuevo usuario
@@ -160,7 +160,7 @@ const linkTextStyle = 'text-grey col-10 fs-5 w-auto hover-bold hover-spacing'
                     </router-link>
                   </div>
                   <div :class="linkElementStyle">
-                    <router-link :class="routerLinkStyle" :to="{name: 'search_books'}">
+                    <router-link :class="routerLinkStyle" :to="{name: 'books'}">
                       <i :class="'fa fa-user ' + iconStyle" ></i>
                       <span :class="linkTextStyle">
                         Ver usuarios
@@ -180,7 +180,7 @@ const linkTextStyle = 'text-grey col-10 fs-5 w-auto hover-bold hover-spacing'
                 </h4>
                 <div :class="linkContainersStyle">
                   <div :class="linkElementStyle">
-                    <router-link :class="routerLinkStyle" :to="{name: 'search_books'}">
+                    <router-link :class="routerLinkStyle" :to="{name: 'books'}">
                       <i :class="'fa fa-star ' + iconStyle" ></i>
                       <span :class="linkTextStyle">
                         Ver estadísticas

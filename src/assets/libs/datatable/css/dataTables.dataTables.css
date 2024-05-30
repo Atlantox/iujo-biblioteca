@@ -570,7 +570,7 @@ div.dt-container .dt-paging .dt-paging-button {
   text-align: center;
   text-decoration: none !important;
   cursor: pointer;
-  color: inherit !important;
+  /* color: inherit !important; */
   border: 1px solid transparent;
   border-radius: 2px;
   background: transparent;
@@ -588,13 +588,13 @@ div.dt-container .dt-paging .dt-paging-button.current, div.dt-container .dt-pagi
 }
 div.dt-container .dt-paging .dt-paging-button.disabled, div.dt-container .dt-paging .dt-paging-button.disabled:hover, div.dt-container .dt-paging .dt-paging-button.disabled:active {
   cursor: default;
-  color: rgba(0, 0, 0, 0.5) !important;
+  /* color: rgba(0, 0, 0, 0.5) !important; */
   border: 1px solid transparent;
   background: transparent;
   box-shadow: none;
 }
 div.dt-container .dt-paging .dt-paging-button:hover {
-  color: white !important;
+  /* color: white !important; */
   border: 1px solid #111;
   background-color: #111;
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #585858), color-stop(100%, #111)); /* Chrome,Safari4+ */

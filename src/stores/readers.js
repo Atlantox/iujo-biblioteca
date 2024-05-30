@@ -1,7 +1,8 @@
 import { ref } from 'vue'
-import useSessionStore from '@/stores/session.js'
-import ApiConfig from '@/stores/config.js'
 import { defineStore } from 'pinia'
+
+import ApiConfig from '@/stores/config.js'
+import useSessionStore from '@/stores/session.js'
 
 const apiConfig = new ApiConfig()
 const useReaderStore = defineStore('readers', {
@@ -33,7 +34,7 @@ const useReaderStore = defineStore('readers', {
                 let json = await response.json()
                 let result = await json
                 if(result.success)
-                    this.books.value = result.books
+                    this.readers.value = result.readers
                 else
                     this.errorMessage =  result.message
             }

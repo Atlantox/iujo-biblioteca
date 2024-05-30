@@ -54,6 +54,14 @@ $quartary: #E5BA71;
     border: $primary solid 2px;
 }
 
+.lb-border-terciary{
+    border: $terciary solid 2px;
+}
+
+.lb-border-terciary-dark{
+    border: $terciary-dark solid 2px;
+}
+
 .shadowed-h{
     box-shadow: 0 0 20px 3px rgb(0 0 0 / 100%);
 }
@@ -125,6 +133,36 @@ $quartary: #E5BA71;
 
 .dataTable{
     overflow: hidden;
+
+    tbody{
+        border-bottom:1px white solid;
+    }
+}
+
+.dt-input{
+    background:white !important;
+    border: 1px black solid !important;
+}
+
+.dt-layout-row{
+    margin-top:10px;
+}
+
+.datatable-navigation{
+    color:black !important;
+}
+
+.dt-paging-button{
+    margin:0 8px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 10px 1px;
+    background:rgb(241, 241, 241) !important;
+    color: rgb(0, 0, 0) !important;
+    border-radius: 10px !important;
+}
+
+.dt-paging-button.current{
+    background: $terciary-ul !important;
+    font-weight: bold;
 }
 
 .dt-buttons{
@@ -358,7 +396,7 @@ input[type="file"] {
 }
 
 .even{
-    background-color: #e7e7e7b2 !important;
+    background-color: #ecececb2 !important;
 }
 
 .dataTable{
@@ -366,6 +404,9 @@ input[type="file"] {
     border-bottom-right-radius: 20px !important;
     overflow: hidden;
     
+    tbody tr td{
+        padding:0 10px !important;
+    }
 }
 
 .dt-scroll-headInner{
@@ -374,4 +415,8 @@ input[type="file"] {
         border-top-left-radius: 20px !important;
         border-top-right-radius: 20px !important;
     }
+}
+
+.single-button{
+    border: $primary 1px solid;
 }

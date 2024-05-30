@@ -3,7 +3,7 @@ from .BaseModel import BaseModel
 class CategoryModel(BaseModel):
     def GetCategories(self):
         cursor = self.connection.connection.cursor()
-        sql = "SELECT name FROM category"
+        sql = "SELECT * FROM category"
         cursor.execute(sql)
         return cursor.fetchall()
 

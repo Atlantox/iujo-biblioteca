@@ -16,7 +16,6 @@ onMounted(() => {
     <table class="w-100 h6 m-0" id="normal-dt">
         <thead>
             <tr class="text-white">
-                <th class="text-center lb-bg-terciary border-1 border-white fs-4">Cédula</th>
                 <th class="text-center lb-bg-terciary border-1 border-white fs-4">Nombre</th>
                 <th class="text-center lb-bg-terciary border-1 border-white fs-4">Género</th>
                 <th class="text-center lb-bg-terciary border-1 border-white fs-4">Teléfono</th>
@@ -26,18 +25,26 @@ onMounted(() => {
         </thead>
         <tbody>
             <tr 
-            v-for="reader in props.readers.value"
+            v-for="reader in props.readers"
             :key="reader.id">
-                <td class="border-1">{{ reader.cedula }}</td>
-                <td class="border-1">{{ reader.names + ' ' + reader.surnames }}</td>
-                <td class="border-1">{{ reader.gender }}</td>
+                <td class="border-1"><strong>({{ reader.cedula }})</strong> {{ reader.names + ' ' + reader.surnames }}</td>
+                <td class="border-1 text-center">{{ reader.gender }}</td>
                 <td class="border-1">{{ reader.phone }}</td>
-                <td class="border-1">{{ reader.teacher }}</td>
+                <td class="border-1">
+                    
+                    <div class="row m-0 p-0 text-center justify-content-center">
+                        <div class="row col-12 m-0 p-1 col-3 fs-2">
+                            <div class="w-100 shake-on-hover text-center m-0 p-0">
+                                <i :class="'text-black fs-1 bi bi-' + (reader.is_teacher === 0 ? 'x text-danger' : 'check text-success')"></i>
+                            </div>
+                        </div>
+                    </div>
+                </td>
                 <td class="border-1">
                     <div class="row m-0 p-0 text-center justify-content-center">
-                        <div class="row m-0 p-1 col-3 fs-3">
-                            <div class="w-100 lb-bg-primary rounded shadowed-l shake-on-hover text-center m-0 p-0">
-                                <router-link :to="{name:'see_reader', params: {id: reader.id}}">
+                        <div class="row col-12 m-0 p-1 col-3 fs-2">
+                            <div class="w-100 shake-on-hover text-center m-0 p-0">
+                                <router-link :to="{name:'see_book', params: {id: reader.id}}">
                                     <i class="text-black bi bi-eye text-center m-0 p-0"></i>
                                 </router-link>
                             </div>
