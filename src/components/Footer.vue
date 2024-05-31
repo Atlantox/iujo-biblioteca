@@ -6,7 +6,7 @@ const currentYear = new Date()
     <!-- Designed by Atlantox https://atlantox.pythonanywhere.com/ -->
     <div class="row m-0 p-0 justify-content-center my-4">
         <div class="col-12 mt-5 p-0 text-center">
-            © Copyright {{ currentYear.getFullYear() }} IUJO Extensión Barquisimeto. All Rights Reserved
+            © Copyright {{ currentYear.getFullYear() }}  <a href="https://www.iujobarquisimeto.edu.ve/" target="_blank">IUJO Extensión Barquisimeto.</a> All Rights Reserved
         </div>
     </div>
 </template>

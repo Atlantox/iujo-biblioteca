@@ -222,7 +222,7 @@ onMounted( async () => {
             <LoadingGadget/>
           </template>
           <template v-else>
-            <article class="col-12 col-lg-5 row m-0 p-0 border-bottom align-middle p-3 p-lg-0">
+            <article class="col-12 col-lg-6 row m-0 p-0 align-middle p-3 px-lg-2 my-1">
                 <div class="col-12 d-flex align-items-center bg-white rounded shadowed-l">
                     <h4 class="h4 m-0 text-center w-100 p-2">
                       <strong>{{ loansCount.value['delivered'] }}</strong>
@@ -231,7 +231,7 @@ onMounted( async () => {
                 </div>
             </article>
   
-            <article class="col-12 col-lg-5 row m-0 p-0 border-bottom align-middle p-3 p-lg-0">
+            <article class="col-12 col-lg-6 row m-0 p-0 align-middle p-3 px-lg-2 my-1">
                 <div class="col-12 d-flex align-items-center bg-white rounded shadowed-l">
                     <h4 class="h4 m-0 text-center w-100 p-2">
                       <strong>{{ loansCount.value['returned'] }}</strong>

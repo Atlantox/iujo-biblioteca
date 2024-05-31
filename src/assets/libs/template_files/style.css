@@ -254,9 +254,15 @@
 .navbar .nav-item:hover .dropdown-menu {
     transform: rotateX(0deg);
     visibility: visible;
-    background: linear-gradient(0deg, rgba(219,248,223,1) 0%, rgba(113,229,128,1) 100%) !important;
+    
     transition: .5s;
     opacity: 1;
+}
+
+.dropdown-menu {
+    border-radius: 10px;
+    background:#DBF8DF;
+    
 }
 
 @media (max-width: 991.98px) {

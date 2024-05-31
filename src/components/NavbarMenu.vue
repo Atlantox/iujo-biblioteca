@@ -1,6 +1,22 @@
 <script setup>
 import useSessionStore from '@/stores/session.js'
 const sessionStore = useSessionStore()
+
+const ToggleNavbar = (() => {
+    const collapser = document.getElementById('navbarCollapse')
+    if(collapser.classList.contains('show'))
+        collapser.classList.remove('show')
+    else
+        collapser.classList.add('show')
+})
+
+const ToggleDropdown = ((id) => {
+    const dropdown = document.getElementById(id)
+    if(dropdown.classList.contains('show'))
+        dropdown.classList.remove('show')
+    else
+        dropdown.classList.add('show')
+})
 </script>
 
 <template>
@@ -12,7 +28,7 @@ const sessionStore = useSessionStore()
                     <img class="navbar-logo w-100" src="@/assets/iujo_logo.png" alt="iujo logo">
                 </router-link>
             </figure>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" @click="ToggleNavbar">
                 <span class="fa fa-bars"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -37,8 +53,8 @@ const sessionStore = useSessionStore()
                     
                     <template v-if="sessionStore.authenticated === true">
                         <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle fs-5" data-bs-toggle="dropdown">{{ sessionStore.userData.nickname }}</a>
-                            <div class="dropdown-menu m-0">
+                            <a href="#" class="nav-link dropdown-toggle fs-5" @click="ToggleDropdown('userOptions')" data-bs-toggle="dropdown">{{ sessionStore.userData.nickname }}</a>
+                            <div class="dropdown-menu m-0" id="userOptions">
                                 <router-link class="dropdown-item text-decoration-none fs-4 hover-bold hover-spacing" :to="{name:'books'}">
                                     Mi cuenta
                                 </router-link>

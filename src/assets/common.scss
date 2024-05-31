@@ -58,6 +58,10 @@ $quartary: #E5BA71;
     border: $terciary solid 2px;
 }
 
+.lb-border-terciary-l{
+    border: $terciary-l solid 2px;
+}
+
 .lb-border-terciary-dark{
     border: $terciary-dark solid 2px;
 }
@@ -124,6 +128,14 @@ $quartary: #E5BA71;
 
 .shake-on-hover:hover{
     transform: scale(1.2)
+}
+
+.animated-1{
+    transition: 1s;
+}
+
+.animated-2{
+    transition: 2s;
 }
 
 .dataTables_wrapper{
@@ -419,4 +431,8 @@ input[type="file"] {
 
 .single-button{
     border: $primary 1px solid;
+}
+
+.dropdown-menu{
+    border: none !important;
 }
