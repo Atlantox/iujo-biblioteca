@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-05-2024 a las 19:33:41
+-- Tiempo de generación: 03-06-2024 a las 01:48:37
 -- Versión del servidor: 10.4.18-MariaDB
 -- Versión de PHP: 8.0.3
 
@@ -83,7 +83,44 @@ INSERT INTO `binnacle` (`id`, `user`, `action`, `date`) VALUES
 (42, 1, 'Creó un préstamo 5 al lector 5 y el libro 5', '2024-05-12 12:20:53'),
 (43, 1, 'Creó un préstamo 6 al lector 4 y el libro 4', '2024-05-12 12:34:34'),
 (44, 1, 'Se devolvió el libro 4 del lector 4 del préstamo 6', '2024-05-12 12:56:46'),
-(45, 1, 'Creó al lector Jaime Pedro de cédula 12345678', '2024-05-12 13:10:10');
+(45, 1, 'Creó al lector Jaime Pedro de cédula 12345678', '2024-05-12 13:10:10'),
+(46, 1, 'Atlantox7 ha creado al usuario Atlantox', '2024-05-21 20:03:39'),
+(47, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 20:04:07'),
+(48, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 20:04:27'),
+(49, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 20:05:05'),
+(50, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 20:24:24'),
+(51, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 20:27:37'),
+(52, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 20:28:30'),
+(53, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 20:29:06'),
+(54, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 20:29:29'),
+(55, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 20:29:59'),
+(56, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 20:30:28'),
+(57, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 20:31:19'),
+(58, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 20:31:34'),
+(59, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 20:31:57'),
+(60, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 20:33:08'),
+(61, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 20:34:19'),
+(62, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 20:36:27'),
+(63, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 20:37:01'),
+(64, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 20:45:55'),
+(65, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 20:46:40'),
+(66, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 20:55:15'),
+(67, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 20:56:53'),
+(68, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 21:01:23'),
+(69, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 21:08:33'),
+(70, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 21:09:30'),
+(71, 10, 'Atlantox ha ingresado al sistema', '2024-05-21 21:38:39'),
+(72, 10, 'Atlantox ha ingresado al sistema', '2024-05-22 17:51:40'),
+(73, 10, 'Atlantox ha ingresado al sistema', '2024-05-22 17:52:07'),
+(74, 10, 'Atlantox ha ingresado al sistema', '2024-05-22 17:59:12'),
+(75, 10, 'Atlantox ha ingresado al sistema', '2024-05-22 18:00:42'),
+(76, 10, 'Atlantox ha ingresado al sistema', '2024-05-22 18:01:18'),
+(77, 10, 'Atlantox ha ingresado al sistema', '2024-05-22 18:02:17'),
+(78, 10, 'Atlantox ha ingresado al sistema', '2024-05-22 18:08:23'),
+(79, 10, 'Atlantox ha ingresado al sistema', '2024-05-22 18:09:31'),
+(80, 10, 'Atlantox ha ingresado al sistema', '2024-05-29 19:05:40'),
+(81, 10, 'Atlantox ha ingresado al sistema', '2024-06-02 19:45:41'),
+(82, 10, 'Atlantox ha ingresado al sistema', '2024-06-02 19:48:12');
 
 -- --------------------------------------------------------
 
@@ -156,14 +193,12 @@ CREATE TABLE `category` (
 
 INSERT INTO `category` (`id`, `name`) VALUES
 (6, 'Acción'),
-(16, 'Adult'),
-(15, 'comedia'),
+(15, 'Comedia'),
 (7, 'Crecimiento personal'),
 (17, 'Curso'),
 (8, 'Enciclopedia'),
 (4, 'Fantasía'),
 (5, 'Historia'),
-(14, 'Mamador'),
 (9, 'Normativo'),
 (2, 'Romance'),
 (3, 'Terror');
@@ -228,8 +263,7 @@ INSERT INTO `permisson` (`id`, `name`, `level`) VALUES
 (13, 'Editores', 'Super'),
 (14, 'Admin', 'Super'),
 (15, 'Préstamos', 'Super'),
-(16, '', 'Super'),
-(17, '', 'Super');
+(18, 'Categorías', 'Editor');
 
 -- --------------------------------------------------------
 
@@ -307,7 +341,8 @@ INSERT INTO `user` (`id`, `nickname`, `level`, `username`, `password`, `token`, 
 (6, 'El pepito5', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$jXGc7XJH4hQT3EOUnaG1uA$1x+TERIFqhg2mZshTx2l+mju0tkap4gSoJ1wFnu7j20', '$argon2id$v=19$m=65536,t=3,p=4$3ibE1pMM3ILiSFWS0bvLYg$Xq6xfDW7TdzXaGCd7KGQcMTclfiR6djZ0kZey/iKmsI', 'c6d08108-8771-46b0-adac-f5ce0c03f8ba-3972822d-3b25-4f54-9f43-c9f134eb266a', 1),
 (7, 'El pepito6', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$NqtGczl0CGAQlsjt55K79g$NdQWA4SWVJ/h+I14AA6CWZOJ0sBs6asyrNzPJpK8N0U', '$argon2id$v=19$m=65536,t=3,p=4$TMNXWRrkjSqdYirkW/q7DQ$1JXU038KTPR6PX0LBZuf9FtEbJ9P7J6a79NKi5tSoco', '1ccd1e8a-8272-49a9-a93b-af486ec03a8b-e33f60bc-38b5-4811-a889-04fec04acc4a', 1),
 (8, 'El pepito7', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$wkHf2sGs7rzpZr8NnxVpCg$qEP5Xdq2Ug2woLQZGgsVYr/ZcO7rm5jaP3SR0P37UGE', '$argon2id$v=19$m=65536,t=3,p=4$0oU/JC3TILOLMY8MHLgQbg$fa5pLqaom4IjiaL6In8wM0BTCYcBEW3yiN5JuKJ1ny0', 'bc7b23dd-63e4-4624-83d4-e2deeb0f3b05-ec23053e-925d-4e4f-ba67-6eff9ea464b3', 1),
-(9, 'El pepito8', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$vQfLmfv2+sGfhhFgruSzfA$PgYiH9XFyggzKsZA4P7tZozj32u8NXi0pPhpvd/RLtY', '$argon2id$v=19$m=65536,t=3,p=4$8vf2Q2qT5OoGFfOpMcCC1A$D9CvCFc2PBJI51YAW4uW8ZswGEgJZWVmCzy7VlLGi68', '45ec7c08-aca4-4c1a-9cdf-cbb9c54ff128-27f6b3b2-50c9-48ac-ba63-3103b995561c', 1);
+(9, 'El pepito8', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$vQfLmfv2+sGfhhFgruSzfA$PgYiH9XFyggzKsZA4P7tZozj32u8NXi0pPhpvd/RLtY', '$argon2id$v=19$m=65536,t=3,p=4$8vf2Q2qT5OoGFfOpMcCC1A$D9CvCFc2PBJI51YAW4uW8ZswGEgJZWVmCzy7VlLGi68', '45ec7c08-aca4-4c1a-9cdf-cbb9c54ff128-27f6b3b2-50c9-48ac-ba63-3103b995561c', 1),
+(10, 'Atlantox', 'Admin', '$argon2id$v=19$m=65536,t=3,p=4$am1VC7JJtJEwA6YHympJfA$g7uf84pTXJKeq5QsUGqDacFoj54gR35J9uwf9KFsX7M', '$argon2id$v=19$m=65536,t=3,p=4$ISIMPRqNxz8MHYV3iuBYWg$tiPy3KFUbTTRqoormbEbXOcPnVogoDvwppMvGtUYjO8', 'dcd78902-70b4-40a2-9c17-b7a0486e9980-5f031834-7798-4cb4-a77b-114b3a7b8d6f', 1);
 
 -- --------------------------------------------------------
 
@@ -414,7 +449,7 @@ ALTER TABLE `user_level`
 -- AUTO_INCREMENT de la tabla `binnacle`
 --
 ALTER TABLE `binnacle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
 
 --
 -- AUTO_INCREMENT de la tabla `book`
@@ -444,7 +479,7 @@ ALTER TABLE `loan`
 -- AUTO_INCREMENT de la tabla `permisson`
 --
 ALTER TABLE `permisson`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `reader`
@@ -456,7 +491,7 @@ ALTER TABLE `reader`
 -- AUTO_INCREMENT de la tabla `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Restricciones para tablas volcadas

@@ -22,28 +22,30 @@ onMounted(async ()  => {
   if (loanStore.errorMessage !== '')
     sessionStore.ShowModal('Error', loanStore.errorMessage, 'error')
   else
-    OnAppearAnimation('table-container', 'hide-up') 
+    OnAppearAnimation('hide-up') 
 })
 
 </script>
 
 <template>
-  <div class="row m-0 p-0 justify-content-center justify-content-lg-start">
-      <BackButtonGadget :back_to="'dashboard'"/>
-  </div>
-  <PageTitleView
-  :title="'Lista de préstamos'"
-  />
-  <div class="row m-0 p-0 col-12 py-4 shadowed-l rounded lb-bg-terciary-ul">
-    <template
-    v-if="loans.value === undefined">
-      <LoadingGadget/>
-    </template>
-    <template v-else>
-      <div class="w-100 m-0 p-3 px-5 table-container hide-up" id="table-container">
-        <LoanTable
-          :loans="loans.value"/>
-      </div>
-    </template>
+  <div class="row w-100 m-0 p-0 px-5">
+    <div class="row m-0 p-0 justify-content-center justify-content-lg-start">
+        <BackButtonGadget :back_to="'dashboard'"/>
+    </div>
+    <PageTitleView
+    :title="'Lista de préstamos'"
+    />
+    <div class="row m-0 p-0 col-12 py-4 shadowed-l rounded lb-bg-terciary-ul">
+      <template
+      v-if="loans.value === undefined">
+        <LoadingGadget/>
+      </template>
+      <template v-else>
+        <div class="w-100 m-0 p-3 px-5 table-container hide-up">
+          <LoanTable
+            :loans="loans.value"/>
+        </div>
+      </template>
+    </div>
   </div>
 </template>

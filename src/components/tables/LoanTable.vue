@@ -36,7 +36,7 @@ onMounted(() => {
             <td class="border-1">
                 <div class="row m-0 p-0 text-center justify-content-center">
                     <div class="row col-12 m-0 p-1 col-3 fs-2">
-                        <div class="w-100 shake-on-hover text-center m-0 p-0">
+                        <div class="w-100 hover-bigger text-center m-0 p-0">
                             <router-link :to="{name:'see_book', params: {id: loan.loan_id}}">
                                 <i class="text-black bi bi-eye text-center m-0 p-0"></i>
                             </router-link>

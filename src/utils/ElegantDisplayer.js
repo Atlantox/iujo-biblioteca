@@ -1,19 +1,22 @@
-const OnAppearAnimation = (elementsIds, animation) => {
-    elementsIds.forEach((elementId) => {
+// Creates an observer with the specified class, when the element is viewed in the navigator, the specifies class is removed
+
+const OnAppearAnimation = (animationClass) => {
+    const htmlElements = document.getElementsByClassName(animationClass)
+    
+    for(let i = 0; i < htmlElements.length; i++){
+        const element = htmlElements[i]
+        
         const myObserver = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 // If the element is visible
                 if (entry.isIntersecting) {
-                // Add the animation class
-                    var targetElement = document.getElementById(elementId);
-                    targetElement.classList.remove(animation);
+                    // Add the animation class
+                    element.classList.remove(animationClass);
                 }
             });
-        });
-        
-        const myChainer = document.getElementById(elementId)
-        myObserver.observe(myChainer);
-    })
+        })
+        myObserver.observe(element);
+    }    
 }
 
 export default OnAppearAnimation

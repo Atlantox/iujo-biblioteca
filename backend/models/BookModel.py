@@ -4,15 +4,15 @@ from .CategoryModel import CategoryModel
 class BookModel(BaseModel):
     BOOK_SELECT_TEMPLATE = '''
             SELECT
-            id,
-            call_number,
-            title,
-            author,
-            editorial,
-            pages,
-            description,
-            shelf,
-            state
+            book.id,
+            book.call_number,
+            book.title,
+            book.author,
+            book.editorial,
+            book.pages,
+            book.description,
+            book.shelf,
+            book.state
             FROM
             book 
             '''
@@ -84,6 +84,27 @@ class BookModel(BaseModel):
         sql = self.BOOK_SELECT_TEMPLATE + 'ORDER BY book.title'
         
         cursor.execute(sql)
+        books = cursor.fetchall()
+        result = []
+        
+        if type(books) is tuple:
+            for i in range(len(books)):
+                book = books[i]
+                categoryModel = CategoryModel(self.connection)
+                book['categories'] = categoryModel.GetCategoriesOfBook(book['id'])
+                result.append(book)
+
+        return result
+    
+    def GetBooksByCategory(self, categoryId):
+        cursor = self.connection.connection.cursor()
+        sql = self.BOOK_SELECT_TEMPLATE + '''
+            INNER JOIN book_category ON book_category.book = book.id
+            WHERE
+            book_category.category = %s
+            '''
+        args = (categoryId,)
+        cursor.execute(sql, args)
         books = cursor.fetchall()
         result = []
         

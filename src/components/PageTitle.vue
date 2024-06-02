@@ -7,8 +7,7 @@ const props = defineProps({
 
 
 onMounted(() => {
-    OnAppearAnimation('title-page', 'hide-up')  
-
+    OnAppearAnimation('hide-up')  
 })
 
 </script>
@@ -16,7 +15,7 @@ onMounted(() => {
 <template>
     <div class="row m-0 p-0 justify-content-center my-3">
         <div class="col-12 col-lg-8 m-0 p-0 my-2">
-            <h1 class="w-100 text-center hide-up fw-bold m-0 text-black" id="title-page">
+            <h1 class="w-100 text-center hide-up fw-bold m-0 text-black outline-black">
                 {{ props.title }}
             </h1>
         </div>
@@ -28,8 +27,6 @@ h1{
     font-size:60px;
     transition:0.8s;
     letter-spacing: 2px;
-    -webkit-text-stroke-width: 2px;
-    -webkit-text-stroke-color: black;
     color: #7ad9c3;
 }
 

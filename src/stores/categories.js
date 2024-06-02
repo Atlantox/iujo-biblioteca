@@ -33,7 +33,7 @@ const useCategoryStore = defineStore('categories', {
                 let response = await fetch(url, fetchConfig)
                 let json = await response.json()
                 let result = await json
-                console.log(result)
+                
                 if(result.success)
                     this.categories.value = result.categories
                 else{

@@ -33,8 +33,43 @@ const useBookStore = defineStore('books', {
                 let response = await fetch(url, fetchConfig)
                 let json = await response.json()
                 let result = await json
-                if(result.success)
+                if(result.success){
                     this.books.value = result.books
+                    this.errorMessage =  ''
+                }
+                else{
+                    this.errorMessage =  result.message
+                }
+            }
+            catch(error){
+                this.errorMessage = 'Error: ' + error
+            }
+        },
+
+        async FetchBooksByCategory(categoryId){
+            const sessionStore = new useSessionStore()
+            try{
+                let url = apiConfig.base_url + '/books/by_category/' + categoryId
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+
+                if (sessionStore.authenticated === true)
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'GET',
+                    headers: fetchHeaders
+                }
+                this.books.value = undefined
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                let result = await json
+                if(result.success){
+                    this.books.value = result.books
+                    this.errorMessage =  ''
+                }
                 else{
                     this.errorMessage =  result.message
                 }

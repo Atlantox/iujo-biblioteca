@@ -129,6 +129,34 @@ def GetBooks():
     return jsonify(response), statusCode
 
 
+@bookController.route('/books/by_category/<int:categoryId>', methods=['GET'])
+def GetBooksByCategory(categoryId):
+    connection = GetConnection()
+    bookModel = BookModel(connection)
+    categoryModel = CategoryModel(connection)
+    response = {}
+    statusCode = 200
+    error = ''
+
+    targetCategory = categoryModel.GetCategoryById(categoryId)
+    if targetCategory is None:
+        error = 'Categoría no encontrada'
+
+    if error == '':
+        books = bookModel.GetBooksByCategory(categoryId)
+
+    if books is None:
+        error = 'No hay libros disponibles'
+
+    response['success'] = error == ''
+    if error == '':
+        response['books'] = books
+    else:
+        response['message'] = error    
+
+    return jsonify(response), statusCode
+
+
 @bookController.route('/books/<int:id>', methods=['GET'])
 def GetBookById(id):
     connection = GetConnection()
