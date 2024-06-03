@@ -1,7 +1,6 @@
 from datetime import datetime
 
 from flask import Blueprint, request, jsonify
-from flask_cors import cross_origin
 
 from models.UserModel import UserModel
 from models.ReaderModel import ReaderModel

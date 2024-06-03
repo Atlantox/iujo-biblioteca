@@ -77,7 +77,6 @@ class BookModel(BaseModel):
             result = error
 
         return result
-
     
     def GetAllBooks(self):
         cursor = self.connection.connection.cursor()
@@ -163,6 +162,43 @@ class BookModel(BaseModel):
             result = None
 
         return result
+    
+    def FilterBooks(self, filters:dict):
+        cursor = self.connection.connection.cursor()
+
+        sql = self.BOOK_SELECT_TEMPLATE + 'INNER JOIN book_category ON book_category.book = book.id '
+        args = []
+
+        if filters != []:
+            sql += 'WHERE '
+
+        
+        if 'category' in filters:
+            sql += 'book_category.category IN (%s) AND '
+            args.append(filters['category'])
+
+        if 'author' in filters:
+            sql += 'book.author IN (%s) AND '
+            args.append(filters['author'])
+
+        if 'editorial' in filters:
+            sql += 'book.editorial IN (%s) AND '
+            args.append(filters['editorial'])
+
+        sql = sql[0:-4]  # Removing the last 'AND'
+
+        try:
+            if args == []:
+                cursor.execute(sql)
+            else:
+                cursor.execute(sql, tuple(args))
+            result = cursor.fetchall()
+            if result is tuple():
+                result = []
+        except:
+            result = 'Ocurrió un error al intetnar filtrar los libros'
+
+        return result      
     
     def UpdateBook(self, bookId, bookData):
         result = True

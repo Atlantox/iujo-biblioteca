@@ -103,6 +103,7 @@ class CategoryModel(BaseModel):
         return ordered_categories
     
     def CategoriesExists(self, ids):
+        ''' Gets a list of Ids and check if all exists, if not return false'''
         cursor = self.connection.connection.cursor()
         orderedIds = ''
         arrayIds = []

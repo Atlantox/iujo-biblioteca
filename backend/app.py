@@ -8,6 +8,8 @@ from config import config
 from controllers.BinnacleController import binnacleController
 from controllers.UserController import userController
 from controllers.BookController import bookController
+from controllers.AuthorController import authorController
+from controllers.EditorialController import editorialController
 from controllers.CategoryController import categoryController
 from controllers.ReaderController import readerController
 from controllers.LoanController import loanController
@@ -20,6 +22,8 @@ CONTROLLERS = [
     binnacleController,
     userController,
     bookController,
+    authorController,
+    editorialController,
     categoryController,
     readerController,
     loanController
@@ -41,5 +45,5 @@ if __name__ == '__main__':
     for controller in CONTROLLERS:
         app.register_blueprint(controller)
 
-    app.run()
-    #app.run('172.31.2.248')
+    #app.run()
+    app.run('172.31.2.248')

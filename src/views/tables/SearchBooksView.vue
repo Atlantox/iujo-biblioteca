@@ -18,9 +18,13 @@ const categoryStore = useCategoryStore()
 
 const targetFetched = ref(false)
 const books = bookStore.books
+const authors = bookStore.authors
+const editorials = bookStore.editorials
 const categories = categoryStore.categories
 
 const categoryFilter = ref('')
+const authorFilter = ref('')
+const editorialFilter = ref('')
 
 const ApplyCategoryFilter = (async () => {
   targetFetched.value = false
@@ -32,18 +36,64 @@ const ApplyCategoryFilter = (async () => {
     targetFetched.value = true
 })
 
-onMounted(async ()  => {
-  const select2Initializer = new Select2Initializer()
+const ApplyFilters = (async () => {
+  targetFetched.value = false
+  var filters = {}
 
-  $('#category').on('select2:select', function (e) {
-    categoryFilter.value = e.target.value
-    ApplyCategoryFilter()
-  });
+  if(categoryFilter.value !== '')
+    filters['category'] = categoryFilter.value
 
-  await bookStore.FetchBooks()  
+  if(authorFilter.value !== '')
+    filters['author'] = authorFilter.value
+
+  if(editorialFilter.value !== '')
+    filters['editorial'] = editorialFilter.value
+  
+  await bookStore.FetchBooksWithFilter(filters)
+
   if (bookStore.errorMessage !== '')
     sessionStore.ShowModal('Error', bookStore.errorMessage, 'error')
   else
+    targetFetched.value = true
+})
+
+onMounted(async ()  => {
+  const select2Initializer = new Select2Initializer()
+  var error = false
+  $('#category').on('select2:select', function (e) {
+    categoryFilter.value = e.target.value
+    ApplyFilters()
+  });
+
+  $('#author').on('select2:select', function (e) {
+    authorFilter.value = e.target.value
+    ApplyFilters()
+  });
+
+  $('#editorial').on('select2:select', function (e) {
+    editorialFilter.value = e.target.value
+    ApplyFilters()
+  });
+
+  await bookStore.FetchBooks()  
+  if (bookStore.errorMessage !== ''){
+    sessionStore.ShowModal('Error', bookStore.errorMessage, 'error')
+    error = true
+  }
+
+  await bookStore.FetchAuthors()  
+  if (bookStore.errorMessage !== ''){
+    sessionStore.ShowModal('Error', bookStore.errorMessage, 'error')
+    error = true
+  }
+
+  await bookStore.FetchEditorials()  
+  if (bookStore.errorMessage !== ''){
+    sessionStore.ShowModal('Error', bookStore.errorMessage, 'error')
+    error = true
+  }
+
+  if (error === false)
     targetFetched.value = true
 
   await categoryStore.FetchCategories()  
@@ -66,7 +116,7 @@ onMounted(async ()  => {
         <h3 class="w-100">
           Filtrar por...
         </h3>
-        <div class="col-6 col-lg-3 fs-6">
+        <div class="col-6 col-lg-2 fs-6">
           Categoría: 
           <select class="select2 fs-6" id="category">
             <option value="">&nbsp;</option>
@@ -76,6 +126,34 @@ onMounted(async ()  => {
             :value="category.id"
             >
             {{ category.name }}
+          </option>
+          </select>
+        </div>
+
+        <div class="col-6 col-lg-2 fs-6">
+          Autor:
+          <select class="select2 fs-6" id="author">
+            <option value="">&nbsp;</option>
+            <option
+            v-for="author in authors.value"
+            :key="author.id"
+            :value="author.id"
+            >
+            {{ author.name }}
+          </option>
+          </select>
+        </div>
+
+        <div class="col-6 col-lg-2 fs-6">
+          Editorial: 
+          <select class="select2 fs-6" id="editorial">
+            <option value="">&nbsp;</option>
+            <option
+            v-for="editorial in editorials.value"
+            :key="editorial.id"
+            :value="editorial.id"
+            >
+            {{ editorial.name }}
           </option>
           </select>
         </div>

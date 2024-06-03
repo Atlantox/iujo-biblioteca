@@ -135,6 +135,62 @@ onMounted( async () => {
             </article>
           </template>
 
+          <template v-if="sessionStore.userData.permissons.includes('Autores')">
+            <article :class="articleStyle">
+              <div :class="articleWrappedStyle">
+                <h4 :class="h4Style">
+                    Autores
+                </h4>
+                <div :class="linkContainersStyle">
+                  <div :class="linkElementStyle">
+                    <router-link :class="routerLinkStyle" :to="{name: 'books'}">
+                      <i :class="'fa fa-plus text-success ' + iconStyle" ></i>
+                      <span :class="linkTextStyle">
+                        Nuevo autor
+                      </span>
+                    </router-link>
+                  </div>
+                  <div :class="linkElementStyle">
+                    <router-link :class="routerLinkStyle" :to="{name: 'categories'}">
+                      <i :class="'fa fa-pencil ' + iconStyle" ></i>
+                      <span :class="linkTextStyle">
+                        Ver autores
+                      </span>
+                    </router-link>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </template>
+
+          <template v-if="sessionStore.userData.permissons.includes('Editoriales')">
+            <article :class="articleStyle">
+              <div :class="articleWrappedStyle">
+                <h4 :class="h4Style">
+                    Editoriales
+                </h4>
+                <div :class="linkContainersStyle">
+                  <div :class="linkElementStyle">
+                    <router-link :class="routerLinkStyle" :to="{name: 'books'}">
+                      <i :class="'fa fa-plus text-success ' + iconStyle" ></i>
+                      <span :class="linkTextStyle">
+                        Nueva editorial
+                      </span>
+                    </router-link>
+                  </div>
+                  <div :class="linkElementStyle">
+                    <router-link :class="routerLinkStyle" :to="{name: 'categories'}">
+                      <i :class="'fa fa-building ' + iconStyle" ></i>
+                      <span :class="linkTextStyle">
+                        Ver editoriales
+                      </span>
+                    </router-link>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </template>
+
           <template v-if="sessionStore.userData.permissons.includes('Lectores')">
             <article :class="articleStyle">
               <div :class="articleWrappedStyle">

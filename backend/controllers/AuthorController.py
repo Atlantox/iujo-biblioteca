@@ -1,27 +1,27 @@
 from flask import Blueprint, request, jsonify
 
 from models.UserModel import UserModel
-from models.CategoryModel import CategoryModel
+from models.AuthorModel import AuthorModel
 
 from helpers import *
 
-CATEGORY_LENGTH_CONFIG = {
-    'name': {'min': 1, 'max':50}
+AUTHOR_LENGTH_CONFIG = {
+    'name': {'min': 1, 'max':100}
 }
 
 REQUIRED_FIELDS = ['name']
 
-categoryController = Blueprint('category', __name__)
+authorController = Blueprint('author', __name__)
 
 def GetConnection():
-    connection = getattr(categoryController, 'connection', None)
+    connection = getattr(authorController, 'connection', None)
     if connection is None:
-        raise Exception('No se pudo obtener la conexión desde el Blueprint Category')
+        raise Exception('No se pudo obtener la conexión desde el Blueprint Author')
     
     return connection
 
-@categoryController.route('/categories', methods=['POST'])
-def CreateCategory():
+@authorController.route('/authors', methods=['POST'])
+def CreateAuthor():
     connection = GetConnection()
     userModel = UserModel(connection)
     
@@ -38,31 +38,31 @@ def CreateCategory():
             statusCode = 400
     
     if error == '':
-        cleanData = ValidateCategoryData(recievedData)
+        cleanData = ValidateAuthorData(recievedData)
         if type(cleanData) is str:
             error = cleanData
             statusCode = 400
 
     if error == '':
-        if userModel.UserHasPermisson(targetUser['id'], 'Categorías') is False:
+        if userModel.UserHasPermisson(targetUser['id'], 'Autores') is False:
             error = 'Acción denegada'
             statusCode = 401  # Unauthorized
 
     if error == '':
-        categoryModel = CategoryModel(connection)
-        if categoryModel.GetCategoryByName(cleanData['name']) is not None:
-            error = 'La categoría ya está registrada'
+        authorModel = AuthorModel(connection)
+        if authorModel.GetAuthorByName(cleanData['name']) is not None:
+            error = 'El autor ya está registrado'
             statusCode = 400
     
     if error == '':
-        created = categoryModel.CreateCategory(cleanData)
+        created = authorModel.CreateAuthor(cleanData)
         if created is False:
-            error = "Hubo un error al crear la categoría"
+            error = "Hubo un error al crear el autor"
             statusCode = 500
         else:
-            action = 'Creó la categoría {0}'.format(cleanData['name'])
-            categoryModel.CreateBinnacle(targetUser['id'], action)
-            message = 'Categoría creada correctamente'
+            action = 'Creó el autor {0}'.format(cleanData['name'])
+            authorModel.CreateBinnacle(targetUser['id'], action)
+            message = 'Autor creado correctamente'
 
     if error != '':
         message = error
@@ -71,27 +71,26 @@ def CreateCategory():
     return jsonify({'success': success, 'message': message}), statusCode
 
 
-@categoryController.route('/categories', methods=['GET'])
-def GetCategories():
+@authorController.route('/authors', methods=['GET'])
+def GetAuthors():
     connection = GetConnection()
-    categoryModel = CategoryModel(connection)
+    authorModel = AuthorModel(connection)
     response = {}
     statusCode = 200
 
-    categories = categoryModel.GetCategories()
-
+    authors = authorModel.GetAuthors()
     response = {
         'success': True,
-        'categories': categories
+        'authors': authors
     }
 
     return jsonify(response), statusCode
 
 
-@categoryController.route('/categories/<int:categoryId>', methods=['GET'])
-def GetCategoryById(categoryId):
+@authorController.route('/authors/<int:authorId>', methods=['GET'])
+def GetAuthorById(authorId):
     connection = GetConnection()
-    categoryModel = CategoryModel(connection)
+    authorModel = AuthorModel(connection)
     userModel = UserModel(connection)
     error = ''
     statusCode = 200
@@ -108,29 +107,29 @@ def GetCategoryById(categoryId):
             statusCode = 400
 
     if error == '':
-        if userModel.UserHasPermisson(targetUser['id'], 'Categorías') is False:
+        if userModel.UserHasPermisson(targetUser['id'], 'Autores') is False:
             error = 'Acción denegada'
             statusCode = 401  # Unauthorized
 
     if error == '':
-        targetCategory = categoryModel.GetCategoryById(categoryId)
-        if targetCategory is None:
-            error = 'Categoría no encontrada'
+        targetAuthor = authorModel.GetAuthorById(authorId)
+        if targetAuthor is None:
+            error = 'Autor no encontrado'
             statusCode = 404  # Not found
     
     success = error == ''
     response = {'success': success}
 
     if error == '':
-        response['category'] = targetCategory
+        response['author'] = targetAuthor
     else:
         response['message'] = error
 
     return jsonify(response), statusCode
 
 
-@categoryController.route('/categories/<int:categoryId>', methods=['PUT'])
-def UpdateCategory(categoryId):
+@authorController.route('/authors/<int:authorId>', methods=['PUT'])
+def UpdateAuthor(authorId):
     connection = GetConnection()
     userModel = UserModel(connection)
     
@@ -147,37 +146,37 @@ def UpdateCategory(categoryId):
             statusCode = 400
     
     if error == '':
-        cleanData = ValidateCategoryData(recievedData)
+        cleanData = ValidateAuthorData(recievedData)
         if type(cleanData) is str:
             error = cleanData
             statusCode = 400
 
     if error == '':
-        if userModel.UserHasPermisson(targetUser['id'], 'Categorías') is False:
+        if userModel.UserHasPermisson(targetUser['id'], 'Autores') is False:
             error = 'Acción denegada'
             statusCode = 401  # Unauthorized
 
     if error == '':
-        categoryModel = CategoryModel(connection)
-        targetCategory = categoryModel.GetCategoryById(categoryId)
-        if targetCategory is None:
-            error = 'Categoría no encontrada'
+        authorModel = AuthorModel(connection)
+        targetAuthor = authorModel.GetAuthorById(authorId)
+        if targetAuthor is None:
+            error = 'Autor no encontrado'
             statusCode = 404  # Not found
 
     if error == '':
-        if categoryModel.GetCategoryByName(cleanData['name']) is not None:
-            error = 'Ya existe una categoría con ese nombre'
+        if targetAuthor.GetAuthorByName(cleanData['name']) is not None:
+            error = 'Ya existe un autor con ese nombre'
             statusCode = 400
 
     if error == '':
-        updated = categoryModel.UpdateCategory(categoryId, cleanData)
+        updated = targetAuthor.UpdateAuthor(authorId, cleanData)
         if updated is False:
-            error = "Hubo un error al renombrar la categoría"
+            error = "Hubo un error al renombrar el autor"
             statusCode = 500
         else:
-            action = 'Renombró la categoría "{0}" por "{1}" '.format(targetCategory['name'], cleanData['name'])
-            categoryModel.CreateBinnacle(targetUser['id'], action)
-            message = 'Categoría renombrada correctamente'
+            action = 'Renombró el autor "{0}" por "{1}" '.format(targetAuthor['name'], cleanData['name'])
+            targetAuthor.CreateBinnacle(targetUser['id'], action)
+            message = 'Autor renombrado correctamente'
 
     if error != '':
         message = error
@@ -186,8 +185,8 @@ def UpdateCategory(categoryId):
     return jsonify({'success': success, 'message': message}), statusCode
 
 
-@categoryController.route('/categories/<int:categoryId>', methods=['DELETE'])
-def DeleteCategory(categoryId):
+@authorController.route('/authors/<int:authorId>', methods=['DELETE'])
+def DeleteAuthor(authorId):
     connection = GetConnection()
     userModel = UserModel(connection)
     error = ''
@@ -205,26 +204,26 @@ def DeleteCategory(categoryId):
             statusCode = 400
 
     if error == '':
-        if userModel.UserHasPermisson(targetUser['id'], 'Categorías') is False:
+        if userModel.UserHasPermisson(targetUser['id'], 'Autores') is False:
             error = 'Acción denegada'
             statusCode = 401  # Unauthorized
 
     if error == '':
-        categoryModel = CategoryModel(connection)
-        targetCategory = categoryModel.GetCategoryById(categoryId)
-        if targetCategory is None:
-            error = 'Categoría no encontrada'
+        authorModel = AuthorModel(connection)
+        targetAuthor = authorModel.GetAuthorById(authorId)
+        if targetAuthor is None:
+            error = 'Autor no encontrado'
             statusCode = 404  # Not found
 
     if error == '':
-        deleted = categoryModel.DeleteCategory(categoryId)
+        deleted = authorModel.DeleteAuthor(authorId)
         if deleted is False:
-            error = "Hubo un error al eliminar la categoría"
+            error = "Hubo un error al eliminar el autor"
             statusCode = 500
         else:
-            action = 'Eliminó la categoría "{0}"'.format(targetCategory['name'])
-            categoryModel.CreateBinnacle(targetUser['id'], action)
-            message = 'Categoría eliminada correctamente'
+            action = 'Eliminó el autor "{0}"'.format(targetAuthor['name'])
+            authorModel.CreateBinnacle(targetUser['id'], action)
+            message = 'Autor eliminado correctamente'
 
     if error != '':
         message = error
@@ -233,7 +232,7 @@ def DeleteCategory(categoryId):
     return jsonify({'success': success, 'message': message}), statusCode
 
 
-def ValidateCategoryData(recievedData, exactData = True):
+def ValidateAuthorData(recievedData, exactData = True):
     error = ''
 
     cleanData = HasEmptyFields(REQUIRED_FIELDS, recievedData, exactData)
@@ -241,7 +240,7 @@ def ValidateCategoryData(recievedData, exactData = True):
         error = cleanData
 
     if error == '':
-        lengthOK = ValidateLength(CATEGORY_LENGTH_CONFIG, cleanData)
+        lengthOK = ValidateLength(AUTHOR_LENGTH_CONFIG, cleanData)
         if lengthOK is not True:
             error = lengthOK
     

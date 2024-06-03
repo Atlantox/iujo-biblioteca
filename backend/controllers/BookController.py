@@ -1,10 +1,11 @@
 from flask import Blueprint, request, jsonify
-from flask_cors import cross_origin
 
 from models.BookModel import BookModel
 from models.UserModel import UserModel
 from models.CategoryModel import CategoryModel
 from models.LoanModel import LoanModel
+from models.AuthorModel import AuthorModel
+from models.EditorialModel import EditorialModel
 
 from helpers import *
 
@@ -178,6 +179,59 @@ def GetBookById(id):
     else:
         response['book'] = targetBook
 
+    return jsonify(response), statusCode
+
+@bookController.route('/books/filter', methods=['POST'])
+def GetBooksByFilter():
+    connection = GetConnection()
+    response = {}
+    recievedData, error, statusCode = JsonExists(request)
+
+    filters = {}
+
+    if 'category' in recievedData:
+        categoryModel = CategoryModel(connection)
+        targetCategory = categoryModel.GetCategoryById(recievedData['category'])
+        if targetCategory is None:
+            error ='Cateogría no encontrada'
+            statusCode = 400
+        else:
+            filters['category'] = recievedData['category']
+
+    if error == '':
+        if 'author' in recievedData:
+            authorModel = AuthorModel(connection)
+            targetAuthor = authorModel.GetAuthorById(recievedData['author'])
+            if targetAuthor is None:
+                error ='Autor no encontrado'
+                statusCode = 400
+            else:
+                filters['author'] = recievedData['author']
+    
+    if error == '':
+        if 'editorial' in recievedData:
+            editorialModel = EditorialModel(connection)
+            targetEditorial = editorialModel.GetEditorialById(recievedData['editorial'])
+            if targetEditorial is None:
+                error ='Editorial no encontrada'
+                statusCode = 400
+            else:
+                filters['editorial'] = recievedData['editorial']
+
+    if error == '':
+        bookModel = BookModel(connection)
+        booksFound = bookModel.FilterBooks(filters)
+        if type(booksFound) is str:
+            error = booksFound
+    
+    success = error == ''
+    response['sucess'] = success
+    
+    if success:
+        response['books'] = booksFound
+    else:
+        response['message'] = error
+    
     return jsonify(response), statusCode
 
 

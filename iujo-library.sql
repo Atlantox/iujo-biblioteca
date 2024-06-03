@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.0
+-- version 5.0.4
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 03-06-2024 a las 01:48:37
--- Versión del servidor: 10.4.18-MariaDB
--- Versión de PHP: 8.0.3
+-- Tiempo de generación: 03-06-2024 a las 22:03:16
+-- Versión del servidor: 10.4.17-MariaDB
+-- Versión de PHP: 7.2.34
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,27 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `iujo-library`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `author`
+--
+
+CREATE TABLE `author` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `author`
+--
+
+INSERT INTO `author` (`id`, `name`) VALUES
+(2, 'Atlantox'),
+(4, 'Edgar Allan Poe'),
+(1, 'Kentaro Miura'),
+(3, 'Nadie');
 
 -- --------------------------------------------------------
 
@@ -120,7 +141,11 @@ INSERT INTO `binnacle` (`id`, `user`, `action`, `date`) VALUES
 (79, 10, 'Atlantox ha ingresado al sistema', '2024-05-22 18:09:31'),
 (80, 10, 'Atlantox ha ingresado al sistema', '2024-05-29 19:05:40'),
 (81, 10, 'Atlantox ha ingresado al sistema', '2024-06-02 19:45:41'),
-(82, 10, 'Atlantox ha ingresado al sistema', '2024-06-02 19:48:12');
+(82, 10, 'Atlantox ha ingresado al sistema', '2024-06-02 19:48:12'),
+(83, 10, 'Atlantox ha ingresado al sistema', '2024-06-03 08:59:17'),
+(84, 10, 'Atlantox ha ingresado al sistema', '2024-06-03 09:23:14'),
+(85, 1, 'Creó el autor Edgar Allan Poe', '2024-06-03 11:34:29'),
+(86, 10, 'Atlantox ha ingresado al sistema', '2024-06-03 11:37:50');
 
 -- --------------------------------------------------------
 
@@ -131,9 +156,9 @@ INSERT INTO `binnacle` (`id`, `user`, `action`, `date`) VALUES
 CREATE TABLE `book` (
   `id` int(11) NOT NULL,
   `call_number` varchar(8) NOT NULL,
-  `author` varchar(100) NOT NULL,
+  `author` varchar(100) DEFAULT NULL,
   `title` varchar(150) NOT NULL,
-  `editorial` varchar(100) NOT NULL,
+  `editorial` varchar(100) DEFAULT NULL,
   `pages` int(4) NOT NULL,
   `shelf` varchar(10) DEFAULT NULL,
   `description` text NOT NULL,
@@ -206,6 +231,26 @@ INSERT INTO `category` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `editorial`
+--
+
+CREATE TABLE `editorial` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `editorial`
+--
+
+INSERT INTO `editorial` (`id`, `name`) VALUES
+(3, 'Editorial vieja'),
+(2, 'El EteSechu'),
+(1, 'Shizuka');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `loan`
 --
 
@@ -263,7 +308,13 @@ INSERT INTO `permisson` (`id`, `name`, `level`) VALUES
 (13, 'Editores', 'Super'),
 (14, 'Admin', 'Super'),
 (15, 'Préstamos', 'Super'),
-(18, 'Categorías', 'Editor');
+(18, 'Categorías', 'Editor'),
+(19, 'Editoriales', 'Editor'),
+(20, 'Editoriales', 'Admin'),
+(21, 'Editoriales', 'Super'),
+(22, 'Autores', 'Editor'),
+(23, 'Autores', 'Admin'),
+(24, 'Autores', 'Super');
 
 -- --------------------------------------------------------
 
@@ -368,6 +419,13 @@ INSERT INTO `user_level` (`name`) VALUES
 --
 
 --
+-- Indices de la tabla `author`
+--
+ALTER TABLE `author`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
+
+--
 -- Indices de la tabla `binnacle`
 --
 ALTER TABLE `binnacle`
@@ -380,7 +438,9 @@ ALTER TABLE `binnacle`
 ALTER TABLE `book`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `call_number` (`call_number`),
-  ADD KEY `book_state` (`state`);
+  ADD KEY `book_state` (`state`),
+  ADD KEY `book_editorial` (`editorial`),
+  ADD KEY `book_author` (`author`);
 
 --
 -- Indices de la tabla `book_category`
@@ -394,6 +454,13 @@ ALTER TABLE `book_category`
 -- Indices de la tabla `category`
 --
 ALTER TABLE `category`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Indices de la tabla `editorial`
+--
+ALTER TABLE `editorial`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
 
@@ -446,10 +513,16 @@ ALTER TABLE `user_level`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `author`
+--
+ALTER TABLE `author`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT de la tabla `binnacle`
 --
 ALTER TABLE `binnacle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
 
 --
 -- AUTO_INCREMENT de la tabla `book`
@@ -470,6 +543,12 @@ ALTER TABLE `category`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
+-- AUTO_INCREMENT de la tabla `editorial`
+--
+ALTER TABLE `editorial`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT de la tabla `loan`
 --
 ALTER TABLE `loan`
@@ -479,7 +558,7 @@ ALTER TABLE `loan`
 -- AUTO_INCREMENT de la tabla `permisson`
 --
 ALTER TABLE `permisson`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT de la tabla `reader`
@@ -507,6 +586,8 @@ ALTER TABLE `binnacle`
 -- Filtros para la tabla `book`
 --
 ALTER TABLE `book`
+  ADD CONSTRAINT `book_author` FOREIGN KEY (`author`) REFERENCES `author` (`name`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `book_editorial` FOREIGN KEY (`editorial`) REFERENCES `editorial` (`name`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `book_state` FOREIGN KEY (`state`) REFERENCES `state` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --

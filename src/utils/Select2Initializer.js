@@ -5,7 +5,9 @@ class Select2Initializer{
             'select2',
             'readers',
             'state',
-            'category'
+            'category',
+            'editorial',
+            'author'
         ]
 
         select2Ids.forEach((id) => { 

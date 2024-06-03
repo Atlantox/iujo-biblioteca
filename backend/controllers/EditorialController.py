@@ -1,27 +1,27 @@
 from flask import Blueprint, request, jsonify
 
 from models.UserModel import UserModel
-from models.CategoryModel import CategoryModel
+from models.EditorialModel import EditorialModel
 
 from helpers import *
 
-CATEGORY_LENGTH_CONFIG = {
-    'name': {'min': 1, 'max':50}
+EDITORIAL_LENGTH_CONFIG = {
+    'name': {'min': 1, 'max':100}
 }
 
 REQUIRED_FIELDS = ['name']
 
-categoryController = Blueprint('category', __name__)
+editorialController = Blueprint('editorial', __name__)
 
 def GetConnection():
-    connection = getattr(categoryController, 'connection', None)
+    connection = getattr(editorialController, 'connection', None)
     if connection is None:
-        raise Exception('No se pudo obtener la conexión desde el Blueprint Category')
+        raise Exception('No se pudo obtener la conexión desde el Blueprint Editorial')
     
     return connection
 
-@categoryController.route('/categories', methods=['POST'])
-def CreateCategory():
+@editorialController.route('/editorials', methods=['POST'])
+def CreateEditorial():
     connection = GetConnection()
     userModel = UserModel(connection)
     
@@ -38,31 +38,31 @@ def CreateCategory():
             statusCode = 400
     
     if error == '':
-        cleanData = ValidateCategoryData(recievedData)
+        cleanData = ValidateEditorialData(recievedData)
         if type(cleanData) is str:
             error = cleanData
             statusCode = 400
 
     if error == '':
-        if userModel.UserHasPermisson(targetUser['id'], 'Categorías') is False:
+        if userModel.UserHasPermisson(targetUser['id'], 'Editoriales') is False:
             error = 'Acción denegada'
             statusCode = 401  # Unauthorized
 
     if error == '':
-        categoryModel = CategoryModel(connection)
-        if categoryModel.GetCategoryByName(cleanData['name']) is not None:
-            error = 'La categoría ya está registrada'
+        editorialModel = EditorialModel(connection)
+        if editorialModel.GetEditorialByName(cleanData['name']) is not None:
+            error = 'La editorial ya está registrada'
             statusCode = 400
     
     if error == '':
-        created = categoryModel.CreateCategory(cleanData)
+        created = editorialModel.CreateEditorial(cleanData)
         if created is False:
-            error = "Hubo un error al crear la categoría"
+            error = "Hubo un error al crear la editorial"
             statusCode = 500
         else:
-            action = 'Creó la categoría {0}'.format(cleanData['name'])
-            categoryModel.CreateBinnacle(targetUser['id'], action)
-            message = 'Categoría creada correctamente'
+            action = 'Creó la editorial {0}'.format(cleanData['name'])
+            editorialModel.CreateBinnacle(targetUser['id'], action)
+            message = 'Editorial creada correctamente'
 
     if error != '':
         message = error
@@ -71,27 +71,26 @@ def CreateCategory():
     return jsonify({'success': success, 'message': message}), statusCode
 
 
-@categoryController.route('/categories', methods=['GET'])
-def GetCategories():
+@editorialController.route('/editorials', methods=['GET'])
+def GetEditorials():
     connection = GetConnection()
-    categoryModel = CategoryModel(connection)
+    editorialModel = EditorialModel(connection)
     response = {}
     statusCode = 200
 
-    categories = categoryModel.GetCategories()
-
+    editorials = editorialModel.GetEditorials()
     response = {
         'success': True,
-        'categories': categories
+        'editorials': editorials
     }
 
     return jsonify(response), statusCode
 
 
-@categoryController.route('/categories/<int:categoryId>', methods=['GET'])
-def GetCategoryById(categoryId):
+@editorialController.route('/editorials/<int:editorialId>', methods=['GET'])
+def GetEditorialById(editorialId):
     connection = GetConnection()
-    categoryModel = CategoryModel(connection)
+    editorialModel = EditorialModel(connection)
     userModel = UserModel(connection)
     error = ''
     statusCode = 200
@@ -108,29 +107,29 @@ def GetCategoryById(categoryId):
             statusCode = 400
 
     if error == '':
-        if userModel.UserHasPermisson(targetUser['id'], 'Categorías') is False:
+        if userModel.UserHasPermisson(targetUser['id'], 'Editoriales') is False:
             error = 'Acción denegada'
             statusCode = 401  # Unauthorized
 
     if error == '':
-        targetCategory = categoryModel.GetCategoryById(categoryId)
-        if targetCategory is None:
-            error = 'Categoría no encontrada'
+        targetEditorial = editorialModel.GetEditorialById(editorialId)
+        if targetEditorial is None:
+            error = 'Editorial no encontrada'
             statusCode = 404  # Not found
     
     success = error == ''
     response = {'success': success}
 
     if error == '':
-        response['category'] = targetCategory
+        response['editorial'] = targetEditorial
     else:
         response['message'] = error
 
     return jsonify(response), statusCode
 
 
-@categoryController.route('/categories/<int:categoryId>', methods=['PUT'])
-def UpdateCategory(categoryId):
+@editorialController.route('/editorials/<int:editorialId>', methods=['PUT'])
+def UpdateEditorial(editorialId):
     connection = GetConnection()
     userModel = UserModel(connection)
     
@@ -147,37 +146,37 @@ def UpdateCategory(categoryId):
             statusCode = 400
     
     if error == '':
-        cleanData = ValidateCategoryData(recievedData)
+        cleanData = ValidateEditorialData(recievedData)
         if type(cleanData) is str:
             error = cleanData
             statusCode = 400
 
     if error == '':
-        if userModel.UserHasPermisson(targetUser['id'], 'Categorías') is False:
+        if userModel.UserHasPermisson(targetUser['id'], 'Editoriales') is False:
             error = 'Acción denegada'
             statusCode = 401  # Unauthorized
 
     if error == '':
-        categoryModel = CategoryModel(connection)
-        targetCategory = categoryModel.GetCategoryById(categoryId)
-        if targetCategory is None:
-            error = 'Categoría no encontrada'
+        editorialModel = EditorialModel(connection)
+        targetEditorial = editorialModel.GetEditorialById(editorialId)
+        if targetEditorial is None:
+            error = 'Editorial no encontrado'
             statusCode = 404  # Not found
 
     if error == '':
-        if categoryModel.GetCategoryByName(cleanData['name']) is not None:
-            error = 'Ya existe una categoría con ese nombre'
+        if targetEditorial.GetEditorialByName(cleanData['name']) is not None:
+            error = 'Ya existe una editorial con ese nombre'
             statusCode = 400
 
     if error == '':
-        updated = categoryModel.UpdateCategory(categoryId, cleanData)
+        updated = targetEditorial.UpdateEditorial(editorialId, cleanData)
         if updated is False:
-            error = "Hubo un error al renombrar la categoría"
+            error = "Hubo un error al renombrar la editorial"
             statusCode = 500
         else:
-            action = 'Renombró la categoría "{0}" por "{1}" '.format(targetCategory['name'], cleanData['name'])
-            categoryModel.CreateBinnacle(targetUser['id'], action)
-            message = 'Categoría renombrada correctamente'
+            action = 'Renombró la editorial "{0}" por "{1}" '.format(targetEditorial['name'], cleanData['name'])
+            targetEditorial.CreateBinnacle(targetUser['id'], action)
+            message = 'Editorial renombrada correctamente'
 
     if error != '':
         message = error
@@ -186,8 +185,8 @@ def UpdateCategory(categoryId):
     return jsonify({'success': success, 'message': message}), statusCode
 
 
-@categoryController.route('/categories/<int:categoryId>', methods=['DELETE'])
-def DeleteCategory(categoryId):
+@editorialController.route('/editorials/<int:editorialId>', methods=['DELETE'])
+def DeleteEditorial(editorialId):
     connection = GetConnection()
     userModel = UserModel(connection)
     error = ''
@@ -205,26 +204,26 @@ def DeleteCategory(categoryId):
             statusCode = 400
 
     if error == '':
-        if userModel.UserHasPermisson(targetUser['id'], 'Categorías') is False:
+        if userModel.UserHasPermisson(targetUser['id'], 'Editoriales') is False:
             error = 'Acción denegada'
             statusCode = 401  # Unauthorized
 
     if error == '':
-        categoryModel = CategoryModel(connection)
-        targetCategory = categoryModel.GetCategoryById(categoryId)
-        if targetCategory is None:
-            error = 'Categoría no encontrada'
+        editorialModel = EditorialModel(connection)
+        targetEditorial = editorialModel.GetEditorialById(editorialId)
+        if targetEditorial is None:
+            error = 'Editorial no encontrada'
             statusCode = 404  # Not found
 
     if error == '':
-        deleted = categoryModel.DeleteCategory(categoryId)
+        deleted = editorialModel.DeleteEditorial(editorialId)
         if deleted is False:
-            error = "Hubo un error al eliminar la categoría"
+            error = "Hubo un error al eliminar la editorial"
             statusCode = 500
         else:
-            action = 'Eliminó la categoría "{0}"'.format(targetCategory['name'])
-            categoryModel.CreateBinnacle(targetUser['id'], action)
-            message = 'Categoría eliminada correctamente'
+            action = 'Eliminó la editorial "{0}"'.format(targetEditorial['name'])
+            editorialModel.CreateBinnacle(targetUser['id'], action)
+            message = 'Editorial eliminada correctamente'
 
     if error != '':
         message = error
@@ -233,7 +232,7 @@ def DeleteCategory(categoryId):
     return jsonify({'success': success, 'message': message}), statusCode
 
 
-def ValidateCategoryData(recievedData, exactData = True):
+def ValidateEditorialData(recievedData, exactData = True):
     error = ''
 
     cleanData = HasEmptyFields(REQUIRED_FIELDS, recievedData, exactData)
@@ -241,7 +240,7 @@ def ValidateCategoryData(recievedData, exactData = True):
         error = cleanData
 
     if error == '':
-        lengthOK = ValidateLength(CATEGORY_LENGTH_CONFIG, cleanData)
+        lengthOK = ValidateLength(EDITORIAL_LENGTH_CONFIG, cleanData)
         if lengthOK is not True:
             error = lengthOK
     

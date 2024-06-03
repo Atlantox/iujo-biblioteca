@@ -1,6 +1,5 @@
 
 from flask import Blueprint, request, jsonify
-from flask_cors import cross_origin
 
 from models.BinnacleModel import BinnacleModel
 from models.UserModel import UserModel
