@@ -186,7 +186,6 @@ def GetBooksByFilter():
     connection = GetConnection()
     response = {}
     recievedData, error, statusCode = JsonExists(request)
-
     filters = {}
 
     if 'category' in recievedData:
@@ -225,7 +224,8 @@ def GetBooksByFilter():
             error = booksFound
     
     success = error == ''
-    response['sucess'] = success
+    response['success'] = success
+
     
     if success:
         response['books'] = booksFound

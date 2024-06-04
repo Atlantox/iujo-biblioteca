@@ -7,14 +7,16 @@ class BookModel(BaseModel):
             book.id,
             book.call_number,
             book.title,
-            book.author,
-            book.editorial,
+            author.name as author,
+            editorial.name as editorial,
             book.pages,
             book.description,
             book.shelf,
             book.state
             FROM
-            book 
+            book
+            LEFT JOIN author ON author.id = book.author 
+            LEFT JOIN editorial ON editorial.id = book.editorial
             '''
     
     def CreateBook(self, bookData):
@@ -165,6 +167,7 @@ class BookModel(BaseModel):
     
     def FilterBooks(self, filters:dict):
         cursor = self.connection.connection.cursor()
+        result = []
 
         sql = self.BOOK_SELECT_TEMPLATE + 'INNER JOIN book_category ON book_category.book = book.id '
         args = []
@@ -192,9 +195,16 @@ class BookModel(BaseModel):
                 cursor.execute(sql)
             else:
                 cursor.execute(sql, tuple(args))
-            result = cursor.fetchall()
-            if result is tuple():
+            books = cursor.fetchall()
+            if books is tuple():
                 result = []
+            else:
+                for i in range(len(books)):
+                    book = books[i]
+                    categoryModel = CategoryModel(self.connection)
+                    book['categories'] = categoryModel.GetCategoriesOfBook(book['id'])
+                    result.append(book)
+
         except:
             result = 'Ocurrió un error al intetnar filtrar los libros'
 

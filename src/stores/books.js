@@ -69,6 +69,7 @@ const useBookStore = defineStore('books', {
                 let response = await fetch(url, fetchConfig)
                 let json = await response.json()
                 let result = await json
+                
                 if(result.success){
                     this.books.value = result.books
                     this.errorMessage =  ''

@@ -14,23 +14,23 @@ const questions = ref([
         question: 
             '¿Existe un tiempo límite para tener un libro?',
         answer: 
-            `Dependerá del libro, si es una enciclopedia o libro educativo, el tiempo máximo de préstamo será de <strong>una semana<strong>`,
+            `Dependerá del libro y de la disponibilidad de este, si se tiene más de un ejemplar, el tiempo máximo de préstamo será de <strong>una semana<strong>`,
     },
     {
         question: 
             '¿Puedo llevarme el libro prestado a mi casa?',
         answer: 
-            `Si se trata de un libro <strong>educativo o enciclopedia</strong>, sí, puedes llevártelo a tu hogar.`,
+            `Si se trata de un libro <strong>recreativo o enciclopedia</strong>, sí, puedes llevártelo a tu hogar.`,
     },
     {
         question: 
             '¿Qué pasa si pierdo un libro?',
         answer: 
-            `En caso de un libro extraviado, el lector deberá de <strong>pagar</strong> el costo total del libro para poder reponerlo nuevamente en la biblioteca`,
+            `En caso de un libro extraviado, el lector debe <strong>pagar</strong> el costo total del libro para poder reponerlo nuevamente en la biblioteca`,
     },
     {
         question: 
-            '¿Quienes pueden utilizar los servicios de la biblioteca?',
+            '¿Quiénes pueden utilizar los servicios de la biblioteca?',
         answer: 
             `<strong>Solamente</strong> estudiantes regulares, docentes y coordinadores`,
     },
