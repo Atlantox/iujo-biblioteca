@@ -45,5 +45,5 @@ if __name__ == '__main__':
     for controller in CONTROLLERS:
         app.register_blueprint(controller)
 
-    #app.run()
-    app.run('172.31.2.248')
+    app.run()
+    #app.run('172.31.2.248')

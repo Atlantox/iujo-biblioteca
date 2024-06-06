@@ -1,6 +1,8 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import ApiConfig from '@/stores/config.js'
+
+import useUtilsStore from './utils'
 import useSessionStore from '@/stores/session.js'
 
 const apiConfig = new ApiConfig()
@@ -11,12 +13,14 @@ const useBookStore = defineStore('books', {
             books: ref([]),
             errorMessage: ref(''),
             authors: ref([]),
-            editorials: ref([])
+            editorials: ref([]),
+            bookStates: ref([])
         }
     },
     actions:{
         async FetchBooks(){
-            const sessionStore = new useSessionStore()
+            const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
             try{
                 let url = apiConfig.base_url + '/books'
                 var fetchHeaders = {
@@ -39,17 +43,17 @@ const useBookStore = defineStore('books', {
                     this.books.value = result.books
                     this.errorMessage =  ''
                 }
-                else{
-                    this.errorMessage =  result.message
-                }
+                else
+                    utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                this.errorMessage = 'Error: ' + error
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los libros', 'error')
             }
         },
 
         async FetchBooksWithFilter(filters){
-            const sessionStore = new useSessionStore()
+            const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
             try{
                 let url = apiConfig.base_url + '/books/filter'
                 var fetchHeaders = {
@@ -74,17 +78,17 @@ const useBookStore = defineStore('books', {
                     this.books.value = result.books
                     this.errorMessage =  ''
                 }
-                else{
-                    this.errorMessage =  result.message
-                }
+                else
+                    utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                this.errorMessage = 'Error: ' + error
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los libros con filtros', 'error')
             }
         },
 
         async FetchAuthors(){
-            const sessionStore = new useSessionStore()
+            const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
             try{
                 let url = apiConfig.base_url + '/authors'
                 var fetchHeaders = {
@@ -107,17 +111,17 @@ const useBookStore = defineStore('books', {
                     this.authors.value = result.authors
                     this.errorMessage =  ''
                 }
-                else{
-                    this.errorMessage =  result.message
-                }
+                else
+                    utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                this.errorMessage = 'Error: ' + error
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los autores', 'error')
             }
         },
 
         async FetchEditorials(){
-            const sessionStore = new useSessionStore()
+            const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
             try{
                 let url = apiConfig.base_url + '/editorials'
                 var fetchHeaders = {
@@ -140,19 +144,19 @@ const useBookStore = defineStore('books', {
                     this.editorials.value = result.editorials
                     this.errorMessage =  ''
                 }
-                else{
-                    this.errorMessage =  result.message
-                }
+                else
+                    utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                this.errorMessage = 'Error: ' + error
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar las editoriales', 'error')
             }
         },
 
-        async FetchBooksByCategory(categoryId){
-            const sessionStore = new useSessionStore()
+        async FetchBookStates(){
+            const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
             try{
-                let url = apiConfig.base_url + '/books/by_category/' + categoryId
+                let url = apiConfig.base_url + '/books/states'
                 var fetchHeaders = {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -165,23 +169,21 @@ const useBookStore = defineStore('books', {
                     method: 'GET',
                     headers: fetchHeaders
                 }
-                this.books.value = undefined
+
                 let response = await fetch(url, fetchConfig)
                 let json = await response.json()
                 let result = await json
                 if(result.success){
-                    this.books.value = result.books
+                    this.bookStates.value = result.states
                     this.errorMessage =  ''
                 }
-                else{
-                    this.errorMessage =  result.message
-                }
+                else
+                    utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                this.errorMessage = 'Error: ' + error
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los estados de libros', 'error')
             }
-        }
-
+        },
     }
 })
 

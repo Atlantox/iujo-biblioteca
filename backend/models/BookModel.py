@@ -3,7 +3,7 @@ from .CategoryModel import CategoryModel
 
 class BookModel(BaseModel):
     BOOK_SELECT_TEMPLATE = '''
-            SELECT
+            SELECT DISTINCT
             book.id,
             book.call_number,
             book.title,
@@ -174,7 +174,6 @@ class BookModel(BaseModel):
 
         if filters != []:
             sql += 'WHERE '
-
         
         if 'category' in filters:
             sql += 'book_category.category IN (%s) AND '
@@ -206,9 +205,21 @@ class BookModel(BaseModel):
                     result.append(book)
 
         except:
-            result = 'Ocurrió un error al intetnar filtrar los libros'
+            result = 'Ocurrió un error al intentar filtrar los libros'
 
         return result      
+    
+    def GetBookStates(self):
+        cursor = self.connection.connection.cursor()
+        sql = 'SELECT * FROM state ORDER BY name'
+
+        try:
+            cursor.execute(sql)
+            states = cursor.fetchall()
+        except:
+            states = False
+        
+        return states
     
     def UpdateBook(self, bookId, bookData):
         result = True

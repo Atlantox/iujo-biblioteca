@@ -2,6 +2,8 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 import ApiConfig from '@/stores/config.js'
+
+import useUtilsStore from './utils'
 import useSessionStore from '@/stores/session.js'
 
 const apiConfig = new ApiConfig()
@@ -14,7 +16,8 @@ const useReaderStore = defineStore('readers', {
     },
     actions:{
         async FetchReaders(){
-            const sessionStore = new useSessionStore()
+            const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
             try{
                 let url = apiConfig.base_url + '/readers'
                 var fetchHeaders = {
@@ -36,10 +39,10 @@ const useReaderStore = defineStore('readers', {
                 if(result.success)
                     this.readers.value = result.readers
                 else
-                    this.errorMessage =  result.message
+                    utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                this.errorMessage = 'Error: ' + error
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los lectores', 'error')
             }
         },
     }

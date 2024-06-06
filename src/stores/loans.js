@@ -2,6 +2,8 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 import ApiConfig from '@/stores/config.js'
+
+import useUtilsStore from './utils'
 import useSessionStore from '@/stores/session.js'
 
 const apiConfig = new ApiConfig()
@@ -16,7 +18,8 @@ const useLoanStore = defineStore('loans', {
     },
     actions:{
         async FetchPendingLoans(){
-            const sessionStore = new useSessionStore()
+            const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
             try{
                 let url = apiConfig.base_url + '/loans'
                 var fetchHeaders = {
@@ -40,15 +43,16 @@ const useLoanStore = defineStore('loans', {
                     this.loans.value = result.loans
                 }
                 else
-                    this.errorMessage =  result.message
+                    utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                this.errorMessage = 'Error: ' + error
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los préstamos en curso', 'error')
             }
         },
 
         async FetchLatestLoans(days = 30){
-            const sessionStore = new useSessionStore()
+            const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
             try{
                 let url = apiConfig.base_url + '/loans/latest/' + days
                 var fetchHeaders = {
@@ -72,15 +76,16 @@ const useLoanStore = defineStore('loans', {
                     this.loans.value = result.loans
                 }
                 else
-                    this.errorMessage =  result.message
+                    utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                this.errorMessage = 'Error: ' + error
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los préstamos recientes', 'error')
             }
         },
 
         async FetchLoansRecentCount(days = 30){
-            const sessionStore = new useSessionStore()
+            const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
             try{
                 let url = apiConfig.base_url + '/loans/latest_count/' + days
                 var fetchHeaders = {
@@ -102,10 +107,10 @@ const useLoanStore = defineStore('loans', {
                 if(result.success)
                     this.counts.value = result.counts
                 else
-                    this.errorMessage =  result.message
+                    utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                this.errorMessage = 'Error: ' + error
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar la cantidad de préstamos recientes', 'error')
             }
         }
     }

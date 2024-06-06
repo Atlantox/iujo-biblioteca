@@ -78,6 +78,10 @@ $quartary: #E5BA71;
     border: $terciary-dark solid 2px;
 }
 
+.border-red{
+    border: red solid 2px !important;
+}
+
 .shadowed-h{
     box-shadow: 0 0 20px 3px rgb(0 0 0 / 100%);
 }

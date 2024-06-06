@@ -41,21 +41,9 @@ const useSessionStore = defineStore('session', {
           let json = await response.json()
           let result = await json
           this.loginResult.value = result
-          /*
-          if(result.success){
-            this.authenticated = true
-            this.token = result.token
-            this.userData = result.userData
-            this.errorMessage =  ''
-          }
-          else{
-              this.errorMessage =  result.message
-          }
-          */
       }
       catch(error){
           this.loginResult.value = 'Error: ' + error.message
-          //this.errorMessage = 'Error: ' + error.message
       }
     },
 
@@ -65,14 +53,6 @@ const useSessionStore = defineStore('session', {
       this.userData = {}
       window.location.href = '/'
     },
-
-    ShowModal(title, content, type){
-      Swal.fire({
-        title: title,
-        text: content,
-        icon: type,
-      })
-    }
   },
   
   persist: true,

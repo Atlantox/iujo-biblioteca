@@ -1,6 +1,8 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import ApiConfig from '@/stores/config.js'
+
+import useUtilsStore from './utils'
 import useSessionStore from '@/stores/session.js'
 
 const apiConfig = new ApiConfig()
@@ -14,7 +16,8 @@ const useCategoryStore = defineStore('categories', {
     },
     actions:{
         async FetchCategories(){
-            const sessionStore = new useSessionStore()
+            const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
             try{
                 let url = apiConfig.base_url + '/categories'
                 var fetchHeaders = {
@@ -36,12 +39,11 @@ const useCategoryStore = defineStore('categories', {
                 
                 if(result.success)
                     this.categories.value = result.categories
-                else{
-                    this.errorMessage =  result.message
-                }
+                else
+                    utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                this.errorMessage = 'Error: ' + error
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar las categorías', 'error')
             }
         }
     }

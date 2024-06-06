@@ -1,13 +1,23 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+
 import Select2Initializer from '@/utils/Select2Initializer'
 import FormValidator from '@/utils/FormValidator'
+
 import PageTitleView from '../PageTitle.vue'
 import BackButtonGadget from '../myGadgets/BackButtonGadget.vue'
 
+import useCategoryStore from '@/stores/categories'
+import useBookStore from '@/stores/books'
+
+const categoryStore = useCategoryStore()
+const bookStore = useBookStore()
+
+const editorials = bookStore.editorials
+const categories = categoryStore.categories
+const bookAuthors = bookStore.authors
+
 const formErrors = ref([])
-const categories = ref([{id:1, name:'Ficción'}, {id:2, name:'Acción'}, {id:3, name:'Fantasía'}])
-const states = ref([{id:1, name:'En biblioteca'}, {id:2, name:'Extraviado'}, {id:3, name:'Prestado'}])
 
 const edit = ref(false)
 
@@ -18,37 +28,60 @@ const bookEditorial = ref('')
 const bookPages = ref('')
 const bookCategories = ref([])
 const bookDescription = ref('')
-const bookState = ref('')
+const bookState = ref('En biblioteca')
 
 const formRowStyle = 'row m-0 p-0 justify-content-center my-2'
 const labelContainerStyle = 'row m-0 p-0 col-12 col-md-3'
 const labelStyle = 'text-center text-md-end'
 const inputContainerStyle = 'row m-0 p-0 col-12 col-md-7 justify-content-center justify-content-md-start'
 
-onMounted(() => {
+onMounted(async () => {
+    await bookStore.FetchEditorials()
+    await bookStore.FetchBookStates()
+    await bookStore.FetchAuthors()
+
+    await categoryStore.FetchCategories()
+    
+
+
     edit.value = false
     const s2Initializer = new Select2Initializer()
+
+    // Vue.js presenta algunas dificultades para trabajar con Select2, en es te caso el indicamos que al cambiar cualquiera de sus valores
+    // Se refleje en su respectiva referencia ref()
+    $('#editorial').on('select2:select', function (e) { bookEditorial.value = e.target.value });
+    $('#author').on('select2:select', function (e) { bookAuthor.value = e.target.value });
+    $('#state').on('select2:select', function (e) { bookState.value = e.target.value });
+
 
     if (edit.value === false) bookState.value = '1'
 })
 
 const ValidateForm = ((e) => {
     const validator = new FormValidator()
-    var errors = []   
+    formErrors.value = [] 
 
-    const empty = validator.FieldsAreEmpty({
+    const emptyFields = validator.FieldsAreEmpty({
         'title': bookTitle.value,
         'call_number': bookCallNumber.value,
         'author': bookAuthor.value,
-        'editorial': bookEditorial.value,
         'pages': bookPages.value,
-        'description': bookDescription.value,
-        'state': bookState.value
+        'state': bookState.value,
+        'select2-editorial-container': bookEditorial.value,
+        'select2-author-container': bookAuthor.value,
+        'select2-state-container': bookState.value
     })
-    if(empty !== false){
+
+    if(emptyFields !== false){
         // uno o más campos están vacíos
-        // se obtendrá como respuesta una array de objetos que tengan un campo id: title, message: 'El campo Título está vacío', de esa forma 
-        // se mostrarán todos los mensajes de error al final del formulario y hará un GetElementById(id) para ponerlo en rojo
+        formErrors.value = emptyFields
+    }
+
+    if(bookCategories.value.length === 0)
+        formErrors.value.push('Seleccione al menos una categoría')
+
+    if(formErrors.value.length === 0){
+        // Create book Query
     }
     
 })
@@ -88,22 +121,20 @@ const ValidateForm = ((e) => {
     
                 <div :class="formRowStyle">
                     <div :class="labelContainerStyle">
-                        <label :class="labelStyle" for="author">Autor</label>
+                        <label :class="labelStyle" for="author">Autor {{ bookAuthor }}</label>
                     </div>
                     <div :class="inputContainerStyle">
-                        <div class="row col-9 col-md-7">
-                            <input type="text" class="myInput" maxlength="100" id="author" v-model="bookAuthor">
-                        </div>
-                    </div>
-                </div>
-    
-                <div :class="formRowStyle">
-                    <div :class="labelContainerStyle">
-                        <label :class="labelStyle" for="editorial">Editorial</label>
-                    </div>
-                    <div :class="inputContainerStyle">
-                        <div class="row col-8 col-md-6">
-                            <input type="text" class="myInput" maxlength="100" id="editorial"  v-model="bookEditorial">
+                        <div class="row col-7">
+                            <select class="myInput select2" id="author" :v-model="bookAuthor">
+                                <option value="">&nbsp;</option>
+                                <template
+                                v-for="author in bookAuthors.value"
+                                :key="author.id">
+                                    <option class="fw-normal" :value="author.id" :selected="bookAuthor == author.id">
+                                        {{ author.name }}
+                                    </option>                                    
+                                </template>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -118,18 +149,39 @@ const ValidateForm = ((e) => {
                         </div>
                     </div>
                 </div>
+
+                <div :class="formRowStyle">
+                    <div :class="labelContainerStyle">
+                        <label :class="labelStyle" for="editorial">Editorial {{ bookEditorial }}</label>
+                    </div>
+                    <div :class="inputContainerStyle">
+                        <div class="row col-7">
+                            <select class="myInput select2" id="editorial" :v-model="bookEditorial">
+                                <option value="">&nbsp;</option>
+                                <template
+                                v-for="editorial in editorials.value"
+                                :key="editorial.id">
+                                    <option class="fw-normal" :value="editorial.id" :selected="bookEditorial == editorial.id">
+                                        {{ editorial.name }}
+                                    </option>                                    
+                                </template>
+                            </select>
+                        </div>
+                    </div>
+                </div>
     
                 <div :class="formRowStyle">
                     <div :class="labelContainerStyle">
-                        <label :class="labelStyle" for="state">Estado</label>
+                        <label :class="labelStyle" for="state">Estado {{ bookState }}</label>
                     </div>
                     <div :class="inputContainerStyle">
                         <div class="row col-7">
                             <select class="myInput select2" id="state" :v-model="bookState">
+                                <option value="">&nbsp;</option>
                                 <template
-                                v-for="state, index in states"
-                                :key="index">
-                                    <option class="fw-normal" :value="state.id">
+                                v-for="state in bookStates.value"
+                                :key="state.name">
+                                    <option class="fw-normal" :value="state.name" :selected="bookState === state.name">
                                         {{ state.name }}
                                     </option>                                    
                                 </template>
@@ -163,7 +215,7 @@ const ValidateForm = ((e) => {
                         v-for="error, index in formErrors"
                         :key="index"
                         >
-                            {{ error.message }}
+                            {{ error }}
                         </li>  
                     </ul>
                 </div>
@@ -174,12 +226,12 @@ const ValidateForm = ((e) => {
                 <h2 class="col-12 text-center">Categorías</h2>
                 <div class="col-12 d-flex justify-content-start align-items-center flex-column rounded shadowed-l p-0 bg-white" style="overflow:hidden">
                     <div class="col-12 d-flex categories-section justify-content-center p-0"
-                    v-for="category, index in categories"
+                    v-for="category, index in categories.value"
                     :key="index">
-                        <div class="category-label-container col-8 d-flex justify-content-center align-items-center p-0">
+                        <div class="category-label-container col-8 d-flex justify-content-center align-items-center p-0 py-1">
                             <label class="text-center w-100" :for="category.id">{{ category.name }}</label>
                         </div>
-                        <div class="category-radio-container col-4 d-flex justify-content-center align-items-center p-0">
+                        <div class="category-radio-container col-4 d-flex justify-content-center align-items-center p-0 y-1">
                             <input class="" type="checkbox" :id="category.id" name="checkbox" :value="category.id" v-model="bookCategories">
                         </div>
                     </div>

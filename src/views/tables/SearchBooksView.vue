@@ -26,16 +26,6 @@ const categoryFilter = ref('')
 const authorFilter = ref('')
 const editorialFilter = ref('')
 
-const ApplyCategoryFilter = (async () => {
-  targetFetched.value = false
-  await bookStore.FetchBooksByCategory(categoryFilter.value)
-
-  if (bookStore.errorMessage !== '')
-    sessionStore.ShowModal('Error', bookStore.errorMessage, 'error')
-  else
-    targetFetched.value = true
-})
-
 const ApplyFilters = (async () => {
   targetFetched.value = false
   var filters = {}
@@ -48,19 +38,19 @@ const ApplyFilters = (async () => {
 
   if(editorialFilter.value !== '')
     filters['editorial'] = editorialFilter.value
-  
-  await bookStore.FetchBooksWithFilter(filters)
 
-  if (bookStore.errorMessage !== '')
-    sessionStore.ShowModal('Error', bookStore.errorMessage, 'error')
-  else
+    if(Object.keys(filters).length === 0)
+      await bookStore.FetchBooks()
+    else
+      await bookStore.FetchBooksWithFilter(filters)  
+
     targetFetched.value = true
 })
 
 onMounted(async ()  => {
   const select2Initializer = new Select2Initializer()
   var error = false
-  $('#category').on('select2:select', function (e) {
+  $('#categories').on('select2:select', function (e) {
     categoryFilter.value = e.target.value
     ApplyFilters()
   });
@@ -118,7 +108,7 @@ onMounted(async ()  => {
         </h3>
         <div class="col-6 col-lg-2 fs-6">
           Categoría: 
-          <select class="select2 fs-6" id="category">
+          <select class="select2 fs-6" id="categories">
             <option value="">&nbsp;</option>
             <option
             v-for="category in categories.value"

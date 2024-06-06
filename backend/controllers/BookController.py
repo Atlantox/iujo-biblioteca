@@ -235,6 +235,27 @@ def GetBooksByFilter():
     return jsonify(response), statusCode
 
 
+@bookController.route('/books/states', methods=['GET'])
+def GetBookStates():
+    connection = GetConnection()
+    bookModel = BookModel(connection)
+    response = {}
+    statusCode = 200
+    error = ''
+    states = bookModel.GetBookStates()
+
+    if states is False:
+        error = 'Ocurrió un error al traer los estados de libros'
+        statusCode = 500
+    
+    response = {
+        'states': states,
+        'success': error == ''
+    }
+
+    return jsonify(response), statusCode
+
+
 @bookController.route('/books/<int:updateId>', methods=['PUT'])
 def UpdateBook(updateId):
     connection = GetConnection()

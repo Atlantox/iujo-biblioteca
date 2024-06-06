@@ -1,10 +1,12 @@
 <script setup>
 import { ref } from 'vue'
-import router from '@/router';
 import LoadingGadget from '../myGadgets/LoadingGadget.vue';
-import useSessionStore from '@/stores/session.js'
 import PageTitleView from '../PageTitle.vue'
 
+import useUtilsStore from '@/stores/utils';
+import useSessionStore from '@/stores/session.js'
+
+const utilsStore = useUtilsStore()
 const sessionStore = useSessionStore()
 
 const formErrors = ref([])
@@ -29,10 +31,9 @@ const ValidateForm = (async (e) => {
             window.location.href = '/'
         }
         else{
-            sessionStore.ShowModal('Error', loginResult.value.message, 'error')
+            utilsStore.ShowModal('Error', loginResult.value.message, 'error')
         }
     }
-
 })
 </script>
 

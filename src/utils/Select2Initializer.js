@@ -5,7 +5,7 @@ class Select2Initializer{
             'select2',
             'readers',
             'state',
-            'category',
+            'categories',
             'editorial',
             'author'
         ]
