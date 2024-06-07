@@ -18,6 +18,37 @@ const useBookStore = defineStore('books', {
         }
     },
     actions:{
+        async CreateBook(bookData){
+            const sessionStore = useSessionStore()
+            let result = {}
+            try{
+                let url = apiConfig.base_url + '/books'
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+
+                if (sessionStore.authenticated === true)
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'POST',
+                    headers: fetchHeaders,
+                    body: JSON.stringify(bookData)
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                result = await json
+                
+            }
+            catch(error){
+                result = {success: false, message: 'Ocurrió un error inesperado al crear el libro'}
+            }
+
+            return result
+        },
+
         async FetchBooks(){
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()

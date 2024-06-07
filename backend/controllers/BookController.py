@@ -12,8 +12,7 @@ from helpers import *
 BOOK_LENGTH_CONFIG = {
     'call_number': {'min': 1, 'max':8},
     'title': {'min': 1, 'max':150},
-    'author': {'min': 1, 'max':100},
-    'editorial': {'min': 1, 'max':100},
+    'state': {'min': 5, 'max':30},
     'shelf': {'min': 1, 'max':10},
     'description': {'min': 0, 'max':1000, 'optional': True}
 }
@@ -83,6 +82,20 @@ def CreateBook():
         categoriesExists = categoryModel.CategoriesExists(cleanData['categories'])
         if categoriesExists is False:
             error = 'Alguna de las categorías no encaja con las registradas'
+            statusCode = 400
+
+    if error == '':
+        authorModel = AuthorModel(connection)
+        targetAuthor = authorModel.GetAuthorById(cleanData['author'])
+        if targetAuthor is None:
+            error = 'Autor no encontrado'
+            statusCode = 400
+
+    if error == '':
+        editorialModel = EditorialModel(connection)
+        targetEditorial = editorialModel.GetEditorialById(cleanData['editorial'])
+        if targetEditorial is None:
+            error = 'Editorial no encontrada'
             statusCode = 400
 
     if error == '':
