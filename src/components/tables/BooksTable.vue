@@ -42,8 +42,8 @@ onMounted(() => {
                 v-for="book in props.books.value"
                 :key="book.id">
                     <td class="border-1">{{ book.title }}</td>
-                    <td class="border-1">{{ book.author }}</td>
-                    <td class="border-1">{{ book.editorial }}</td>
+                    <td class="border-1">{{ book.author === null ? 'Desconocido' : book.author }}</td>
+                    <td class="border-1">{{ book.editorial === null ? 'Desconocida' : book.editorial}}</td>
                     <td class="border-1">{{ book.categories.join(', ') }}</td>
                     <td class="text-center border-1">{{ book.state }}</td>
                     <td class="text-center border-1">{{ book.pages }}</td>

@@ -85,18 +85,24 @@ def CreateBook():
             statusCode = 400
 
     if error == '':
-        authorModel = AuthorModel(connection)
-        targetAuthor = authorModel.GetAuthorById(cleanData['author'])
-        if targetAuthor is None:
-            error = 'Autor no encontrado'
-            statusCode = 400
+        if cleanData['author'] == '':
+            cleanData['author'] = None
+        else:
+            authorModel = AuthorModel(connection)
+            targetAuthor = authorModel.GetAuthorById(cleanData['author'])
+            if targetAuthor is None:
+                error = 'Autor no encontrado'
+                statusCode = 400
 
     if error == '':
-        editorialModel = EditorialModel(connection)
-        targetEditorial = editorialModel.GetEditorialById(cleanData['editorial'])
-        if targetEditorial is None:
-            error = 'Editorial no encontrada'
-            statusCode = 400
+        if cleanData['editorial'] == '':
+            cleanData['editorial'] = None
+        else:
+            editorialModel = EditorialModel(connection)
+            targetEditorial = editorialModel.GetEditorialById(cleanData['editorial'])
+            if targetEditorial is None:
+                error = 'Editorial no encontrada'
+                statusCode = 400
 
     if error == '':
         stateExists = bookModel.GetStateByName(cleanData['state'])

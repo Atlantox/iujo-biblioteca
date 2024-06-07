@@ -11,7 +11,7 @@ const useBookStore = defineStore('books', {
     state: () => {
         return {
             books: ref([]),
-            errorMessage: ref(''),
+            singleBook: ref([]),
             authors: ref([]),
             editorials: ref([]),
             bookStates: ref([])
@@ -39,14 +39,45 @@ const useBookStore = defineStore('books', {
 
                 let response = await fetch(url, fetchConfig)
                 let json = await response.json()
-                result = await json
-                
+                result = await json                
             }
             catch(error){
                 result = {success: false, message: 'Ocurrió un error inesperado al crear el libro'}
             }
 
             return result
+        },
+
+        async FetchBookById(id){
+            const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
+            try{
+                let url = apiConfig.base_url + '/books/' + id
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+
+                if (sessionStore.authenticated === true)
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'GET',
+                    headers: fetchHeaders
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                let result = await json
+                if(result.success){
+                    this.singleBook.value = result.book
+                }
+                else
+                    utilsStore.ShowModal('Error', result.message, 'error')
+            }
+            catch(error){
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar el libro buscado: ' + error.message, 'error')
+            }
         },
 
         async FetchBooks(){
@@ -72,7 +103,6 @@ const useBookStore = defineStore('books', {
                 let result = await json
                 if(result.success){
                     this.books.value = result.books
-                    this.errorMessage =  ''
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
@@ -107,7 +137,6 @@ const useBookStore = defineStore('books', {
                 
                 if(result.success){
                     this.books.value = result.books
-                    this.errorMessage =  ''
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
@@ -140,7 +169,6 @@ const useBookStore = defineStore('books', {
                 let result = await json
                 if(result.success){
                     this.authors.value = result.authors
-                    this.errorMessage =  ''
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
@@ -173,7 +201,6 @@ const useBookStore = defineStore('books', {
                 let result = await json
                 if(result.success){
                     this.editorials.value = result.editorials
-                    this.errorMessage =  ''
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
@@ -206,7 +233,6 @@ const useBookStore = defineStore('books', {
                 let result = await json
                 if(result.success){
                     this.bookStates.value = result.states
-                    this.errorMessage =  ''
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')

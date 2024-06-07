@@ -370,14 +370,13 @@ input[type="file"] {
     padding-left:15px;
 }
 
-.select2-selection__rendered{
-    
+.select2-selection__rendered{    
     padding:2px !important;
     font-size:24px;
     font-weight: normal;
     background-color: white;
     border-radius: 4px;
-    border: 1px $terciary solid;
+    border: 1px black solid;
 }
 
 .select2-container--default .select2-selection--single{
@@ -388,10 +387,11 @@ input[type="file"] {
 .select2-selection__arrow {
     margin-right:5px;
     margin-top:4px;
+    border-color:black transparent transparent transparent;
 }
 
 .select2-container--default .select2-selection--single .select2-selection__arrow b{
-    border-color:$terciary transparent transparent transparent;
+    border-color:black transparent transparent transparent;
 }
 
 .myForm{

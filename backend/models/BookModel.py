@@ -7,7 +7,9 @@ class BookModel(BaseModel):
             book.id,
             book.call_number,
             book.title,
+            author.id as author_id,
             author.name as author,
+            editorial.id as editorial_id,
             editorial.name as editorial,
             book.pages,
             book.description,
@@ -120,7 +122,7 @@ class BookModel(BaseModel):
     
     def GetBookById(self, id):
         cursor = self.connection.connection.cursor()
-        sql = self.BOOK_SELECT_TEMPLATE + 'WHERE id = %s ORDER BY title'
+        sql = self.BOOK_SELECT_TEMPLATE + 'WHERE book.id = %s ORDER BY title'
         
         args = (id,)
         cursor.execute(sql, args)

@@ -14,7 +14,7 @@ import router from './router'
 const app = createApp(App)
 
 const sweetalertOptions = {
-    confirmButtonColor: '#8709B4',
+    confirmButtonColor: '#71E580',
     cancelButtonColor: '#ff7674',
     background: 'black'
 }

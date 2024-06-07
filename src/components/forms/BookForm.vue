@@ -1,7 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
-import Select2Initializer from '@/utils/Select2Initializer'
+import { useRoute } from 'vue-router'
+
 import FormValidator from '@/utils/FormValidator'
 
 import PageTitleView from '../PageTitle.vue'
@@ -10,6 +11,8 @@ import BackButtonGadget from '../myGadgets/BackButtonGadget.vue'
 import useUtilsStore from '@/stores/utils'
 import useCategoryStore from '@/stores/categories'
 import useBookStore from '@/stores/books'
+
+const route = useRoute()
 
 const utilsStore = useUtilsStore()
 const categoryStore = useCategoryStore()
@@ -23,6 +26,7 @@ const bookStates = bookStore.bookStates
 const formErrors = ref([])
 
 const edit = ref(false)
+const targetBook = bookStore.singleBook
 
 const bookTitle = ref('')
 const bookCallNumber = ref('')
@@ -44,12 +48,29 @@ onMounted(async () => {
     await bookStore.FetchBookStates()
     await bookStore.FetchAuthors()
     await categoryStore.FetchCategories()
-    
 
+    edit.value = route.params.id
+    if(edit.value !== ''){
+        await bookStore.FetchBookById(edit.value)
+        if(targetBook.value !== null){
+            console.log(targetBook)
+            bookTitle.value = targetBook.value['title']
+            bookCallNumber.value = targetBook.value['call_number']
+            bookAuthor.value = targetBook.value['author_id']
+            bookEditorial.value = targetBook.value['editorial_id']
+            bookDescription.value = targetBook.value['description']
+            bookCategories.value = targetBook.value['categories'] // TODO: categories are obtaines as ids 
+            bookPages.value = targetBook.value['pages']
+            bookShelf.value = targetBook.value['shelf']
+            bookShelf.value = targetBook.value['state']
 
-    edit.value = false
-    const s2Initializer = new Select2Initializer()
+            $('#author').val(bookAuthor.value); $('#author').trigger('change');
+            $('#editorial').val(bookEditorial.value); $('#editorial').trigger('change');
+            $('#state').val(bookState.value); $('#state').trigger('change');            
+        }
+    }
 
+    utilsStore.InitializeSelect2()
     // Vue.js presenta algunas dificultades para trabajar con Select2, en es te caso el indicamos que al cambiar cualquiera de sus valores
     // Se refleje en su respectiva referencia ref()
     $('#editorial').on('select2:select', function (e) { bookEditorial.value = e.target.value });
@@ -129,7 +150,7 @@ async function ValidateForm() {
         formErrors.value.push('El número de páginas no puede ser mayor a 99999')
 
     if(formErrors.value.length === 0){
-        const created = await bookStore.CreateBook({
+        const cleanBookData = {
             'title': bookTitle.value,
             'call_number': bookCallNumber.value,
             'author': bookAuthor.value,
@@ -139,12 +160,14 @@ async function ValidateForm() {
             'state': bookState.value,
             'description': bookDescription.value,
             'categories': bookCategories.value,
-        })
+        }
 
-        
-        if(created.success){
-            utilsStore.ShowModal('Success', created.message, 'success')
-            
+        if(edit.value === ''){
+            // Creating the book
+            const created = await bookStore.CreateBook(cleanBookData)            
+            if(created.success){
+                utilsStore.ShowModal('Success', created.message, 'success')
+
             bookTitle.value = ''
             bookCallNumber.value = ''
             bookAuthor.value = ''
@@ -154,10 +177,15 @@ async function ValidateForm() {
             bookCategories.value = ''
             bookDescription.value = ''
             bookState.value = ''
-
+    
             $('#author').val(''); $('#author').trigger('change');
             $('#editorial').val(''); $('#editorial').trigger('change');
             $('#state').val('En biblioteca'); $('#state').trigger('change');
+        }
+        else{
+            // Updating the book
+        }
+            
         }
         else{
             utilsStore.ShowModal('Error', created.message, 'error')

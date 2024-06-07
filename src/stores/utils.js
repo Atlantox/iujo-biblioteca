@@ -15,6 +15,22 @@ const useUtilsStore = defineStore('utils', {
         text: content,
         icon: type,
       })
+    },
+
+    InitializeSelect2(){
+      const select2Ids = [
+        'books',
+        'select2',
+        'readers',
+        'state',
+        'categories',
+        'editorial',
+        'author'
+      ]
+
+      select2Ids.forEach((id) => { 
+          $('#' + id).select2() 
+      })
     }
   },
   
