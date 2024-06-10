@@ -9,6 +9,8 @@ import LoginFormView from '../views/forms/LoginFormView.vue'
 import BookFormView from '../views/forms/BookFormView.vue'
 import LoanFormView from '../views/forms/LoanFormView.vue'
 import ReaderFormView from '../views/forms/ReaderFormView.vue'
+import EditorialFormView from '../views/forms/EditorialFormView.vue'
+import AuthorFormView from '@/views/forms/AuthorFormView.vue'
 
 import SearchBooksView from '../views/tables/SearchBooksView.vue'
 import SearchLoanView from '../views/tables/SearchLoanView.vue'
@@ -18,6 +20,7 @@ import SearchCategoryView from '@/views/tables/SearchCategoryView.vue'
 import SeeBookView from '../views/SeeBookView.vue'
 import SeeLoanView from '../views/SeeLoanView.vue'
 import SeeReaderView from '../views/SeeReaderView.vue'
+import AuthorForm from '@/components/forms/AuthorForm.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -54,6 +57,16 @@ const router = createRouter({
       name: 'add_book',
       component: BookFormView,
       meta:{ requireAuth: true, bookPermisson: true }
+    },
+    {
+      path: '/add_editorial/:id?',
+      name: 'add_editorial',
+      component: EditorialFormView
+    },
+    {
+      path: '/add_author/:id?',
+      name: 'add_author',
+      component: AuthorFormView
     },
     {
       path: '/search_categories',
@@ -101,6 +114,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  
   const sessionStore = useSessionStore()
   var routeOk = true
 

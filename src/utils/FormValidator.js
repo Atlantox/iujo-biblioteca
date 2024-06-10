@@ -1,4 +1,5 @@
 const field_translator = {
+    'name': 'Nombre',
     'title': 'Título',
     'call_number': 'Cota',
     'author': 'Autor',

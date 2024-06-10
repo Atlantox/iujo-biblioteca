@@ -104,6 +104,7 @@ class CategoryModel(BaseModel):
         return ordered_categories
     
     def CategoriesExists(self, ids):
+        print(ids)
         ''' Gets a list of Ids and check if all exists, if not return false'''
         cursor = self.connection.connection.cursor()
         orderedIds = ''
@@ -143,6 +144,22 @@ class CategoryModel(BaseModel):
         except:
             result = False
         
+        return result
+    
+    def UpdateCategoriesOfBook(self, bookId, categories):
+        cursor = self.connection.connection.cursor()
+        result = True
+
+        sql = "DELETE FROM book_category WHERE book = %s"
+        args = (bookId,)
+
+        try:
+            cursor.execute(sql, args)
+            self.connection.connection.commit()
+            self.AddCategoriesToBook(bookId, categories)
+        except:
+            result = False
+
         return result
     
     def DeleteCategory(self, categoryId):

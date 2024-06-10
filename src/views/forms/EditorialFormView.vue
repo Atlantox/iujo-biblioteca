@@ -9,41 +9,25 @@ import BackButtonGadget from '@/components/myGadgets/BackButtonGadget.vue'
 import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue'
 
 import useBookStore from '@/stores/books'
-import useCategoryStore from '@/stores/categories'
 
-import BookForm from '@/components/forms/BookForm.vue'
+import EditorialForm from '@/components/forms/EditorialForm.vue'
 
 const route = useRoute()
 
-const categoryStore = useCategoryStore()
 const bookStore = useBookStore()
 
-const targetBook = ref([])
+const targetEditorial = ref([])
 const fetchReady = ref(false)
-
-const editorials = bookStore.editorials
-const authors = bookStore.authors
-const bookStates = bookStore.bookStates
-const categories = categoryStore.categories
 
 onMounted( async () => {
   fetchReady.value = false
   const recievedId = route.params.id
 
-  
   if(recievedId !== undefined && recievedId !== ''){
-    targetBook.value = await bookStore.FetchBookById(recievedId)
+    targetEditorial.value = await bookStore.FetchEditorialById(recievedId)
   }
 
-  await FetchData()
   fetchReady.value = true
-})
-
-const FetchData = ( async () => {
-  await bookStore.FetchEditorials()
-  await bookStore.FetchAuthors()  
-  await bookStore.FetchBookStates()
-  await categoryStore.FetchCategories()
 })
 
 </script>
@@ -52,21 +36,15 @@ const FetchData = ( async () => {
   <div class="row m-0 p-0 justify-content-center justify-content-lg-start">
     <BackButtonGadget :back_to="'dashboard'"/>
   </div>
-
   <PageTitle
-    :title="(route.params.id === undefined || route.params.id === '' ? 'Registrar nuevo ' : 'Modificar ') + 'libro'"
+    :title="(targetEditorial === false ? 'Modificar ' : 'Registrar nueva ') + 'editorial'"
   />
-
   <template v-if="fetchReady === false">
     <LoadingGadget />
   </template>
   <template v-else>    
-    <BookForm
-    :targetBook = "targetBook"
-    :editorials = editorials.value
-    :authors = authors.value
-    :bookStates = bookStates.value
-    :categories = categories.value
+    <EditorialForm
+    :targetEditorial = "targetEditorial"
     />
   </template>
 </template>

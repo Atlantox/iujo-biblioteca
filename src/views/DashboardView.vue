@@ -143,7 +143,7 @@ onMounted( async () => {
                 </h4>
                 <div :class="linkContainersStyle">
                   <div :class="linkElementStyle">
-                    <router-link :class="routerLinkStyle" :to="{name: 'books'}">
+                    <router-link :class="routerLinkStyle" :to="{name: 'add_author'}">
                       <i :class="'fa fa-plus text-success ' + iconStyle" ></i>
                       <span :class="linkTextStyle">
                         Nuevo autor
@@ -171,7 +171,7 @@ onMounted( async () => {
                 </h4>
                 <div :class="linkContainersStyle">
                   <div :class="linkElementStyle">
-                    <router-link :class="routerLinkStyle" :to="{name: 'books'}">
+                    <router-link :class="routerLinkStyle" :to="{name: 'add_editorial'}">
                       <i :class="'fa fa-plus text-success ' + iconStyle" ></i>
                       <span :class="linkTextStyle">
                         Nueva editorial

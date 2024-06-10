@@ -9,7 +9,7 @@ from models.EditorialModel import EditorialModel
 
 from helpers import *
 
-BOOK_LENGTH_CONFIG = {
+LENGTH_CONFIG = {
     'call_number': {'min': 1, 'max':8},
     'title': {'min': 1, 'max':150},
     'state': {'min': 5, 'max':30},
@@ -200,6 +200,7 @@ def GetBookById(id):
 
     return jsonify(response), statusCode
 
+
 @bookController.route('/books/filter', methods=['POST'])
 def GetBooksByFilter():
     connection = GetConnection()
@@ -254,27 +255,6 @@ def GetBooksByFilter():
     return jsonify(response), statusCode
 
 
-@bookController.route('/books/states', methods=['GET'])
-def GetBookStates():
-    connection = GetConnection()
-    bookModel = BookModel(connection)
-    response = {}
-    statusCode = 200
-    error = ''
-    states = bookModel.GetBookStates()
-
-    if states is False:
-        error = 'Ocurrió un error al traer los estados de libros'
-        statusCode = 500
-    
-    response = {
-        'states': states,
-        'success': error == ''
-    }
-
-    return jsonify(response), statusCode
-
-
 @bookController.route('/books/<int:updateId>', methods=['PUT'])
 def UpdateBook(updateId):
     connection = GetConnection()
@@ -283,7 +263,6 @@ def UpdateBook(updateId):
     response = {}
     recievedData, error, statusCode = JsonExists(request)
     token = GetTokenOfRequest(request)
-    
     if token is None:
         error = 'Acceso denegado. Autenticación requerida'
         statusCode = 401
@@ -322,6 +301,23 @@ def UpdateBook(updateId):
                 error = 'La cota ya está registrada'
                 statusCode = 400
 
+    if error == '':
+        if 'author' in cleanData:
+            if cleanData['author'] != '':
+                targetAuthor = bookModel.GetAuthorById(cleanData['author'])
+                if targetAuthor is None:
+                    error = 'Autor no encontrado'
+                    statusCode = 400
+
+    if error == '':
+        if 'editorial' in cleanData:
+            if cleanData['editorial'] != '':
+                targetEditorial = bookModel.GetEditorialById(cleanData['editorial'])
+                if targetEditorial is None:
+                    error = 'Editorial no encontrada'
+                    statusCode = 400
+            
+
     if error == '' and 'categories' in cleanData:
         categoryModel = CategoryModel(connection)
         categoriesExists = categoryModel.CategoriesExists(cleanData['categories'])
@@ -331,20 +327,20 @@ def UpdateBook(updateId):
 
     if error == '':
         if 'state' in cleanData:
-            stateExists = bookModel.GetStateById(cleanData['state'])
+            stateExists = bookModel.GetStateByName(cleanData['state'])
             if stateExists is None:
                 error = 'El estado seleccionado no existe'
                 statusCode = 400
 
     if error == '':
-        if cleanData == {}:
+        if cleanData == {} and 'categories' not in cleanData:
             error = 'Información recibida vacía'
             statusCode = 400
     
     if error == '':
         updated = bookModel.UpdateBook(updateId, cleanData)
-        if updated is False:
-            error = "Hubo un error al intentar actualizar el libro"
+        if updated is not True:
+            error = updated
             statusCode = 500
         else:
             alteredColumns = ''
@@ -358,7 +354,7 @@ def UpdateBook(updateId):
 
     if error != '':
         message = error
-        
+
     success = error == ''
     response['success'] = success
     response['message'] = message
@@ -435,7 +431,7 @@ def ValidateBookData(recievedData, exactData = True):
         error = cleanData
 
     if error == '':
-        lengthOK = ValidateLength(BOOK_LENGTH_CONFIG, cleanData)
+        lengthOK = ValidateLength(LENGTH_CONFIG, cleanData)
         if lengthOK is not True:
             error = lengthOK
 

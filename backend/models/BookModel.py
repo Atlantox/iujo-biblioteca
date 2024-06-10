@@ -183,6 +183,45 @@ class BookModel(BaseModel):
 
         return result
     
+    def GetStateById(self, id):
+        cursor = self.connection.connection.cursor()
+        sql = "SELECT * FROM state WHERE id = %s"
+        args = (id,)
+
+        try:
+            cursor.execute(sql, args)
+            result = cursor.fetchone()
+        except:
+            result = None
+
+        return result
+    
+    def GetAuthorById(self, id):
+        cursor = self.connection.connection.cursor()
+        sql = "SELECT * FROM author WHERE id = %s"
+        args = (id,)
+
+        try:
+            cursor.execute(sql, args)
+            result = cursor.fetchone()
+        except:
+            result = None
+
+        return result
+    
+    def GetEditorialById(self, id):
+        cursor = self.connection.connection.cursor()
+        sql = "SELECT * FROM editorial WHERE id = %s"
+        args = (id,)
+
+        try:
+            cursor.execute(sql, args)
+            result = cursor.fetchone()
+        except:
+            result = None
+
+        return result
+    
     def FilterBooks(self, filters:dict):
         cursor = self.connection.connection.cursor()
         result = []
@@ -245,22 +284,38 @@ class BookModel(BaseModel):
     
     def UpdateBook(self, bookId, bookData):
         result = True
-        cursor = self.connection.connection.cursor()
-        arrayValues = []
-        sql = "UPDATE book SET "
-        for column, value in bookData.items():
-            sql += "{0} = %s,".format(column)
-            arrayValues.append(value)
-        
-        sql = sql[0:-1] + " WHERE id = %s"
-        arrayValues.append(bookId)
-        args = tuple(arrayValues)
+        if 'categories' in bookData:
+            recievedCategories = bookData['categories']
+            del bookData['categories']
+            categoryModel = CategoryModel(self.connection)            
+            categoriesAssigned = categoryModel.UpdateCategoriesOfBook(bookId, recievedCategories)
+            if categoriesAssigned is False:
+                result = 'Ocurrió un problema durante el proceso de actualización de las categorías del libro'
 
-        try:
-            cursor.execute(sql, args)
-            self.connection.connection.commit()
-        except:
-            result = False
+        if bookData != {}:
+            cursor = self.connection.connection.cursor()
+            arrayValues = []
+            newBookData =  { key: None if value == '' else value for key, value in bookData.items() }
+            sql = "UPDATE book SET "
+            for column, value in newBookData.items():
+                sql += "{0} = %s,".format(column)
+                arrayValues.append(value)
+            
+            sql = sql[0:-1] + " WHERE id = %s"
+            arrayValues.append(bookId)
+            print(sql)
+            print(arrayValues)
+            args = tuple(arrayValues)
+
+            try:
+                cursor.execute(sql, args)
+                self.connection.connection.commit()
+            except:
+                errorMessage = 'Ocurrió un error durante el proceso de actualización del libro'
+                if result is str():
+                    result += '<br>' + errorMessage
+                else:
+                    result = errorMessage
         
         return result
     

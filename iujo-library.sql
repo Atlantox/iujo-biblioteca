@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.4
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 03-06-2024 a las 22:03:16
--- Versión del servidor: 10.4.17-MariaDB
--- Versión de PHP: 7.2.34
+-- Tiempo de generación: 10-06-2024 a las 21:51:34
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `author` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `author`
@@ -40,6 +40,7 @@ INSERT INTO `author` (`id`, `name`) VALUES
 (2, 'Atlantox'),
 (4, 'Edgar Allan Poe'),
 (1, 'Kentaro Miura'),
+(5, 'Miguelito'),
 (3, 'Nadie');
 
 -- --------------------------------------------------------
@@ -53,7 +54,7 @@ CREATE TABLE `binnacle` (
   `user` int(11) NOT NULL,
   `action` text NOT NULL,
   `date` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `binnacle`
@@ -145,7 +146,39 @@ INSERT INTO `binnacle` (`id`, `user`, `action`, `date`) VALUES
 (83, 10, 'Atlantox ha ingresado al sistema', '2024-06-03 08:59:17'),
 (84, 10, 'Atlantox ha ingresado al sistema', '2024-06-03 09:23:14'),
 (85, 1, 'Creó el autor Edgar Allan Poe', '2024-06-03 11:34:29'),
-(86, 10, 'Atlantox ha ingresado al sistema', '2024-06-03 11:37:50');
+(86, 10, 'Atlantox ha ingresado al sistema', '2024-06-03 11:37:50'),
+(87, 10, 'Creó el Libro \"Mein Kaphf\"', '2024-06-07 11:27:16'),
+(88, 10, 'Creó el Libro \"Libro nuevo\"', '2024-06-07 11:52:34'),
+(89, 10, 'Creó el Libro \"Other book\"', '2024-06-07 14:14:23'),
+(90, 10, 'Editó los campos: title del Libro de id 5', '2024-06-10 07:43:44'),
+(91, 10, 'Editó los campos: title del Libro de id 5', '2024-06-10 07:43:58'),
+(92, 10, 'Editó los campos:  del Libro de id 5', '2024-06-10 08:03:07'),
+(93, 10, 'Editó los campos:  del Libro de id 5', '2024-06-10 08:25:01'),
+(94, 10, 'Editó los campos:  del Libro de id 5', '2024-06-10 08:25:07'),
+(95, 10, 'Editó los campos:  del Libro de id 5', '2024-06-10 08:25:10'),
+(96, 10, 'Editó los campos:  del Libro de id 5', '2024-06-10 08:25:23'),
+(97, 10, 'Editó los campos: state del Libro de id 5', '2024-06-10 08:27:32'),
+(98, 10, 'Editó los campos: editorial, state del Libro de id 5', '2024-06-10 08:27:36'),
+(99, 10, 'Editó los campos: editorial, shelf, state del Libro de id 5', '2024-06-10 08:27:40'),
+(100, 10, 'Editó los campos: editorial, shelf, pages, state del Libro de id 5', '2024-06-10 08:27:45'),
+(101, 10, 'Editó los campos: editorial del Libro de id 5', '2024-06-10 09:01:45'),
+(102, 10, 'Editó los campos: author, editorial del Libro de id 5', '2024-06-10 09:02:22'),
+(103, 10, 'Editó los campos:  del Libro de id 6', '2024-06-10 10:50:53'),
+(104, 10, 'Editó los campos:  del Libro de id 6', '2024-06-10 10:51:01'),
+(105, 10, 'Creó la editorial 123123', '2024-06-10 14:35:38'),
+(106, 10, 'Renombró la editorial \"Editorial editada\" por \"Editorial editada22\" ', '2024-06-10 14:40:03'),
+(107, 10, 'Renombró la editorial \"Shizuka\" por \"Shizukazin\" ', '2024-06-10 14:41:13'),
+(108, 10, 'Editó los campos:  del Libro de id 4', '2024-06-10 15:00:22'),
+(109, 10, 'Renombró la editorial \"Editorial editada22\" por \"Editorial editada\" ', '2024-06-10 15:06:40'),
+(110, 10, 'Creó la editorial UwU Cats', '2024-06-10 15:08:44'),
+(111, 10, 'Renombró la editorial \"UwU Cats\" por \"UwU Cats2\" ', '2024-06-10 15:09:48'),
+(112, 1, 'Creó el estado de libro Nuevecito', '2024-06-10 15:28:24'),
+(113, 1, 'Renombró el estado de libro \"Nuevecito\" por \"Nuevecito22\" ', '2024-06-10 15:29:45'),
+(114, 1, 'Creó el estado de libro Nuevecito22', '2024-06-10 15:33:04'),
+(115, 1, 'Creó el estado de libro Nuevecito22', '2024-06-10 15:33:33'),
+(116, 1, 'Eliminó el estado de libro \"Nuevecito22\"', '2024-06-10 15:33:41'),
+(117, 10, 'Creó el autor Miguelito', '2024-06-10 15:41:23'),
+(118, 10, 'Renombró el autor \"Miguelito22\" por \"Miguelito\" ', '2024-06-10 15:50:47');
 
 -- --------------------------------------------------------
 
@@ -156,26 +189,29 @@ INSERT INTO `binnacle` (`id`, `user`, `action`, `date`) VALUES
 CREATE TABLE `book` (
   `id` int(11) NOT NULL,
   `call_number` varchar(8) NOT NULL,
-  `author` varchar(100) DEFAULT NULL,
+  `author` int(11) DEFAULT NULL,
   `title` varchar(150) NOT NULL,
-  `editorial` varchar(100) DEFAULT NULL,
+  `editorial` int(11) DEFAULT NULL,
   `pages` int(4) NOT NULL,
   `shelf` varchar(10) DEFAULT NULL,
   `description` text NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `state` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `book`
 --
 
 INSERT INTO `book` (`id`, `call_number`, `author`, `title`, `editorial`, `pages`, `shelf`, `description`, `created_at`, `state`) VALUES
-(2, 'BE-01', 'Kentaro Miura', 'Berserk Vol. 1', 'Shizuka', 26, 'A2', '', '2024-05-07 09:25:33', 'Prestado'),
-(3, 'BE3-01', 'Kentaro Miura', 'Berserk Vol. 3', 'Shizuka', 25, 'A2', '', '2024-05-09 08:07:56', 'Prestado'),
-(4, 'BE4-01', 'Kentaro Miura', 'Berserk Vol. 4', 'Shizuka', 22, 'A2', '', '2024-05-09 08:31:38', 'En biblioteca'),
-(5, 'IFA-115', 'Atlantox', '¿Cómo ser tu propio jefe?', 'El EteSechu', 409, 'A6', 'Trata sobre como estafar personas sin que estas se den cuenta así mismo explica como lidiar con los clientes difíciles dándoles una muerte inmediata y secreta', '2024-05-12 12:15:27', 'Prestado'),
-(6, 'PHP2-1', 'Nadie', 'Curso de PHP 2', 'Editorial vieja', 596, 'A2', '', '2024-05-12 12:17:59', 'Prestado');
+(2, 'BE-01', 1, 'Berserk Vol. 1', 1, 26, 'A2', '', '2024-05-07 09:25:33', 'Prestado'),
+(3, 'BE3-01', 1, 'Berserk Vol. 3', 1, 25, 'A2', '', '2024-05-09 08:07:56', 'Prestado'),
+(4, 'BE4-01', 1, 'Berserk Vol. 4', 1, 22, 'A2', '', '2024-05-09 08:31:38', 'En biblioteca'),
+(5, 'IFA-115', 2, '¿Cómo ser tu propio jefe?', 1, 40, 'A62', 'Trata sobre como estafar personas sin que estas se den cuenta así mismo explica como lidiar con los clientes difíciles dándoles una muerte inmediata y secreta', '2024-05-12 12:15:27', 'En biblioteca'),
+(6, 'PHP2-1', 3, 'Curso de PHP 2', 3, 596, 'A2', '', '2024-05-12 12:17:59', 'Prestado'),
+(7, 'MK-23', 2, 'Mein Kaphf', 2, 123, 'A1-S', '', '2024-06-07 11:27:16', 'En biblioteca'),
+(8, 'Cota02', 3, 'Libro nuevo', 2, 666, 'AE-5', 'Trata sobre como escribir libros nuevos', '2024-06-07 11:52:34', 'En biblioteca'),
+(10, '123ASng', 4, 'Other book', NULL, 123, 'A654', '', '2024-06-07 14:14:23', 'En biblioteca');
 
 -- --------------------------------------------------------
 
@@ -187,7 +223,7 @@ CREATE TABLE `book_category` (
   `id` int(11) NOT NULL,
   `book` int(11) NOT NULL,
   `category` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `book_category`
@@ -196,10 +232,18 @@ CREATE TABLE `book_category` (
 INSERT INTO `book_category` (`id`, `book`, `category`) VALUES
 (4, 2, 3),
 (6, 3, 3),
-(8, 4, 3),
-(9, 5, 6),
-(10, 5, 8),
-(11, 6, 17);
+(12, 7, 3),
+(13, 7, 7),
+(14, 7, 15),
+(15, 8, 5),
+(16, 8, 4),
+(17, 10, 8),
+(18, 10, 17),
+(56, 5, 17),
+(57, 5, 7),
+(60, 6, 17),
+(61, 4, 3),
+(62, 4, 6);
 
 -- --------------------------------------------------------
 
@@ -210,7 +254,7 @@ INSERT INTO `book_category` (`id`, `book`, `category`) VALUES
 CREATE TABLE `category` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `category`
@@ -237,16 +281,18 @@ INSERT INTO `category` (`id`, `name`) VALUES
 CREATE TABLE `editorial` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `editorial`
 --
 
 INSERT INTO `editorial` (`id`, `name`) VALUES
+(4, 'Editorial editada'),
 (3, 'Editorial vieja'),
 (2, 'El EteSechu'),
-(1, 'Shizuka');
+(1, 'Shizukazin'),
+(5, 'UwU Cats2');
 
 -- --------------------------------------------------------
 
@@ -263,7 +309,7 @@ CREATE TABLE `loan` (
   `return_date` datetime DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `active` tinyint(1) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `loan`
@@ -287,7 +333,7 @@ CREATE TABLE `permisson` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
   `level` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `permisson`
@@ -331,7 +377,7 @@ CREATE TABLE `reader` (
   `birthdate` date NOT NULL,
   `phone` varchar(16) NOT NULL,
   `is_teacher` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `reader`
@@ -352,7 +398,7 @@ INSERT INTO `reader` (`id`, `cedula`, `names`, `surnames`, `gender`, `birthdate`
 
 CREATE TABLE `state` (
   `name` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `state`
@@ -377,7 +423,7 @@ CREATE TABLE `user` (
   `password` varchar(200) NOT NULL,
   `token` varchar(200) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `user`
@@ -403,7 +449,7 @@ INSERT INTO `user` (`id`, `nickname`, `level`, `username`, `password`, `token`, 
 
 CREATE TABLE `user_level` (
   `name` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `user_level`
@@ -516,25 +562,25 @@ ALTER TABLE `user_level`
 -- AUTO_INCREMENT de la tabla `author`
 --
 ALTER TABLE `author`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `binnacle`
 --
 ALTER TABLE `binnacle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
 
 --
 -- AUTO_INCREMENT de la tabla `book`
 --
 ALTER TABLE `book`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `book_category`
 --
 ALTER TABLE `book_category`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT de la tabla `category`
@@ -546,7 +592,7 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT de la tabla `editorial`
 --
 ALTER TABLE `editorial`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `loan`
@@ -586,8 +632,8 @@ ALTER TABLE `binnacle`
 -- Filtros para la tabla `book`
 --
 ALTER TABLE `book`
-  ADD CONSTRAINT `book_author` FOREIGN KEY (`author`) REFERENCES `author` (`name`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `book_editorial` FOREIGN KEY (`editorial`) REFERENCES `editorial` (`name`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `book_author` FOREIGN KEY (`author`) REFERENCES `author` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `book_editorial` FOREIGN KEY (`editorial`) REFERENCES `editorial` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `book_state` FOREIGN KEY (`state`) REFERENCES `state` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --

@@ -164,18 +164,18 @@ def UpdateAuthor(authorId):
             statusCode = 404  # Not found
 
     if error == '':
-        if targetAuthor.GetAuthorByName(cleanData['name']) is not None:
+        if authorModel.GetAuthorByName(cleanData['name']) is not None:
             error = 'Ya existe un autor con ese nombre'
             statusCode = 400
 
     if error == '':
-        updated = targetAuthor.UpdateAuthor(authorId, cleanData)
+        updated = authorModel.UpdateAuthor(authorId, cleanData)
         if updated is False:
             error = "Hubo un error al renombrar el autor"
             statusCode = 500
         else:
             action = 'Renombró el autor "{0}" por "{1}" '.format(targetAuthor['name'], cleanData['name'])
-            targetAuthor.CreateBinnacle(targetUser['id'], action)
+            authorModel.CreateBinnacle(targetUser['id'], action)
             message = 'Autor renombrado correctamente'
 
     if error != '':
