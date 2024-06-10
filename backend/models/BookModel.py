@@ -94,7 +94,11 @@ class BookModel(BaseModel):
             for i in range(len(books)):
                 book = books[i]
                 categoryModel = CategoryModel(self.connection)
-                book['categories'] = categoryModel.GetCategoriesOfBook(book['id'])
+                categories = categoryModel.GetCategoriesOfBook(book['id'])
+                categoryNames = [ c['name'] for c in categories ]
+                categoryIds = [ c['id'] for c in categories ]
+                book['category_names'] = categoryNames
+                book['category_ids'] = categoryIds
                 result.append(book)
 
         return result
@@ -115,7 +119,11 @@ class BookModel(BaseModel):
             for i in range(len(books)):
                 book = books[i]
                 categoryModel = CategoryModel(self.connection)
-                book['categories'] = categoryModel.GetCategoriesOfBook(book['id'])
+                categories = categoryModel.GetCategoriesOfBook(book['id'])
+                categoryNames = [ c['name'] for c in categories ]
+                categoryIds = [ c['id'] for c in categories ]
+                book['category_names'] = categoryNames
+                book['category_ids'] = categoryIds
                 result.append(book)
 
         return result
@@ -132,7 +140,11 @@ class BookModel(BaseModel):
             result = None
         else:
             categoryModel = CategoryModel(self.connection)
-            book['categories'] = categoryModel.GetCategoriesOfBook(book['id'])
+            categories = categoryModel.GetCategoriesOfBook(book['id'])
+            categoryNames = [ c['name'] for c in categories ]
+            categoryIds = [ c['id'] for c in categories ]
+            book['category_names'] = categoryNames
+            book['category_ids'] = categoryIds
             result = book
         
         return result
@@ -149,7 +161,11 @@ class BookModel(BaseModel):
             result = None
         else:
             categoryModel = CategoryModel(self.connection)
-            book['categories'] = categoryModel.GetCategoriesOfBook(book['id'])
+            categories = categoryModel.GetCategoriesOfBook(book['id'])
+            categoryNames = [ c['name'] for c in categories ]
+            categoryIds = [ c['id'] for c in categories ]
+            book['category_names'] = categoryNames
+            book['category_ids'] = categoryIds
             result = book
         
         return result
@@ -203,7 +219,11 @@ class BookModel(BaseModel):
                 for i in range(len(books)):
                     book = books[i]
                     categoryModel = CategoryModel(self.connection)
-                    book['categories'] = categoryModel.GetCategoriesOfBook(book['id'])
+                    categories = categoryModel.GetCategoriesOfBook(book['id'])
+                    categoryNames = [ c['name'] for c in categories ]
+                    categoryIds = [ c['id'] for c in categories ]
+                    book['category_names'] = categoryNames
+                    book['category_ids'] = categoryIds
                     result.append(book)
 
         except:

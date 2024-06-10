@@ -50,16 +50,19 @@ onMounted(async () => {
     await categoryStore.FetchCategories()
 
     edit.value = route.params.id
-    if(edit.value !== ''){
+    if(edit.value === '')
+        edit.value = undefined
+
+    if(edit.value !== undefined){
         await bookStore.FetchBookById(edit.value)
         if(targetBook.value !== null){
-            console.log(targetBook)
+            console.log(targetBook.value)
             bookTitle.value = targetBook.value['title']
             bookCallNumber.value = targetBook.value['call_number']
             bookAuthor.value = targetBook.value['author_id']
             bookEditorial.value = targetBook.value['editorial_id']
             bookDescription.value = targetBook.value['description']
-            bookCategories.value = targetBook.value['categories'] // TODO: categories are obtaines as ids 
+            bookCategories.value = targetBook.value['category_ids'] // TODO: categories are obtaines as ids 
             bookPages.value = targetBook.value['pages']
             bookShelf.value = targetBook.value['shelf']
             bookShelf.value = targetBook.value['state']
@@ -71,7 +74,7 @@ onMounted(async () => {
     }
 
     utilsStore.InitializeSelect2()
-    // Vue.js presenta algunas dificultades para trabajar con Select2, en es te caso el indicamos que al cambiar cualquiera de sus valores
+    // Vue.js presenta algunas dificultades para trabajar con Select2, en este caso le indicamos que al cambiar cualquiera de sus valores
     // Se refleje en su respectiva referencia ref()
     $('#editorial').on('select2:select', function (e) { bookEditorial.value = e.target.value });
     $('#author').on('select2:select', function (e) { bookAuthor.value = e.target.value });
@@ -142,56 +145,63 @@ async function ValidateForm() {
         formErrors.value.push('Seleccione al menos una categoría')
 
     const lengthOK = validator.FieldsMeetsLength(validationStructure)
-    if (lengthOK !== true){
+    if (lengthOK !== true)
         formErrors.value = formErrors.value.concat(lengthOK)
-    }
 
     if(bookPages.value > 99999)
         formErrors.value.push('El número de páginas no puede ser mayor a 99999')
 
-    if(formErrors.value.length === 0){
-        const cleanBookData = {
-            'title': bookTitle.value,
-            'call_number': bookCallNumber.value,
-            'author': bookAuthor.value,
-            'pages': bookPages.value,
-            'shelf': bookShelf.value,
-            'editorial': bookEditorial.value,
-            'state': bookState.value,
-            'description': bookDescription.value,
-            'categories': bookCategories.value,
-        }
-
+    if(formErrors.value.length === 0){        
         if(edit.value === ''){
             // Creating the book
+            const cleanBookData = {
+                'title': validationStructure['title']['value'],
+                'call_number': validationStructure['call_number']['value'],
+                'author': validationStructure['author']['value'],
+                'pages':validationStructure['pages']['value'],
+                'shelf': validationStructure['shelf']['value'],
+                'editorial': validationStructure['editorial']['value'],
+                'state': validationStructure['state']['value'],
+                'description': validationStructure['description']['value'],
+                'categories': validationStructure['categories']['value'],
+            }
+
             const created = await bookStore.CreateBook(cleanBookData)            
             if(created.success){
                 utilsStore.ShowModal('Success', created.message, 'success')
+                bookTitle.value = ''
+                bookCallNumber.value = ''
+                bookAuthor.value = ''
+                bookShelf.value = ''
+                bookEditorial.value = ''
+                bookPages.value = ''
+                bookCategories.value = ''
+                bookDescription.value = ''
+                bookState.value = ''
 
-            bookTitle.value = ''
-            bookCallNumber.value = ''
-            bookAuthor.value = ''
-            bookShelf.value = ''
-            bookEditorial.value = ''
-            bookPages.value = ''
-            bookCategories.value = ''
-            bookDescription.value = ''
-            bookState.value = ''
-    
-            $('#author').val(''); $('#author').trigger('change');
-            $('#editorial').val(''); $('#editorial').trigger('change');
-            $('#state').val('En biblioteca'); $('#state').trigger('change');
+                $('#author').val(''); $('#author').trigger('change');
+                $('#editorial').val(''); $('#editorial').trigger('change');
+                $('#state').val('En biblioteca'); $('#state').trigger('change');
+            }
+            else
+                utilsStore.ShowModal('Error', created.message, 'error')
         }
         else{
             // Updating the book
-        }
-            
-        }
-        else{
-            utilsStore.ShowModal('Error', created.message, 'error')
-        }
-    }
-    
+            let cleanBookData = {}
+
+            if(targetBook.value['title'] !== bookTitle.value) cleanBookData['title'] = bookTitle.value
+            if(targetBook.value['call_number'] !== bookCallNumber.value) cleanBookData['call_number'] = bookCallNumber.value
+            if(targetBook.value['description'] !== bookDescription.value) cleanBookData['description'] = bookDescription.value
+            // continue building cleanBookData
+            console.log(cleanBookData)
+            /*
+            const updated = await bookStore.UpdateBook(targetBook.value['id'], cleanBookData)
+            if (updated.success)
+                utilsStore.ShowModal('Success', created.message, 'success')
+            */
+        }          
+    }    
 }
 </script>
 
@@ -201,7 +211,7 @@ async function ValidateForm() {
             <BackButtonGadget :back_to="'dashboard'"/>
         </div>
         <PageTitleView
-        :title="(edit ? 'Modificar ' : 'Registrar nuevo ') + 'libro'"
+        :title="(route.params.id === '' || route.params.id === undefined ? 'Registrar nuevo ' : 'Modificar ') + 'libro'"
         />
         <div class="col-12 row p-4 pt-5 fs-4 justify-content-around">
             <div class="col-12 col-lg-8 p-2 row myForm shadowed-l rounded lb-bg-terciary-ul justify-content-center">

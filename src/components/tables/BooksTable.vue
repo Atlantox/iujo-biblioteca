@@ -1,18 +1,21 @@
 <script setup>
 import { onMounted } from 'vue'
 
+import useUtilsStore from '@/stores/utils';
 import useSessionStore from '@/stores/session.js'
-import DataTableInitializer from '@/utils/DataTableInitializer';
+
 import OnAppearAnimation from '@/utils/ElegantDisplayer';
 
 const sessionStore = useSessionStore()
+const utilsStore = useUtilsStore()
+
 const props = defineProps({
     books: Object
 })
 
 onMounted(() => {
     OnAppearAnimation('hide-up') 
-    const dtInitializer = new DataTableInitializer()  
+    utilsStore.InitializeDatatables()
 })
 
 </script>
@@ -44,7 +47,7 @@ onMounted(() => {
                     <td class="border-1">{{ book.title }}</td>
                     <td class="border-1">{{ book.author === null ? 'Desconocido' : book.author }}</td>
                     <td class="border-1">{{ book.editorial === null ? 'Desconocida' : book.editorial}}</td>
-                    <td class="border-1">{{ book.categories.join(', ') }}</td>
+                    <td class="border-1">{{ book.category_names.join(', ') }}</td>
                     <td class="text-center border-1">{{ book.state }}</td>
                     <td class="text-center border-1">{{ book.pages }}</td>
                     <template v-if="sessionStore.authenticated === true">

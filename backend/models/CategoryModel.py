@@ -76,6 +76,7 @@ class CategoryModel(BaseModel):
         cursor = self.connection.connection.cursor()
         sql = '''
             SELECT
+            category.id,
             category.name
             FROM
             category
@@ -98,7 +99,7 @@ class CategoryModel(BaseModel):
         
         ordered_categories = []
         for category in categories:
-            ordered_categories.append(category['name'])
+            ordered_categories.append(category)
         
         return ordered_categories
     
