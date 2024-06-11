@@ -183,19 +183,6 @@ class BookModel(BaseModel):
 
         return result
     
-    def GetStateById(self, id):
-        cursor = self.connection.connection.cursor()
-        sql = "SELECT * FROM state WHERE id = %s"
-        args = (id,)
-
-        try:
-            cursor.execute(sql, args)
-            result = cursor.fetchone()
-        except:
-            result = None
-
-        return result
-    
     def GetAuthorById(self, id):
         cursor = self.connection.connection.cursor()
         sql = "SELECT * FROM author WHERE id = %s"

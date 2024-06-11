@@ -107,7 +107,7 @@ async function ValidateForm() {
                             <label :class="labelStyle" for="name"><strong>Nombre</strong></label>
                         </div>
                         <div :class="inputContainerStyle">
-                            <div class="row col-12">
+                            <div class="row col-12 col-lg-8">
                                 <input type="text" class="myInput" maxlength="150" id="name" autofocus v-model="stateName">
                             </div>
                         </div>

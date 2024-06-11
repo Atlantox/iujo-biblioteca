@@ -14,6 +14,9 @@ const useUtilsStore = defineStore('utils', {
         title: title,
         text: content,
         icon: type,
+        confirmButtonColor: '#71E580',
+        confirmButtonBorder: 'red',
+        cancelButtonColor: '#71E580'
       })
     },
 

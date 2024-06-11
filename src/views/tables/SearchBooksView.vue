@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
+import useUtilsStore from '@/stores/utils'
 import useBookStore from '@/stores/books.js'
 import useSessionStore from '@/stores/session'
 import useCategoryStore from '@/stores/categories'
@@ -10,8 +11,7 @@ import BackButtonGadget from '@/components/myGadgets/BackButtonGadget.vue'
 import BooksTable from '@/components/tables/BooksTable.vue'
 import PageTitleView from '@/components/PageTitle.vue'
 
-import Select2Initializer from '@/utils/Select2Initializer'
-
+const utilsStore = useUtilsStore()
 const bookStore = useBookStore()
 const sessionStore = useSessionStore()
 const categoryStore = useCategoryStore()
@@ -47,8 +47,8 @@ const ApplyFilters = (async () => {
     targetFetched.value = true
 })
 
-onMounted(async ()  => {
-  const select2Initializer = new Select2Initializer()
+onMounted(async ()  => {  
+  utilsStore.InitializeSelect2()
   var error = false
   $('#categories').on('select2:select', function (e) {
     categoryFilter.value = e.target.value
@@ -66,29 +66,11 @@ onMounted(async ()  => {
   });
 
   await bookStore.FetchBooks()  
-  if (bookStore.errorMessage !== ''){
-    sessionStore.ShowModal('Error', bookStore.errorMessage, 'error')
-    error = true
-  }
-
-  await bookStore.FetchAuthors()  
-  if (bookStore.errorMessage !== ''){
-    sessionStore.ShowModal('Error', bookStore.errorMessage, 'error')
-    error = true
-  }
-
-  await bookStore.FetchEditorials()  
-  if (bookStore.errorMessage !== ''){
-    sessionStore.ShowModal('Error', bookStore.errorMessage, 'error')
-    error = true
-  }
-
-  if (error === false)
-    targetFetched.value = true
-
   await categoryStore.FetchCategories()  
-  if (categoryStore.errorMessage !== '')
-    sessionStore.ShowModal('Error', categoryStore.errorMessage, 'error')
+  await bookStore.FetchAuthors()  
+  await bookStore.FetchEditorials()  
+
+  targetFetched.value = true
 })
 
 </script>

@@ -8,7 +8,7 @@ import OnAppearAnimation from '@/utils/ElegantDisplayer';
 const utilsStore = useUtilsStore()
 
 const props = defineProps({
-    categories: Array
+    editorials: Array
 })
 
 onMounted(() => {
@@ -29,14 +29,14 @@ onMounted(() => {
                 </thead>
             <tbody class="fs-5">
                 <tr 
-                v-for="category in props.categories"
-                :key="category.id">
-                    <td class="border-1 text-center">{{ category.name }}</td>
+                v-for="editorial in props.editorials"
+                :key="editorial.id">
+                    <td class="border-1 text-center">{{ editorial.name }}</td>
                     <td class="border-1">
                         <div class="row m-0 p-0 text-center justify-content-center">
                             <div class="row col-12 m-0 p-1 col-3 fs-2">
                                 <div class="w-100 hover-bigger text-center m-0 p-0">
-                                    <router-link :to="{name:'see_book', params: {id: category.id}}">
+                                    <router-link :to="{name:'see_book', params: {id: editorial.id}}">
                                         <i class="text-black bi bi-eye text-center m-0 p-0"></i>
                                     </router-link>
                                 </div>

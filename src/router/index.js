@@ -16,11 +16,12 @@ import SearchBooksView from '../views/tables/SearchBooksView.vue'
 import SearchLoanView from '../views/tables/SearchLoanView.vue'
 import SearchReadersView from '../views/tables/SearchReadersView.vue'
 import SearchCategoryView from '@/views/tables/SearchCategoryView.vue'
+import SearchAuthorsView from '@/views/tables/SearchAuthorsView.vue'
+import SearchEditorialsView from '@/views/tables/SearchEditorialsView.vue'
 
 import SeeBookView from '../views/SeeBookView.vue'
 import SeeLoanView from '../views/SeeLoanView.vue'
 import SeeReaderView from '../views/SeeReaderView.vue'
-import AuthorForm from '@/components/forms/AuthorForm.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,6 +43,7 @@ const router = createRouter({
       component: DashboardView,
       meta:{ requireAuth: true }
     },
+    // BOOKS
     {
       path: '/search_books',
       name: 'books',
@@ -58,22 +60,36 @@ const router = createRouter({
       component: BookFormView,
       meta:{ requireAuth: true, bookPermisson: true }
     },
+    // EDITORIALS
     {
       path: '/add_editorial/:id?',
       name: 'add_editorial',
       component: EditorialFormView
     },
     {
+      path: '/search_editorials',
+      name: 'editorials',
+      component: SearchEditorialsView
+    },
+    // AUTHORS
+    {
       path: '/add_author/:id?',
       name: 'add_author',
       component: AuthorFormView
     },
+    {
+      path: '/search_authors',
+      name: 'authors',
+      component: SearchAuthorsView
+    },
+    // CATEGORIES
     {
       path: '/search_categories',
       name: 'categories',
       component: SearchCategoryView,
       meta:{ requireAuth: true, categoryPermisson: true }
     },
+    // LOANS
     {
       path: '/add_loan/:id?',
       name: 'add_loan',
@@ -92,6 +108,7 @@ const router = createRouter({
       component: SeeLoanView,
       meta:{ requireAuth: true, loanPermisson: true }
     },
+    // READERS
     {
       path: '/add_reader/:id?',
       name: 'add_reader',

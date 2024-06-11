@@ -92,16 +92,6 @@ onMounted( async () => {
                       </span>
                     </router-link>
                   </div>
-                  <template v-if="sessionStore.userData.permissons.includes('Estados de libros')">
-                    <div :class="linkElementStyle">
-                      <router-link :class="routerLinkStyle" :to="{name: 'books'}">
-                        <i :class="'fa fa-inbox ' + iconStyle" ></i>
-                        <span :class="linkTextStyle">
-                          Ver estados de libros
-                        </span>
-                      </router-link>
-                    </div>
-                  </template>
                 </div>
               </div>
             </article>
@@ -151,7 +141,7 @@ onMounted( async () => {
                     </router-link>
                   </div>
                   <div :class="linkElementStyle">
-                    <router-link :class="routerLinkStyle" :to="{name: 'categories'}">
+                    <router-link :class="routerLinkStyle" :to="{name: 'authors'}">
                       <i :class="'fa fa-pencil ' + iconStyle" ></i>
                       <span :class="linkTextStyle">
                         Ver autores
@@ -179,7 +169,7 @@ onMounted( async () => {
                     </router-link>
                   </div>
                   <div :class="linkElementStyle">
-                    <router-link :class="routerLinkStyle" :to="{name: 'categories'}">
+                    <router-link :class="routerLinkStyle" :to="{name: 'editorials'}">
                       <i :class="'fa fa-building ' + iconStyle" ></i>
                       <span :class="linkTextStyle">
                         Ver editoriales

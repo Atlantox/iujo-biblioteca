@@ -1,9 +1,12 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import Select2Initializer from '@/utils/Select2Initializer'
 import FormValidator from '@/utils/FormValidator'
 import PageTitleView from '../PageTitle.vue';
 import BackButtonGadget from '../myGadgets/BackButtonGadget.vue'
+
+import useUtilsStore from '@/stores/utils';
+
+const utilsStore = useUtilsStore()
 
 const props = defineProps({
     books: Object,
@@ -29,7 +32,7 @@ const loanObservation = ref('')
 
 onMounted(() => {
     edit.value = false
-    const s2Initializer = new Select2Initializer()
+    utilsStore.InitializeSelect2()
 })
 
 const ValidateForm = ((e) => {

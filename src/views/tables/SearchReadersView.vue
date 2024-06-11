@@ -2,7 +2,6 @@
 import { onMounted } from 'vue'
 
 import useReaderStore from '@/stores/readers.js'
-import useSessionStore from '@/stores/session.js'
 
 import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue'
 import BackButtonGadget from '@/components/myGadgets/BackButtonGadget.vue'
@@ -10,19 +9,11 @@ import BackButtonGadget from '@/components/myGadgets/BackButtonGadget.vue'
 import ReaderTable from '@/components/tables/ReaderTable.vue'
 import PageTitleView from '@/components/PageTitle.vue';
 
-import OnAppearAnimation from '@/utils/ElegantDisplayer.js'
-
 const readerStore = useReaderStore()
-const sessionStore = useSessionStore()
 const readers = readerStore.readers
 
 onMounted(async ()  => {
   await readerStore.FetchReaders()
-
-  if(readerStore.errorMessage !== '')
-    sessionStore.ShowModal('Error', readerStore.errorMessage, 'error')
-  else
-    OnAppearAnimation('hide-up') 
 })
 
 </script>
