@@ -199,6 +199,14 @@ async function ValidateForm() {
         }          
     }    
 }
+
+const DisplayAuthorForm = (() => {
+
+})
+
+const DisplayEditorialForm = (() => {
+    
+})
 </script>
 
 <template>
@@ -225,7 +233,7 @@ async function ValidateForm() {
                             <label :class="labelStyle" for="call_number"><strong>Cota</strong></label>
                         </div>
                         <div :class="inputContainerStyle">
-                            <div class="row col-7 col-md-4">
+                            <div class="row col-7">
                                 <input type="text" class="myInput" maxlength="8" id="call_number" v-model="bookCallNumber">
                             </div>
                         </div>
@@ -236,17 +244,20 @@ async function ValidateForm() {
                             <label :class="labelStyle" for="author">Autor</label>
                         </div>
                         <div :class="inputContainerStyle">
-                            <div class="row col-7">
+                            <div class="row col-10 col-lg-7">
                                 <select class="myInput select2" id="author" :v-model="bookAuthor">
                                     <option value="">&nbsp;</option>
                                     <template
-                                    v-for="author in props.authors"
+                                    v-for="author in props.authors.value"
                                     :key="author.id">
                                         <option class="fw-normal" :value="author.id" :selected="bookAuthor == author.id">
                                             {{ author.name }}
                                         </option>                                    
                                     </template>
                                 </select>
+                            </div>
+                            <div class="col-1 align-middle" @click="DisplayAuthorForm()">
+                                <i class="fa fa-plus my-auto align-middle text-success bg-white border-black p-1 rounded"></i>
                             </div>
                         </div>
                     </div>
@@ -278,17 +289,20 @@ async function ValidateForm() {
                             <label :class="labelStyle" for="editorial">Editorial</label>
                         </div>
                         <div :class="inputContainerStyle">
-                            <div class="row col-7">
+                            <div class="row col-10 col-lg-7">
                                 <select class="myInput select2" id="editorial" :v-model="bookEditorial">
                                     <option value="">&nbsp;</option>
                                     <template
-                                    v-for="editorial in props.editorials"
+                                    v-for="editorial in props.editorials.value"
                                     :key="editorial.id">
                                         <option class="fw-normal" :value="editorial.id" :selected="bookEditorial == editorial.id">
                                             {{ editorial.name }}
                                         </option>                                    
                                     </template>
                                 </select>
+                            </div>
+                            <div class="col-1 align-middle" @click="DisplayEditorialForm()">
+                                <i class="fa fa-plus my-auto align-middle text-success bg-white border-black p-1 rounded"></i>
                             </div>
                         </div>
                     </div>
@@ -298,11 +312,11 @@ async function ValidateForm() {
                             <label :class="labelStyle" for="state"><strong>Estado</strong></label>
                         </div>
                         <div :class="inputContainerStyle">
-                            <div class="row col-7">
+                            <div class="row col-10 col-lg-7">
                                 <select class="myInput select2" id="state" :v-model="bookState">
                                     <option value="">&nbsp;</option>
                                     <template
-                                    v-for="state in props.bookStates"
+                                    v-for="state in props.bookStates.value"
                                     :key="state.name">
                                         <option class="fw-normal" :value="state.name" :selected="bookState === state.name">
                                             {{ state.name }}
@@ -349,7 +363,7 @@ async function ValidateForm() {
                     <h2 class="col-12 text-center">Categorías</h2>
                     <div class="col-12 d-flex justify-content-start align-items-center flex-column rounded shadowed-l p-0 bg-white" style="overflow:hidden">
                         <div class="col-12 d-flex categories-section justify-content-center p-0"
-                        v-for="category, index in props.categories"
+                        v-for="category, index in props.categories.value"
                         :key="index">
                             <div class="category-label-container col-8 d-flex justify-content-center align-items-center p-0 py-1">
                                 <label class="text-center w-100" :for="category.id">{{ category.name }}</label>

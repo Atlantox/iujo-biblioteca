@@ -148,6 +148,24 @@ def GetBooks():
 
     return jsonify(response), statusCode
 
+@bookController.route('/states', methods=['GET'])
+def GetStates():
+    connection = GetConnection()
+    bookModel = BookModel(connection)
+    response = {}
+    statusCode = 200
+    error = ''
+
+    states = bookModel.GetBookStates()
+
+    response['success'] = error == ''
+    if error == '':
+        response['states'] = states
+    else:
+        response['message'] = error    
+
+    return jsonify(response), statusCode
+
 
 @bookController.route('/books/by_category/<int:categoryId>', methods=['GET'])
 def GetBooksByCategory(categoryId):

@@ -46,6 +46,13 @@ const FetchData = ( async () => {
   await categoryStore.FetchCategories()
 })
 
+const SpinSymbol = (() =>{
+  const spinIcon = document.getElementById('spin-icon')
+  spinIcon.classList.remove('spin-on')
+  void spinIcon.offsetWidth
+  spinIcon.classList.add('spin-on')
+})
+
 </script>
 
 <template>
@@ -60,17 +67,39 @@ const FetchData = ( async () => {
   <template v-if="fetchReady === false">
     <LoadingGadget />
   </template>
-  <template v-else>    
+  <template v-else>
+    <div class="row w-100 m-0 p-0 justify-content-center">
+      <div class="col-1">
+        <button @click="FetchData(); SpinSymbol()" class="icon-container d-flex justify-content-center align-items-center rounded lb-border-terciary shadowed-l lb-bg-terciary-l p-2 mx-auto">
+            <i class="fa fa-rotate-left fs-1 my-auto text-white align-middle" id="spin-icon"></i>
+        </button>
+      </div>
+    </div>
+    
     <BookForm
     :targetBook = "targetBook"
-    :editorials = editorials.value
-    :authors = authors.value
-    :bookStates = bookStates.value
-    :categories = categories.value
+    :editorials = editorials
+    :authors = authors
+    :bookStates = bookStates
+    :categories = categories
     />
   </template>
 </template>
 
 <style scoped>
 
+.spin-on{
+  animation: spin 0.7s
+}
+
+@keyframes spin {
+    0% {
+        transform:rotate(0deg);
+    }
+    
+    100%{
+      transform:rotate(-360deg);
+    }
+    
+}
 </style>
