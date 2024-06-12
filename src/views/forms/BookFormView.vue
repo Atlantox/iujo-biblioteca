@@ -70,7 +70,11 @@ const SpinSymbol = (() =>{
   <template v-else>
     <div class="row w-100 m-0 p-0 justify-content-center">
       <div class="col-1">
-        <button @click="FetchData(); SpinSymbol()" class="icon-container d-flex justify-content-center align-items-center rounded lb-border-terciary shadowed-l lb-bg-terciary-l p-2 mx-auto">
+        <button 
+        @click="FetchData(); SpinSymbol()" 
+        class="icon-container d-flex justify-content-center align-items-center rounded lb-border-terciary shadowed-l lb-bg-terciary-l p-2 mx-auto" 
+        title="Refrescar autores y editoriales"
+        >
             <i class="fa fa-rotate-left fs-1 my-auto text-white align-middle" id="spin-icon"></i>
         </button>
       </div>
@@ -81,7 +85,7 @@ const SpinSymbol = (() =>{
     :editorials = editorials
     :authors = authors
     :bookStates = bookStates
-    :categories = categories
+    :categories = "categories"
     />
   </template>
 </template>
@@ -101,5 +105,23 @@ const SpinSymbol = (() =>{
       transform:rotate(-360deg);
     }
     
+}
+
+ .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+ .tooltiptext{
+  visibility: visible;
 }
 </style>

@@ -24,7 +24,10 @@ const labelStyle = 'text-center text-md-end'
 const inputContainerStyle = 'row m-0 p-0 col-12 col-md-7 justify-content-center justify-content-md-start'
 
 const props = defineProps({
-    'targetEditorial': Object,
+    'targetEditorial': {
+        type: Object,
+        default: {}
+    },
 })
 
 onMounted(async () => {
@@ -101,7 +104,7 @@ async function ValidateForm() {
         </template>
         <template v-else>
             <div class="col-12 row p-4 pt-5 fs-4 justify-content-around hide-up animated-1">
-                <div class="col-12 col-lg-8 p-2 row myForm shadowed-l rounded lb-bg-terciary-ul justify-content-center">
+                <div class="col-12 col-lg-10 p-2 row myForm shadowed-l rounded lb-bg-terciary-ul justify-content-center">
                     <div :class="formRowStyle">
                         <div :class="labelContainerStyle">
                             <label :class="labelStyle" for="name"><strong>Nombre</strong></label>

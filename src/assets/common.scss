@@ -126,6 +126,18 @@ $quartary: #E5BA71;
     color:rgb(109, 109, 109);
 }
 
+.border-none{
+    border: none
+} 
+
+.bg-none{
+    background: none;
+}
+
+.cursor-pointer{
+    cursor:pointer;
+}
+
 .outline-black{
     -webkit-text-stroke-width: 2px;
     -webkit-text-stroke-color: black;

@@ -3,11 +3,16 @@ import { ref, onMounted } from 'vue'
 
 import FormValidator from '@/utils/FormValidator'
 
+import EditorialForm from './EditorialForm.vue'
+import AuthorForm from './AuthorForm.vue'
+
 import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue'
 import OnAppearAnimation from '@/utils/ElegantDisplayer'
 
 import useUtilsStore from '@/stores/utils'
 import useBookStore from '@/stores/books'
+
+import LargeModalGadget from '../myGadgets/LargeModalGadget.vue'
 
 
 const utilsStore = useUtilsStore()
@@ -43,7 +48,7 @@ onMounted(async () => {
     utilsStore.InitializeSelect2()
     OnAppearAnimation('hide-up')
 
-    if(props.targetBook !== undefined){
+    if(Object.keys(props.targetBook).length !== 0){
         bookTitle.value = props.targetBook['title']
         bookCallNumber.value = props.targetBook['call_number']
         bookAuthor.value = props.targetBook['author_id']
@@ -61,9 +66,21 @@ onMounted(async () => {
 
     // Vue.js presenta algunas dificultades para trabajar con Select2, en este caso le indicamos que al cambiar cualquiera de sus valores
     // Se refleje en su respectiva referencia ref()
-    $('#editorial').on('select2:select', function (e) { bookEditorial.value = e.target.value });
-    $('#author').on('select2:select', function (e) { bookAuthor.value = e.target.value });
-    $('#state').on('select2:select', function (e) { bookState.value = e.target.value });
+    $('#editorial').on('select2:select', function (e) { 
+        bookEditorial.value = e.target.value;
+        document.getElementById('select2-editorial-container').classList.remove('border-red') 
+
+    });
+    $('#author').on('select2:select', function (e) { 
+        bookAuthor.value = e.target.value;
+        document.getElementById('select2-author-container').classList.remove('border-red') 
+
+    });
+    $('#state').on('select2:select', function (e) { 
+        bookState.value = e.target.value;
+        document.getElementById('select2-state-container').classList.remove('border-red') 
+
+    });
     
     mounted.value = true    
 })
@@ -201,11 +218,11 @@ async function ValidateForm() {
 }
 
 const DisplayAuthorForm = (() => {
-
+    $('#AuthorModal').modal('show')
 })
 
 const DisplayEditorialForm = (() => {
-    
+    $('#EditorialModal').modal('show')
 })
 </script>
 
@@ -256,7 +273,7 @@ const DisplayEditorialForm = (() => {
                                     </template>
                                 </select>
                             </div>
-                            <div class="col-1 align-middle" @click="DisplayAuthorForm()">
+                            <div class="col-1 align-middle cursor-pointer" title="Agregar nuevo autor" @click="DisplayAuthorForm()">
                                 <i class="fa fa-plus my-auto align-middle text-success bg-white border-black p-1 rounded"></i>
                             </div>
                         </div>
@@ -301,7 +318,7 @@ const DisplayEditorialForm = (() => {
                                     </template>
                                 </select>
                             </div>
-                            <div class="col-1 align-middle" @click="DisplayEditorialForm()">
+                            <div class="col-1 align-middle cursor-pointer"  title="Agregar nueva editorial" @click="DisplayEditorialForm()">
                                 <i class="fa fa-plus my-auto align-middle text-success bg-white border-black p-1 rounded"></i>
                             </div>
                         </div>
@@ -341,7 +358,7 @@ const DisplayEditorialForm = (() => {
                     <div class="row m-0 p-0 justify-content-center my-2 mt-5">
                         <div class="row m-0 p-0 col-12 justify-content-center">
                             <button class="col-6 col-lg-3 myBtn terciary-btn shadowed-l h3">
-                                {{ props.targetBook !== undefined ? 'Modificar ' : 'Registrar ' }}
+                                {{ Object.keys(props.targetBook).length === 0 ? 'Registrar ' : 'Modificar ' }}
                             </button>
                         </div>
                     </div>
@@ -376,8 +393,19 @@ const DisplayEditorialForm = (() => {
                 </div>        
             </div>
         </template>
-
     </form>
+
+    <LargeModalGadget
+    :componentToShow="AuthorForm"
+    :title="'Agregar nuevo autor'"
+    :modalName="'AuthorModal'"
+    />
+    <LargeModalGadget
+    :componentToShow="EditorialForm"
+    :title="'Agregar nueva editorial'"
+    :modalName="'EditorialModal'"
+    />
+
 </template>
 
 <style scoped>
