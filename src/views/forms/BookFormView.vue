@@ -40,6 +40,7 @@ onMounted( async () => {
 })
 
 const FetchData = ( async () => {
+  SpinSymbol()
   await bookStore.FetchEditorials()
   await bookStore.FetchAuthors()  
   await bookStore.FetchBookStates()
@@ -48,9 +49,11 @@ const FetchData = ( async () => {
 
 const SpinSymbol = (() =>{
   const spinIcon = document.getElementById('spin-icon')
-  spinIcon.classList.remove('spin-on')
-  void spinIcon.offsetWidth
-  spinIcon.classList.add('spin-on')
+  if (spinIcon !== null){
+    spinIcon.classList.remove('spin-on')
+    void spinIcon.offsetWidth
+    spinIcon.classList.add('spin-on')
+  }
 })
 
 </script>
@@ -71,8 +74,8 @@ const SpinSymbol = (() =>{
     <div class="row w-100 m-0 p-0 justify-content-center">
       <div class="col-1">
         <button 
-        @click="FetchData(); SpinSymbol()" 
-        class="icon-container d-flex justify-content-center align-items-center rounded lb-border-terciary shadowed-l lb-bg-terciary-l p-2 mx-auto" 
+        @click="FetchData()" 
+        class="icon-container d-flex justify-content-center align-items-center rounded lb-border-terciary shadowed-l lb-bg-terciary-l p-2 mx-auto hide-up animated-1" 
         title="Refrescar autores y editoriales"
         >
             <i class="fa fa-rotate-left fs-1 my-auto text-white align-middle" id="spin-icon"></i>
@@ -86,6 +89,7 @@ const SpinSymbol = (() =>{
     :authors = authors
     :bookStates = bookStates
     :categories = "categories"
+    @fetchAgain = "FetchData"
     />
   </template>
 </template>

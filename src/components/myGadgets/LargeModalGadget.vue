@@ -1,4 +1,12 @@
 <script setup>
+import { defineEmits } from 'vue'
+
+const emits = defineEmits(['firstEmit'])
+
+const FirstEmit = (() => {
+    emits('firstEmit')
+})
+
 const props = defineProps({
     componentToShow: Object,
     modalName: String,
@@ -19,7 +27,7 @@ const props = defineProps({
                     <h3 class="text-center">
                         {{ props.title }}
                     </h3>
-                    <component :is="props.componentToShow" />
+                    <component :is="props.componentToShow" @formOk="FirstEmit" />
                 </div>
             </div>
         </div>

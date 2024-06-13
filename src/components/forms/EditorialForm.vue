@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, defineEmits } from 'vue'
 
 import FormValidator from '@/utils/FormValidator'
 
@@ -12,6 +12,7 @@ import useBookStore from '@/stores/books'
 
 const utilsStore = useUtilsStore()
 const bookStore = useBookStore()
+const emit = defineEmits(['formOk'])
 
 const mounted = ref(false)
 const formErrors = ref([])
@@ -30,7 +31,8 @@ const props = defineProps({
     },
 })
 
-onMounted(async () => {
+onMounted(() => {
+    emit('formOk')
     OnAppearAnimation('hide-up')
 
     if(props.targetEditorial !== undefined){
@@ -71,6 +73,7 @@ async function ValidateForm() {
 
             const created = await bookStore.CreateEditorial(cleanEditorialData)            
             if(created.success){
+                emit('formOk')
                 utilsStore.ShowModal('Success', created.message, 'success')
                 stateName.value = ''
             }
@@ -87,8 +90,10 @@ async function ValidateForm() {
                 utilsStore.ShowModal('Info', 'No se realizaron cambios', 'info')
             else{
                 const updated = await bookStore.UpdateEditorial(props.targetEditorial['id'], cleanEditorialData)
-                if (updated.success)
+                if (updated.success){
+                    emit('formOk')
                     utilsStore.ShowModal('Success', updated.message, 'success')
+                }
                 else
                     utilsStore.ShowModal('Error', updated.message, 'error')
             }

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, defineEmits } from 'vue'
 
 import FormValidator from '@/utils/FormValidator'
 
@@ -43,6 +43,8 @@ const props = defineProps({
     'bookStates': Array,
     'categories': Array,
 })
+
+const emit = defineEmits(['fetchAgain'])
 
 onMounted(async () => {
     utilsStore.InitializeSelect2()
@@ -224,6 +226,11 @@ const DisplayAuthorForm = (() => {
 const DisplayEditorialForm = (() => {
     $('#EditorialModal').modal('show')
 })
+
+const FetchAgain = (() => {
+    emit('fetchAgain')
+})
+
 </script>
 
 <template>
@@ -399,11 +406,13 @@ const DisplayEditorialForm = (() => {
     :componentToShow="AuthorForm"
     :title="'Agregar nuevo autor'"
     :modalName="'AuthorModal'"
+    @firstEmit="FetchAgain"
     />
     <LargeModalGadget
     :componentToShow="EditorialForm"
     :title="'Agregar nueva editorial'"
     :modalName="'EditorialModal'"
+    @firstEmit="FetchAgain"
     />
 
 </template>

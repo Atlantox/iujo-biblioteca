@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, defineEmits } from 'vue'
 
 import FormValidator from '@/utils/FormValidator'
 
@@ -23,6 +23,7 @@ const labelContainerStyle = 'row m-0 p-0 col-12 col-md-3'
 const labelStyle = 'text-center text-md-end'
 const inputContainerStyle = 'row m-0 p-0 col-12 col-md-7 justify-content-center justify-content-md-start'
 
+const emits = defineEmits(['formOk'])
 const props = defineProps({
     'targetAuthor': {
         type: Object,
@@ -73,6 +74,7 @@ async function ValidateForm() {
             if(created.success){
                 utilsStore.ShowModal('Success', created.message, 'success')
                 authorName.value = ''
+                emits('formOk')
             }
             else
                 utilsStore.ShowModal('Error', created.message, 'error')
@@ -87,8 +89,10 @@ async function ValidateForm() {
                 utilsStore.ShowModal('Info', 'No se realizaron cambios', 'info')
             else{
                 const updated = await bookStore.UpdateAuthor(props.targetAuthor['id'], cleanAuthorData)
-                if (updated.success)
+                if (updated.success){
+                    emits('formOk')
                     utilsStore.ShowModal('Success', updated.message, 'success')
+                }
                 else
                     utilsStore.ShowModal('Error', updated.message, 'error')
             }
