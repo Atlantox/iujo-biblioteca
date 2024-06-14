@@ -11,6 +11,13 @@ const field_translator = {
     'select2-state-container': 'Estado',
     'pages': 'Páginas',
     'description': 'Descripción',
+    'phone': 'Teléfono',
+    'cedula': 'Cédula',
+    'names': 'Nombres',
+    'surnames': 'Apellidos',
+    'gender': 'Género',
+    'birthdate': 'Fecha de nacimiento',
+    'is_teacher': 'Es docente'
 }
 
 class FormValidator{

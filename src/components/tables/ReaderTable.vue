@@ -34,7 +34,7 @@ onMounted(() => {
                 v-for="reader in props.readers"
                 :key="reader.id">
                     <td class="border-1"><strong>({{ reader.cedula }})</strong> {{ reader.names + ' ' + reader.surnames }}</td>
-                    <td class="border-1 text-center">{{ reader.gender }}</td>
+                    <td class="border-1 text-center fs-5">{{ reader.gender }}</td>
                     <td class="border-1">{{ reader.phone }}</td>
                     <td class="border-1">
                         

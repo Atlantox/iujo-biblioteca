@@ -55,7 +55,21 @@ class ReaderModel(BaseModel):
     def GetReaderByCedula(self, cedula):
         cursor = self.connection.connection.cursor()
 
-        sql = "SELECT * FROM reader WHERE cedula = %s"
+        sql = '''
+            SELECT
+            id,
+            cedula,
+            names,
+            surnames,
+            gender,
+            phone,
+            is_teacher,
+            CONCAT(YEAR(birthdate), '-', MONTH(birthdate), '-', DAY(birthdate)) as birthdate
+            FROM
+            reader
+            WHERE
+            cedula = %s
+            '''
         args = (cedula,)
 
         try:
@@ -69,7 +83,21 @@ class ReaderModel(BaseModel):
     def GetReaderById(self, id):
         cursor = self.connection.connection.cursor()
 
-        sql = "SELECT * FROM reader WHERE id = %s"
+        sql = '''
+            SELECT
+            id,
+            cedula,
+            names,
+            surnames,
+            gender,
+            phone,
+            is_teacher,
+            CONCAT(YEAR(birthdate), '-', MONTH(birthdate), '-', DAY(birthdate)) as birthdate
+            FROM
+            reader
+            WHERE
+            id = %s
+            '''
         args = (id,)
 
         try:

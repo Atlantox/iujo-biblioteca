@@ -1,5 +1,4 @@
 <script setup>
-import { defineEmits } from 'vue'
 
 const emits = defineEmits(['firstEmit'])
 
@@ -19,9 +18,7 @@ const props = defineProps({
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header border-none">
-                    <button type="button" class="close border-none bg-none fs-1" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <h3 class="text-center">

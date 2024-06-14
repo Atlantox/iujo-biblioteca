@@ -78,7 +78,7 @@ def CreateReader():
 
     if error == '':
         if cleanData['is_teacher'] not in ['1', '0']:
-            error = 'Campo es profesor inválido'
+            error = 'El campo "es profesor" es inválido'
             statusCode = 400
     
     if error == '':
@@ -95,7 +95,7 @@ def CreateReader():
     if error == '':
         diff = abs((now - birthdate).days)
         if diff < 365 * 10:
-            error = 'El lector no cumple con la edad mínima para realziar el préstamo (10 años)'
+            error = 'El lector no cumple con la edad mínima para realizar el préstamo (10 años)'
             statusCode = 400
 
     if error == '':
@@ -242,7 +242,7 @@ def UpdateReader(readerId):
 
     if error == '' and 'is_teacher' in cleanData:
         if cleanData['is_teacher'] not in ['1', '0']:
-            error = 'Campo es profesor inválido'
+            error = 'El campo "es profesor" es inválido'
             statusCode = 400
 
     if error == '':

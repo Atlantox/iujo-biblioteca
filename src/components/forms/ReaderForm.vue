@@ -12,6 +12,7 @@ import useReaderStore from '@/stores/readers'
 
 const utilsStore = useUtilsStore()
 const readerStore = useReaderStore()
+const today = ref(new Date())
 
 const mounted = ref(false)
 const formErrors = ref([])
@@ -21,7 +22,8 @@ const readerNames = ref('')
 const readerSurnames = ref('')
 const readerPhone = ref('')
 const readerGender = ref('')
-const readerIsTeacher = ref('')
+const readerBirthdate = ref('')
+const readerIsTeacher = ref(['0'])
 
 const formRowStyle = 'row m-0 p-0 justify-content-center my-2'
 const labelContainerStyle = 'row m-0 p-0 col-12 col-md-3'
@@ -32,39 +34,163 @@ const props = defineProps({
     'targetReader': Object
 })
 
+const emits = defineEmits(['formOk'])
+
 onMounted(() => {
+
+    var year = today.value.getFullYear() - 10
+    var month = today.value.getMonth() + 1
+    if(month < 10) month = '0' + month
+    var day = today.value.getDate()
+    if(day < 10) day = '0' + day
+    today.value = year + '-' + month + '-' + day
+
+    const birthdateInput = document.getElementById('birthdate')
+    birthdateInput.max = today.value
     OnAppearAnimation('hide-up')
-    if(props.targetBook !== undefined){
+    if(Object.keys(props.targetReader).length !== 0){
+        readerCedula.value = props.targetReader.cedula
+        readerNames.value = props.targetReader.names
+        readerSurnames.value = props.targetReader.surnames
+        readerPhone.value = props.targetReader.phone
+        readerGender.value = props.targetReader.gender
+        readerIsTeacher.value = [String(props.targetReader.is_teacher)]
+
+        const myDate = new Date(props.targetReader.birthdate)
+        
+        var year = myDate.getFullYear()
+        var month = myDate.getMonth() + 1
+        if(month < 10) month = '0' + month
+        var day = myDate.getDate()
+        if(day < 10) day = '0' + day
+        readerBirthdate.value = year + '-' + month + '-' + day
     }
     mounted.value = true
 })
 
 
+const ValidateForm = (async (e) => {
+    const validator = new FormValidator()
 
-/*
-cedula,
-names
-surnames
-gender
-birthdate
-phone
-is_teacher
+    formErrors.value = [] 
+    const validationStructure = {
+        'cedula':{ 
+            'min': 7,
+            'max': 11, 
+            'required': true, 
+            'value': readerCedula.value 
+        },
+        'names':{
+            'min': 2, 
+            'max': 60, 
+            'required': true, 
+            'value': readerNames.value 
+        },
+        'surnames':{
+            'min': 2, 
+            'max': 60, 
+            'required': true, 
+            'value': readerSurnames.value 
+        },
+        'birthdate':{
+            'min': 8, 
+            'max': 10, 
+            'required': true, 
+            'value': readerBirthdate.value 
+        },
+        'phone':{
+            'min': 7,
+            'max': 15, 
+            'required': true, 
+            'value': readerPhone.value 
+        }
+    }    
+
+    const emptyFields = validator.FieldsAreEmpty(validationStructure)
+    if(emptyFields !== false){
+        // uno o más campos están vacíos
+        formErrors.value = emptyFields
+    }
+
+    const lengthOK = validator.FieldsMeetsLength(validationStructure)
+    if (lengthOK !== true)
+        formErrors.value = formErrors.value.concat(lengthOK)
+
+    if(!['M', 'F'].includes(readerGender.value)){
+        formErrors.value.push('El campo género es requerido')
+    }
+
+    if(readerIsTeacher.value === '')
+        readerIsTeacher.value = '0'
+
+    console.log(readerIsTeacher.value[0])
+    if(!['0', '1'].includes(readerIsTeacher.value[0])){
+        formErrors.value.push('El campo es docente debe ser 1 o 0')
+    }
+
+    if(new Date(readerBirthdate.value) >= new Date()){
+        formErrors.value.push('El cumpleaños debe ser anterior a la fecha actual')
+    }    
 
 
-READER_LENGTH_CONFIG = {
-    'cedula': {'min': 7, 'max':11},
-    'names': {'min': 2, 'max':60},
-    'surnames': {'min': 2, 'max':60},
-    'gender': {'min': 1, 'max':1},
-    'birthdate': {'min':8, 'max':10},
-    'phone': {'min': 7, 'max':15},
-    'is_teacher': {'min': 1, 'max':1}
-}
 
-*/
-const ValidateForm = ((e) => {
-    const myForm = e.srcElement
-    const validator = new FormValidator()    
+    if(formErrors.value.length === 0){        
+        if(Object.keys(props.targetReader).length === 0){
+            // Creating the book
+            const cleanReaderData = {
+                'cedula': String(validationStructure['cedula']['value']),
+                'names': validationStructure['names']['value'],
+                'surnames': validationStructure['surnames']['value'],
+                'phone':validationStructure['phone']['value'],
+                'gender': readerGender.value,
+                'birthdate': validationStructure['birthdate']['value'],
+                'is_teacher': readerIsTeacher.value[0],
+            }
+
+            const created = await readerStore.CreateReader(cleanReaderData)            
+            if(created.success){
+                emits('formOk')
+                utilsStore.ShowModal('Success', created.message, 'success')
+                readerCedula.value = ''
+                readerNames.value = ''
+                readerSurnames.value = ''
+                readerPhone.value = ''
+                readerGender.value = ''
+                readerBirthdate.value = ''
+                readerIsTeacher.value = [0]
+            }
+            else
+                utilsStore.ShowModal('Error', created.message, 'error')
+        }
+        else{
+            // Updating the book
+            let cleanReaderData = {}
+
+            if(props.targetReader['cedula'] !== readerCedula.value) cleanReaderData['cedula'] = readerCedula.value
+            if(props.targetReader['names'] !== readerNames.value) cleanReaderData['names'] = readerNames.value
+            if(props.targetReader['surnames'] !== readerSurnames.value) cleanReaderData['surnames'] = readerSurnames.value
+            if(props.targetReader['phone'] !== readerPhone.value) cleanReaderData['phone'] = readerPhone.value
+            if(props.targetReader['gender'] !== readerGender.value) cleanReaderData['gender'] = readerGender.value
+            if(props.targetReader['birthdate'] !== readerBirthdate.value) cleanReaderData['birthdate'] = readerBirthdate.value
+            if(props.targetReader['is_teacher'] !== parseInt(readerIsTeacher.value[0])) cleanReaderData['is_teacher'] = parseInt(readerIsTeacher.value[0])
+
+            console.log(readerBirthdate.value)
+            console.log(props.targetReader['birthdate'])
+            if(Object.keys(cleanReaderData).length === 0)
+                utilsStore.ShowModal('Info', 'No se realizaron cambios', 'info')
+            else{
+                const updated = await readerStore.UpdateReader(props.targetReader['id'], cleanReaderData)
+                if (updated.success){
+                    emits('formOk')
+                    utilsStore.ShowModal('Success', updated.message, 'success')
+                }
+                else
+                    utilsStore.ShowModal('Error', updated.message, 'error')            
+            }
+        }          
+    }    
+
+
 })
 </script>
 
@@ -81,8 +207,8 @@ const ValidateForm = ((e) => {
                             <label :class="labelStyle" for="cedula"><strong>Cédula</strong></label>
                         </div>
                         <div :class="inputContainerStyle">
-                            <div class="row col-7">
-                                <input type="number" class="myInput" maxlength="11" id="cedula" v-model="readerCedula">
+                            <div class="row col-10 col-lg-5">
+                                <input type="number" class="myInput" maxlength="11" id="cedula" autofocus v-model="readerCedula">
                             </div>
                         </div>
                     </div>
@@ -92,8 +218,8 @@ const ValidateForm = ((e) => {
                             <label :class="labelStyle" for="names"><strong>Nombres</strong></label>
                         </div>
                         <div :class="inputContainerStyle">
-                            <div class="row col-12">
-                                <input type="text" class="myInput" maxlength="60" id="names" autofocus v-model="readerNames">
+                            <div class="row col-10 col-lg-6">
+                                <input type="text" class="myInput" maxlength="60" id="names" v-model="readerNames">
                             </div>
                         </div>
                     </div>
@@ -103,8 +229,8 @@ const ValidateForm = ((e) => {
                             <label :class="labelStyle" for="surnames"><strong>Apellidos</strong></label>
                         </div>
                         <div :class="inputContainerStyle">
-                            <div class="row col-12">
-                                <input type="text" class="myInput" maxlength="60" id="surnames" autofocus v-model="readerSurnames">
+                            <div class="row col-10 col-lg-6">
+                                <input type="text" class="myInput" maxlength="60" id="surnames" v-model="readerSurnames">
                             </div>
                         </div>
                     </div>
@@ -114,8 +240,8 @@ const ValidateForm = ((e) => {
                             <label :class="labelStyle" for="phone"><strong>Teléfono</strong></label>
                         </div>
                         <div :class="inputContainerStyle">
-                            <div class="row col-12">
-                                <input type="text" class="myInput" minlength="10" maxlength="16" id="phone" autofocus v-model="readerPhone">
+                            <div class="row col-10 col-lg-5">
+                                <input type="text" class="myInput" minlength="10" maxlength="15" id="phone" v-model="readerPhone">
                             </div>
                         </div>
                     </div>
@@ -126,13 +252,26 @@ const ValidateForm = ((e) => {
                         </div>
                         <div :class="inputContainerStyle">
                             <div class="row col-12">
-                                <div class="row col-12 col-lg-5 m-0 p-0 my-1">
+                                <div class="row col-12 col-lg-3 m-0 p-0 my-1">
                                     <label class="col-6 text-end" for="gender-m">M</label>
                                     <input class="col-1" type="radio" id="gender-m" name="gender" value="M" v-model="readerGender">
                                 </div>
-                                <div class="row col-12 col-lg-5 m-0 p-0 my-1">
+                                <div class="row col-12 col-lg-3 m-0 p-0 my-1">
                                     <label class="col-6 text-end" for="gender-f">F</label>
                                     <input class="col-1" type="radio" id="gender-f" name="gender" value="F" v-model="readerGender">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div :class="formRowStyle">
+                        <div :class="labelContainerStyle">
+                            <label :class="labelStyle" for="birthdate"><strong>Fecha de nacimiento</strong></label>
+                        </div>
+                        <div :class="inputContainerStyle">
+                            <div class="row col-12">
+                                <div class="row col-12 col-lg-5 m-0 p-0 my-1">
+                                    <input class="col-12 myInput" type="date" id="birthdate" name="birthdate" value="" v-model="readerBirthdate">
                                 </div>
                             </div>
                         </div>
@@ -145,11 +284,30 @@ const ValidateForm = ((e) => {
                         <div :class="inputContainerStyle">
                             <div class="row col-12">
                                 <div class="row col-12 col-lg-5 m-0 p-0 my-1">
-                                    <input class="col-1" type="checkbox" id="teacher" name="teacher" value="1" v-model="readerIsTeacher">
+                                    <input class="col-1 mx-auto mx-lg-0" type="checkbox" id="teacher" name="teacher" value="1" v-model="readerIsTeacher">
                                 </div>
                             </div>
                         </div>
                     </div>       
+
+                    <div class="row m-0 p-0 justify-content-center my-2 mt-5">
+                        <div class="row m-0 p-0 col-12 justify-content-center">
+                            <button class="col-6 col-lg-3 myBtn terciary-btn shadowed-l h3">
+                                {{ Object.keys(props.targetReader).length === 0 ? 'Registrar ' : 'Modificar ' }}
+                            </button>
+                        </div>
+                    </div>
+        
+                    <div v-if="formErrors.length > 0" class="row m-0 p-0 justify-content-center my-2 mt-2">
+                        <ul class="row m-0 p-0 col-12 justify-content-center list-unstyled text-center text-danger fs-5">
+                            <li 
+                            v-for="error, index in formErrors"
+                            :key="index"
+                            >
+                                {{ error }}
+                            </li>  
+                        </ul>
+                    </div>
                     
                 </div>    
             </div>
