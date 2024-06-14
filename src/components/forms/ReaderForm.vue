@@ -123,7 +123,6 @@ const ValidateForm = (async (e) => {
     if(readerIsTeacher.value === '')
         readerIsTeacher.value = '0'
 
-    console.log(readerIsTeacher.value[0])
     if(!['0', '1'].includes(readerIsTeacher.value[0])){
         formErrors.value.push('El campo es docente debe ser 1 o 0')
     }
