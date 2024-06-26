@@ -7,19 +7,18 @@ import useUtilsStore from './utils'
 import useSessionStore from '@/stores/session.js'
 
 const apiConfig = new ApiConfig()
-const useReaderStore = defineStore('readers', {
+const useUserStore = defineStore('users', {
     state: () => {
         return {
-            readers: ref([]),
-            errorMessage: ref('')
+            users: ref([])
         }
     },
     actions:{
-        async CreateReader(readerData){
+        async CreateUser(userData){
             const sessionStore = useSessionStore()
             let result = {}
             try{
-                let url = apiConfig.base_url + '/readers'
+                let url = apiConfig.base_url + '/users'
                 var fetchHeaders = {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -31,7 +30,7 @@ const useReaderStore = defineStore('readers', {
                 let fetchConfig = {
                     method: 'POST',
                     headers: fetchHeaders,
-                    body: JSON.stringify(readerData)
+                    body: JSON.stringify(userData)
                 }
 
                 let response = await fetch(url, fetchConfig)
@@ -39,17 +38,17 @@ const useReaderStore = defineStore('readers', {
                 result = await json                
             }
             catch(error){
-                result = {success: false, message: 'Ocurrió un error inesperado al crear el lector'}
+                result = {success: false, message: 'Ocurrió un error inesperado al crear el usuario'}
             }
 
             return result
         },
 
-        async FetchReaders(){
+        async FetchUsers(){
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
-                let url = apiConfig.base_url + '/readers'
+                let url = apiConfig.base_url + '/users'
                 var fetchHeaders = {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -67,20 +66,20 @@ const useReaderStore = defineStore('readers', {
                 let json = await response.json()
                 let result = await json
                 if(result.success)
-                    this.readers.value = result.readers
+                    this.users.value = result.users
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los lectores', 'error')
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los usuarios', 'error')
             }
         },
 
-        async FetchReaderById(id){
-            var targetReader = false
+        async FetchUserById(id){
+            var targetUser = false
             const sessionStore = useSessionStore()
             try{
-                let url = apiConfig.base_url + '/readers/' + id
+                let url = apiConfig.base_url + '/users/' + id
                 var fetchHeaders = {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -98,24 +97,23 @@ const useReaderStore = defineStore('readers', {
                 let json = await response.json()
                 let result = await json
                 if(result.success){
-                    targetReader = result.reader
-                    
+                    targetUser = result.user                    
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar el lector solicitado: ' + error.message, 'error')
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar el usuario solicitado: ' + error.message, 'error')
             }
 
-            return targetReader
+            return targetUser
         },
 
-        async UpdateReader(readerId, readerData){
+        async UpdateUser(userId, userData){
             const sessionStore = useSessionStore()
             let result = {}
             try{
-                let url = apiConfig.base_url + '/readers/' + readerId
+                let url = apiConfig.base_url + '/users/' + userId
                 var fetchHeaders = {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -127,7 +125,7 @@ const useReaderStore = defineStore('readers', {
                 let fetchConfig = {
                     method: 'PUT',
                     headers: fetchHeaders,
-                    body: JSON.stringify(readerData)
+                    body: JSON.stringify(userData)
                 }
 
                 let response = await fetch(url, fetchConfig)
@@ -135,7 +133,7 @@ const useReaderStore = defineStore('readers', {
                 result = await json                
             }
             catch(error){
-                result = {success: false, message: 'Ocurrió un error inesperado al intentar actualizar el lector'}
+                result = {success: false, message: 'Ocurrió un error inesperado al intentar actualizar el usuario'}
             }
 
             return result
@@ -143,4 +141,4 @@ const useReaderStore = defineStore('readers', {
     }
 })
 
-export default useReaderStore
+export default useUserStore

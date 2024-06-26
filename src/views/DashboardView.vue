@@ -209,7 +209,7 @@ onMounted( async () => {
             </article>
           </template>
 
-          <template v-if="sessionStore.userData.permissons.includes('Editores') || sessionStore.userData.permissons.includes('Admin')">
+          <template v-if="sessionStore.userData.permissons.includes('Editor') || sessionStore.userData.permissons.includes('Admin')">
             <article :class="articleStyle">
               <div :class="articleWrappedStyle">
                 <h4 :class="h4Style">
@@ -217,7 +217,7 @@ onMounted( async () => {
                 </h4>
                 <div :class="linkContainersStyle">
                   <div :class="linkElementStyle">
-                    <router-link :class="routerLinkStyle" :to="{name: 'books'}">
+                    <router-link :class="routerLinkStyle" :to="{name: 'add_user'}">
                       <i :class="'fa fa-plus text-success ' + iconStyle" ></i>
                       <span :class="linkTextStyle">
                         Nuevo usuario
@@ -225,7 +225,7 @@ onMounted( async () => {
                     </router-link>
                   </div>
                   <div :class="linkElementStyle">
-                    <router-link :class="routerLinkStyle" :to="{name: 'books'}">
+                    <router-link :class="routerLinkStyle" :to="{name: 'users'}">
                       <i :class="'fa fa-user ' + iconStyle" ></i>
                       <span :class="linkTextStyle">
                         Ver usuarios

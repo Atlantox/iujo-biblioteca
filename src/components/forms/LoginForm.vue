@@ -28,7 +28,7 @@ const ValidateForm = (async (e) => {
             sessionStore.authenticated = true
             sessionStore.token = loginResult.value.token
             sessionStore.userData = loginResult.value.userData
-            window.location.href = '/'
+            window.location.href = '/dashboard'
         }
         else{
             utilsStore.ShowModal('Error', loginResult.value.message, 'error')

@@ -76,9 +76,34 @@ class UserModel(BaseModel):
 
         return tentativeToken
     
+    def GetUsersPublicData(self):
+        cursor = self.connection.connection.cursor()
+        sql = '''
+            SELECT 
+            id, 
+            nickname, 
+            level, 
+            CONCAT(YEAR(created_at), '-', LPAD(MONTH(created_at), 2, '0'), '-', LPAD(DAY(created_at), 2, '0')) AS created_at, 
+            active 
+            FROM 
+            user'''
+        
+        cursor.execute(sql,)
+        users = cursor.fetchall()
+        return users
+    
     def GetUserPublicData(self, token):
         cursor = self.connection.connection.cursor()
-        sql = 'SELECT id, nickname, level, active FROM user WHERE token = %s'
+        sql = '''
+            SELECT 
+            id, 
+            nickname, 
+            level, 
+            CONCAT(YEAR(created_at), '-', LPAD(MONTH(created_at), 2, '0'), '-', LPAD(DAY(created_at), 2, '0')) AS created_at, 
+            active 
+            FROM 
+            user
+            WHERE token = %s'''
         
         cursor.execute(sql, (token,))
         targetUser = cursor.fetchone()

@@ -11,6 +11,7 @@ import LoanFormView from '../views/forms/LoanFormView.vue'
 import ReaderFormView from '../views/forms/ReaderFormView.vue'
 import EditorialFormView from '../views/forms/EditorialFormView.vue'
 import AuthorFormView from '@/views/forms/AuthorFormView.vue'
+import UserFormView from '@/views/forms/UserFormView.vue'
 
 import SearchBooksView from '../views/tables/SearchBooksView.vue'
 import SearchLoanView from '../views/tables/SearchLoanView.vue'
@@ -18,10 +19,12 @@ import SearchReadersView from '../views/tables/SearchReadersView.vue'
 import SearchCategoryView from '@/views/tables/SearchCategoryView.vue'
 import SearchAuthorsView from '@/views/tables/SearchAuthorsView.vue'
 import SearchEditorialsView from '@/views/tables/SearchEditorialsView.vue'
+import SearchUsersView from '@/views/tables/SearchUsersView.vue'
 
 import SeeBookView from '../views/SeeBookView.vue'
 import SeeLoanView from '../views/SeeLoanView.vue'
 import SeeReaderView from '../views/SeeReaderView.vue'
+import SeeUserView from '../views/SeeUserView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -43,6 +46,7 @@ const router = createRouter({
       component: DashboardView,
       meta:{ requireAuth: true }
     },
+
     // BOOKS
     {
       path: '/search_books',
@@ -60,6 +64,7 @@ const router = createRouter({
       component: BookFormView,
       meta:{ requireAuth: true, bookPermisson: true }
     },
+
     // EDITORIALS
     {
       path: '/add_editorial/:id?',
@@ -71,6 +76,7 @@ const router = createRouter({
       name: 'editorials',
       component: SearchEditorialsView
     },
+
     // AUTHORS
     {
       path: '/add_author/:id?',
@@ -82,6 +88,7 @@ const router = createRouter({
       name: 'authors',
       component: SearchAuthorsView
     },
+
     // CATEGORIES
     {
       path: '/search_categories',
@@ -89,6 +96,7 @@ const router = createRouter({
       component: SearchCategoryView,
       meta:{ requireAuth: true, categoryPermisson: true }
     },
+    
     // LOANS
     {
       path: '/add_loan/:id?',
@@ -108,6 +116,7 @@ const router = createRouter({
       component: SeeLoanView,
       meta:{ requireAuth: true, loanPermisson: true }
     },
+
     // READERS
     {
       path: '/add_reader/:id?',
@@ -126,6 +135,26 @@ const router = createRouter({
       name: 'see_reader',
       component: SeeReaderView,
       meta:{ requireAuth: true, readerPermisson: true }
+    },
+
+    // USERS
+    {
+      path: '/add_user/:id?',
+      name: 'add_user',
+      component: UserFormView,
+      meta:{ requireAuth: true, editorPermisson: true }
+    },
+    {
+      path: '/search_users',
+      name: 'users',
+      component: SearchUsersView,
+      meta:{ requireAuth: true, editorPermisson: true }
+    },
+    {
+      path: '/see_user/:id',
+      name: 'see_user',
+      component: SeeUserView,
+      meta:{ requireAuth: true, editorPermisson: true }
     },
   ]
 })
@@ -152,6 +181,10 @@ router.beforeEach((to, from, next) => {
       }
 
       if(to.meta.categoryPermisson && !(sessionStore.userData.permissons.includes('Categorías'))){
+        routeOk = false
+      }
+
+      if(to.meta.editorPermisson && !(sessionStore.userData.permissons.includes('Editor'))){
         routeOk = false
       }
     }

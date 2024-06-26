@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.1.0
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-06-2024 a las 21:51:34
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.0.30
+-- Tiempo de generación: 26-06-2024 a las 02:40:33
+-- Versión del servidor: 10.4.18-MariaDB
+-- Versión de PHP: 8.0.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `author` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `author`
@@ -54,7 +54,7 @@ CREATE TABLE `binnacle` (
   `user` int(11) NOT NULL,
   `action` text NOT NULL,
   `date` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `binnacle`
@@ -178,7 +178,50 @@ INSERT INTO `binnacle` (`id`, `user`, `action`, `date`) VALUES
 (115, 1, 'Creó el estado de libro Nuevecito22', '2024-06-10 15:33:33'),
 (116, 1, 'Eliminó el estado de libro \"Nuevecito22\"', '2024-06-10 15:33:41'),
 (117, 10, 'Creó el autor Miguelito', '2024-06-10 15:41:23'),
-(118, 10, 'Renombró el autor \"Miguelito22\" por \"Miguelito\" ', '2024-06-10 15:50:47');
+(118, 10, 'Renombró el autor \"Miguelito22\" por \"Miguelito\" ', '2024-06-10 15:50:47'),
+(119, 10, 'Creó la editorial nuevote', '2024-06-13 19:44:38'),
+(120, 10, 'Creó al lector adfaefdasdas de cédula 13434114', '2024-06-13 21:23:55'),
+(121, 10, 'Editó los campos birthdate, is_teacher del lector de id 5', '2024-06-13 21:55:09'),
+(122, 10, 'Editó los campos birthdate, is_teacher del lector de id 5', '2024-06-13 21:55:13'),
+(123, 10, 'Editó los campos birthdate, is_teacher del lector de id 5', '2024-06-13 21:55:51'),
+(124, 10, 'Editó los campos birthdate, is_teacher del lector de id 5', '2024-06-13 21:56:10'),
+(125, 10, 'Editó los campos birthdate, is_teacher del lector de id 5', '2024-06-13 21:56:24'),
+(126, 10, 'Editó los campos birthdate, is_teacher del lector de id 5', '2024-06-13 21:56:35'),
+(127, 10, 'Editó los campos birthdate, is_teacher del lector de id 5', '2024-06-13 21:56:46'),
+(128, 10, 'Editó los campos birthdate, is_teacher del lector de id 5', '2024-06-13 21:56:56'),
+(129, 10, 'Editó los campos birthdate del lector de id 5', '2024-06-13 21:57:28'),
+(130, 10, 'Editó los campos birthdate del lector de id 5', '2024-06-13 21:57:48'),
+(131, 10, 'Creó al lector Raul de cédula 32165498', '2024-06-25 17:35:32'),
+(132, 10, 'Creó al lector hdryhft de cédula 3563636', '2024-06-25 18:06:36'),
+(133, 10, 'Editó los campos birthdate, is_teacher del lector de id 9', '2024-06-25 18:49:06'),
+(134, 10, 'Editó los campos birthdate, is_teacher del lector de id 9', '2024-06-25 18:49:23'),
+(135, 10, 'Editó los campos gender, birthdate, is_teacher del lector de id 9', '2024-06-25 18:49:31'),
+(136, 10, 'Editó los campos birthdate, phone, is_teacher del lector de id 9', '2024-06-25 18:49:39'),
+(137, 10, 'Editó los campos surnames, birthdate, phone, is_teacher del lector de id 9', '2024-06-25 18:49:49'),
+(138, 10, 'Editó los campos names, surnames, birthdate, phone, is_teacher del lector de id 9', '2024-06-25 18:49:58'),
+(139, 10, 'Editó los campos birthdate, phone, is_teacher del lector de id 9', '2024-06-25 18:53:31'),
+(140, 10, 'Editó los campos surnames, birthdate, phone, is_teacher del lector de id 9', '2024-06-25 18:53:38'),
+(141, 10, 'Editó los campos cedula, birthdate, is_teacher del lector de id 9', '2024-06-25 18:53:49'),
+(142, 10, 'Editó los campos birthdate, is_teacher del lector de id 9', '2024-06-25 18:54:56'),
+(143, 10, 'Editó los campos birthdate, is_teacher del lector de id 9', '2024-06-25 18:55:04'),
+(144, 10, 'Editó los campos birthdate, is_teacher del lector de id 9', '2024-06-25 18:55:35'),
+(145, 10, 'Editó los campos birthdate, is_teacher del lector de id 9', '2024-06-25 18:55:51'),
+(146, 10, 'Editó los campos birthdate, is_teacher del lector de id 9', '2024-06-25 18:57:08'),
+(147, 10, 'Editó los campos birthdate, is_teacher del lector de id 9', '2024-06-25 18:57:26'),
+(148, 10, 'Editó los campos birthdate del lector de id 9', '2024-06-25 18:58:26'),
+(149, 10, 'Editó los campos birthdate del lector de id 9', '2024-06-25 18:58:44'),
+(150, 10, 'Editó los campos birthdate del lector de id 9', '2024-06-25 18:59:07'),
+(151, 10, 'Editó los campos birthdate del lector de id 9', '2024-06-25 18:59:25'),
+(152, 10, 'Editó los campos birthdate del lector de id 9', '2024-06-25 19:08:38'),
+(153, 10, 'Editó los campos birthdate del lector de id 9', '2024-06-25 19:15:23'),
+(154, 10, 'Editó los campos cedula del lector de id 9', '2024-06-25 19:22:43'),
+(155, 10, 'Editó los campos cedula, is_teacher del lector de id 9', '2024-06-25 19:22:47'),
+(156, 10, 'Editó los campos gender del lector de id 9', '2024-06-25 19:23:08'),
+(157, 10, 'Editó los campos is_teacher del lector de id 9', '2024-06-25 19:23:15'),
+(158, 10, 'Editó los campos birthdate, is_teacher del lector de id 9', '2024-06-25 19:23:22'),
+(159, 10, 'Editó los campos phone, is_teacher del lector de id 9', '2024-06-25 19:23:34'),
+(160, 10, 'Atlantox ha ingresado al sistema', '2024-06-25 19:45:08'),
+(161, 10, 'Atlantox ha ingresado al sistema', '2024-06-25 19:46:04');
 
 -- --------------------------------------------------------
 
@@ -197,7 +240,7 @@ CREATE TABLE `book` (
   `description` text NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `state` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `book`
@@ -223,7 +266,7 @@ CREATE TABLE `book_category` (
   `id` int(11) NOT NULL,
   `book` int(11) NOT NULL,
   `category` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `book_category`
@@ -254,7 +297,7 @@ INSERT INTO `book_category` (`id`, `book`, `category`) VALUES
 CREATE TABLE `category` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `category`
@@ -281,7 +324,7 @@ INSERT INTO `category` (`id`, `name`) VALUES
 CREATE TABLE `editorial` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `editorial`
@@ -291,6 +334,7 @@ INSERT INTO `editorial` (`id`, `name`) VALUES
 (4, 'Editorial editada'),
 (3, 'Editorial vieja'),
 (2, 'El EteSechu'),
+(6, 'nuevote'),
 (1, 'Shizukazin'),
 (5, 'UwU Cats2');
 
@@ -309,7 +353,7 @@ CREATE TABLE `loan` (
   `return_date` datetime DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `active` tinyint(1) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `loan`
@@ -333,7 +377,7 @@ CREATE TABLE `permisson` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
   `level` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `permisson`
@@ -377,7 +421,7 @@ CREATE TABLE `reader` (
   `birthdate` date NOT NULL,
   `phone` varchar(16) NOT NULL,
   `is_teacher` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `reader`
@@ -388,7 +432,10 @@ INSERT INTO `reader` (`id`, `cedula`, `names`, `surnames`, `gender`, `birthdate`
 (3, '28019228', 'Gabriel Alberto', 'Silva Montilla', 'M', '2001-03-02', '04163567008', 0),
 (4, '7474747', 'Pepito Fracisco', 'Gallegos Arroyo', 'M', '2014-03-02', '04163567008', 0),
 (5, '85967412', 'Magda', 'Perozo', 'F', '1989-04-09', '04163567008', 1),
-(6, '12345678', 'Jaime Pedro', 'Altozano Rajoy', 'M', '1975-08-26', '04168759225', 0);
+(6, '12345678', 'Jaime Pedro', 'Altozano Rajoy', 'M', '1975-08-26', '04168759225', 0),
+(7, '13434114', 'adfaefdasdas', 'sfgfsgsfgfssdfg', 'M', '2014-06-06', 'sfsdfsdfsdfsdf', 0),
+(8, '32165498', 'Raul', 'Sequera', 'M', '2014-06-19', '04163567008', 0),
+(9, '3563630', 'Ramón Luis', 'Gallegos', 'F', '2014-03-05', '8684562451', 0);
 
 -- --------------------------------------------------------
 
@@ -398,7 +445,7 @@ INSERT INTO `reader` (`id`, `cedula`, `names`, `surnames`, `gender`, `birthdate`
 
 CREATE TABLE `state` (
   `name` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `state`
@@ -419,27 +466,28 @@ CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `nickname` varchar(50) NOT NULL,
   `level` varchar(20) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `username` varchar(200) NOT NULL,
   `password` varchar(200) NOT NULL,
   `token` varchar(200) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `user`
 --
 
-INSERT INTO `user` (`id`, `nickname`, `level`, `username`, `password`, `token`, `active`) VALUES
-(1, 'Atlantox7', 'Admin', '$argon2id$v=19$m=65536,t=3,p=4$3AS4idk0Vww0t4Sb01WeTA$jGz2iJeNl6gDxT2fMeWDqSoxQFQDGMiKysTEl77zrtE', '$argon2id$v=19$m=65536,t=3,p=4$ZdHbxL0d8wcfNPlDgenj+A$fl4pfvgOkUwHLCjxIAP5d794CGpc13YWcDrOWgrvtak', 'd4239cd0-77e5-4d73-bb73-7ba3e9ecbc00-b4828893-f47d-47fe-a5f0-128b13e8a786', 1),
-(2, 'El pepito', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$sp8mhZbVtyUACABltP8eCg$XlidoVZSzekOnHySDnU/kRYAKs8Ud8B4N/HMyxLQCuE', '$argon2id$v=19$m=65536,t=3,p=4$rQF6bSodODC/FDhfDiAsyw$tmoSw54ricWjwJdTi2wjuox93J5FEt9JHDly3tcDFco', '9559e961-3d82-4013-ac43-1071ae4bbea9-48f22212-d27f-439d-a32e-9c7facdc62c2', 1),
-(3, 'El pepito2', 'Admin', '$argon2id$v=19$m=65536,t=3,p=4$sC68eq03u8/8VvWIlE7V2w$8zFKttxeLrzFfxzoCv38GzAnNGEdln7SamRwOV+1GRY', '$argon2id$v=19$m=65536,t=3,p=4$bHwiNX9DS0r6cPzgUELkUA$XBm8tql9z9n6rvaSX1YAcbyI5ht97u8lLTnFczr4uak', '73361c62-9340-4c9e-9dd3-33a73547d761-029002f7-f5a7-4c99-bdd4-2d179f024977', 1),
-(4, 'El pepito3', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$LpxdH78OEo+g1pjBUaK04Q$HqgbgCdtTM4GaXFZ2ZqLmQv6gMs46Ot5c3Y5Am9LMsY', '$argon2id$v=19$m=65536,t=3,p=4$pkySPKBSNnOnewqZdy67Ww$gUgbBU6aqv5xEtiSdWYRDqoYcBVxCVafxysh4vvxnaY', '08bc0ff1-132b-40b4-ad58-c196890dee56-2ded1689-f8da-4534-9abe-67247860d3ab', 1),
-(5, 'El pepito4', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$cpWY38BOtU9Obhe3DR3bhA$XLJGqZHPj1WwsM9OL6JMR2yxTWkzjXwPO1Mw6KP1t2I', '$argon2id$v=19$m=65536,t=3,p=4$Wlmnwt6OoPS40ziRz3qwAQ$yFOrGDhX1sE5VjMiOzZgPz+fbwDBGGIwRWl/DkgL8vY', '876bbab3-5890-457b-888b-69c2acfc8a00-c0938fd2-a87d-4451-a865-fe8405df6122', 1),
-(6, 'El pepito5', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$jXGc7XJH4hQT3EOUnaG1uA$1x+TERIFqhg2mZshTx2l+mju0tkap4gSoJ1wFnu7j20', '$argon2id$v=19$m=65536,t=3,p=4$3ibE1pMM3ILiSFWS0bvLYg$Xq6xfDW7TdzXaGCd7KGQcMTclfiR6djZ0kZey/iKmsI', 'c6d08108-8771-46b0-adac-f5ce0c03f8ba-3972822d-3b25-4f54-9f43-c9f134eb266a', 1),
-(7, 'El pepito6', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$NqtGczl0CGAQlsjt55K79g$NdQWA4SWVJ/h+I14AA6CWZOJ0sBs6asyrNzPJpK8N0U', '$argon2id$v=19$m=65536,t=3,p=4$TMNXWRrkjSqdYirkW/q7DQ$1JXU038KTPR6PX0LBZuf9FtEbJ9P7J6a79NKi5tSoco', '1ccd1e8a-8272-49a9-a93b-af486ec03a8b-e33f60bc-38b5-4811-a889-04fec04acc4a', 1),
-(8, 'El pepito7', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$wkHf2sGs7rzpZr8NnxVpCg$qEP5Xdq2Ug2woLQZGgsVYr/ZcO7rm5jaP3SR0P37UGE', '$argon2id$v=19$m=65536,t=3,p=4$0oU/JC3TILOLMY8MHLgQbg$fa5pLqaom4IjiaL6In8wM0BTCYcBEW3yiN5JuKJ1ny0', 'bc7b23dd-63e4-4624-83d4-e2deeb0f3b05-ec23053e-925d-4e4f-ba67-6eff9ea464b3', 1),
-(9, 'El pepito8', 'Editor', '$argon2id$v=19$m=65536,t=3,p=4$vQfLmfv2+sGfhhFgruSzfA$PgYiH9XFyggzKsZA4P7tZozj32u8NXi0pPhpvd/RLtY', '$argon2id$v=19$m=65536,t=3,p=4$8vf2Q2qT5OoGFfOpMcCC1A$D9CvCFc2PBJI51YAW4uW8ZswGEgJZWVmCzy7VlLGi68', '45ec7c08-aca4-4c1a-9cdf-cbb9c54ff128-27f6b3b2-50c9-48ac-ba63-3103b995561c', 1),
-(10, 'Atlantox', 'Admin', '$argon2id$v=19$m=65536,t=3,p=4$am1VC7JJtJEwA6YHympJfA$g7uf84pTXJKeq5QsUGqDacFoj54gR35J9uwf9KFsX7M', '$argon2id$v=19$m=65536,t=3,p=4$ISIMPRqNxz8MHYV3iuBYWg$tiPy3KFUbTTRqoormbEbXOcPnVogoDvwppMvGtUYjO8', 'dcd78902-70b4-40a2-9c17-b7a0486e9980-5f031834-7798-4cb4-a77b-114b3a7b8d6f', 1);
+INSERT INTO `user` (`id`, `nickname`, `level`, `created_at`, `username`, `password`, `token`, `active`) VALUES
+(1, 'Atlantox7', 'Admin', '2024-06-25 19:49:47', '$argon2id$v=19$m=65536,t=3,p=4$3AS4idk0Vww0t4Sb01WeTA$jGz2iJeNl6gDxT2fMeWDqSoxQFQDGMiKysTEl77zrtE', '$argon2id$v=19$m=65536,t=3,p=4$ZdHbxL0d8wcfNPlDgenj+A$fl4pfvgOkUwHLCjxIAP5d794CGpc13YWcDrOWgrvtak', 'd4239cd0-77e5-4d73-bb73-7ba3e9ecbc00-b4828893-f47d-47fe-a5f0-128b13e8a786', 1),
+(2, 'El pepito', 'Editor', '2024-06-25 19:49:47', '$argon2id$v=19$m=65536,t=3,p=4$sp8mhZbVtyUACABltP8eCg$XlidoVZSzekOnHySDnU/kRYAKs8Ud8B4N/HMyxLQCuE', '$argon2id$v=19$m=65536,t=3,p=4$rQF6bSodODC/FDhfDiAsyw$tmoSw54ricWjwJdTi2wjuox93J5FEt9JHDly3tcDFco', '9559e961-3d82-4013-ac43-1071ae4bbea9-48f22212-d27f-439d-a32e-9c7facdc62c2', 1),
+(3, 'El pepito2', 'Admin', '2024-06-25 19:49:47', '$argon2id$v=19$m=65536,t=3,p=4$sC68eq03u8/8VvWIlE7V2w$8zFKttxeLrzFfxzoCv38GzAnNGEdln7SamRwOV+1GRY', '$argon2id$v=19$m=65536,t=3,p=4$bHwiNX9DS0r6cPzgUELkUA$XBm8tql9z9n6rvaSX1YAcbyI5ht97u8lLTnFczr4uak', '73361c62-9340-4c9e-9dd3-33a73547d761-029002f7-f5a7-4c99-bdd4-2d179f024977', 1),
+(4, 'El pepito3', 'Editor', '2024-06-25 19:49:47', '$argon2id$v=19$m=65536,t=3,p=4$LpxdH78OEo+g1pjBUaK04Q$HqgbgCdtTM4GaXFZ2ZqLmQv6gMs46Ot5c3Y5Am9LMsY', '$argon2id$v=19$m=65536,t=3,p=4$pkySPKBSNnOnewqZdy67Ww$gUgbBU6aqv5xEtiSdWYRDqoYcBVxCVafxysh4vvxnaY', '08bc0ff1-132b-40b4-ad58-c196890dee56-2ded1689-f8da-4534-9abe-67247860d3ab', 0),
+(5, 'El pepito4', 'Editor', '2024-06-25 19:49:47', '$argon2id$v=19$m=65536,t=3,p=4$cpWY38BOtU9Obhe3DR3bhA$XLJGqZHPj1WwsM9OL6JMR2yxTWkzjXwPO1Mw6KP1t2I', '$argon2id$v=19$m=65536,t=3,p=4$Wlmnwt6OoPS40ziRz3qwAQ$yFOrGDhX1sE5VjMiOzZgPz+fbwDBGGIwRWl/DkgL8vY', '876bbab3-5890-457b-888b-69c2acfc8a00-c0938fd2-a87d-4451-a865-fe8405df6122', 1),
+(6, 'El pepito5', 'Editor', '2024-06-25 19:49:47', '$argon2id$v=19$m=65536,t=3,p=4$jXGc7XJH4hQT3EOUnaG1uA$1x+TERIFqhg2mZshTx2l+mju0tkap4gSoJ1wFnu7j20', '$argon2id$v=19$m=65536,t=3,p=4$3ibE1pMM3ILiSFWS0bvLYg$Xq6xfDW7TdzXaGCd7KGQcMTclfiR6djZ0kZey/iKmsI', 'c6d08108-8771-46b0-adac-f5ce0c03f8ba-3972822d-3b25-4f54-9f43-c9f134eb266a', 1),
+(7, 'El pepito6', 'Editor', '2024-06-25 19:49:47', '$argon2id$v=19$m=65536,t=3,p=4$NqtGczl0CGAQlsjt55K79g$NdQWA4SWVJ/h+I14AA6CWZOJ0sBs6asyrNzPJpK8N0U', '$argon2id$v=19$m=65536,t=3,p=4$TMNXWRrkjSqdYirkW/q7DQ$1JXU038KTPR6PX0LBZuf9FtEbJ9P7J6a79NKi5tSoco', '1ccd1e8a-8272-49a9-a93b-af486ec03a8b-e33f60bc-38b5-4811-a889-04fec04acc4a', 1),
+(8, 'El pepito7', 'Editor', '2024-06-25 19:49:47', '$argon2id$v=19$m=65536,t=3,p=4$wkHf2sGs7rzpZr8NnxVpCg$qEP5Xdq2Ug2woLQZGgsVYr/ZcO7rm5jaP3SR0P37UGE', '$argon2id$v=19$m=65536,t=3,p=4$0oU/JC3TILOLMY8MHLgQbg$fa5pLqaom4IjiaL6In8wM0BTCYcBEW3yiN5JuKJ1ny0', 'bc7b23dd-63e4-4624-83d4-e2deeb0f3b05-ec23053e-925d-4e4f-ba67-6eff9ea464b3', 1),
+(9, 'El pepito8', 'Editor', '2024-06-25 19:49:47', '$argon2id$v=19$m=65536,t=3,p=4$vQfLmfv2+sGfhhFgruSzfA$PgYiH9XFyggzKsZA4P7tZozj32u8NXi0pPhpvd/RLtY', '$argon2id$v=19$m=65536,t=3,p=4$8vf2Q2qT5OoGFfOpMcCC1A$D9CvCFc2PBJI51YAW4uW8ZswGEgJZWVmCzy7VlLGi68', '45ec7c08-aca4-4c1a-9cdf-cbb9c54ff128-27f6b3b2-50c9-48ac-ba63-3103b995561c', 0),
+(10, 'Atlantox', 'Admin', '2024-06-25 19:49:47', '$argon2id$v=19$m=65536,t=3,p=4$am1VC7JJtJEwA6YHympJfA$g7uf84pTXJKeq5QsUGqDacFoj54gR35J9uwf9KFsX7M', '$argon2id$v=19$m=65536,t=3,p=4$ISIMPRqNxz8MHYV3iuBYWg$tiPy3KFUbTTRqoormbEbXOcPnVogoDvwppMvGtUYjO8', 'dcd78902-70b4-40a2-9c17-b7a0486e9980-5f031834-7798-4cb4-a77b-114b3a7b8d6f', 1);
 
 -- --------------------------------------------------------
 
@@ -449,7 +497,7 @@ INSERT INTO `user` (`id`, `nickname`, `level`, `username`, `password`, `token`, 
 
 CREATE TABLE `user_level` (
   `name` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `user_level`
@@ -568,7 +616,7 @@ ALTER TABLE `author`
 -- AUTO_INCREMENT de la tabla `binnacle`
 --
 ALTER TABLE `binnacle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=162;
 
 --
 -- AUTO_INCREMENT de la tabla `book`
@@ -592,7 +640,7 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT de la tabla `editorial`
 --
 ALTER TABLE `editorial`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `loan`
@@ -610,7 +658,7 @@ ALTER TABLE `permisson`
 -- AUTO_INCREMENT de la tabla `reader`
 --
 ALTER TABLE `reader`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `user`

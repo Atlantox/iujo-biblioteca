@@ -7,23 +7,22 @@ import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue'
 import OnAppearAnimation from '@/utils/ElegantDisplayer'
 
 import useUtilsStore from '@/stores/utils'
-import useReaderStore from '@/stores/readers'
+import useSessionStore from '@/stores/session'
+import useUserStore from '@/stores/users'
 
 
 const utilsStore = useUtilsStore()
-const readerStore = useReaderStore()
-const today = ref(new Date())
+const userStore = useUserStore()
+const sessionStore = useSessionStore()
 
 const mounted = ref(false)
 const formErrors = ref([])
 
-const readerCedula = ref('')
-const readerNames = ref('')
-const readerSurnames = ref('')
-const readerPhone = ref('')
-const readerGender = ref('')
-const readerBirthdate = ref('')
-const readerIsTeacher = ref([])
+const userNickname = ref('')
+const userLevel = ref('')
+const userUsername = ref('')
+const userPassword = ref('')
+const userActive = ref('')
 
 const formRowStyle = 'row m-0 p-0 justify-content-center my-2'
 const labelContainerStyle = 'row m-0 p-0 col-12 col-md-3'
@@ -31,43 +30,19 @@ const labelStyle = 'text-center text-md-end'
 const inputContainerStyle = 'row m-0 p-0 col-12 col-md-7 justify-content-center justify-content-md-start'
 
 const props = defineProps({
-    'targetReader': Object
+    'targetUser': Object
 })
 
 const emits = defineEmits(['formOk'])
 
 onMounted(() => {
-
-    var year = today.value.getFullYear() - 10
-    var month = today.value.getMonth() + 1
-    if(month < 10) month = '0' + month
-    var day = today.value.getDate()
-    if(day < 10) day = '0' + day
-    today.value = year + '-' + month + '-' + day
-
-    const birthdateInput = document.getElementById('birthdate')
-    birthdateInput.max = today.value
     OnAppearAnimation('hide-up')
-    if(Object.keys(props.targetReader).length !== 0){
-        readerCedula.value = props.targetReader.cedula
-        readerNames.value = props.targetReader.names
-        readerSurnames.value = props.targetReader.surnames
-        readerPhone.value = props.targetReader.phone
-        readerGender.value = props.targetReader.gender
-        if(props.targetReader.is_teacher === 0)
-            readerIsTeacher.value = []
-        else
-            readerIsTeacher.value = [1]
-
-        const myDate = new Date(props.targetReader.birthdate)
-        
-        var year = myDate.getFullYear()
-        var month = myDate.getMonth() + 1
-        if(month < 10) month = '0' + month
-        var day = myDate.getDate() + 1
-        if(day < 10) day = '0' + day
-        
-        readerBirthdate.value = year + '-' + month + '-' + day
+    if(Object.keys(props.targetUser).length !== 0){
+        userNickname.value = props.targetUser.cedula
+        userLevel.value = props.targetUser.names
+        userUsername.value = props.targetUser.surnames
+        userPassword.value = props.targetUser.phone
+        userActive.value = props.targetUser.gender
     }
     mounted.value = true
 })
@@ -140,7 +115,7 @@ const ValidateForm = (async (e) => {
 
 
     if(formErrors.value.length === 0){        
-        if(Object.keys(props.targetReader).length === 0){
+        if(Object.keys(props.targetUser).length === 0){
             // Creating the reader
             const cleanReaderData = {
                 'cedula': String(validationStructure['cedula']['value']),
@@ -152,7 +127,7 @@ const ValidateForm = (async (e) => {
                 'is_teacher': readerIsTeacher.value[0],
             }
 
-            const created = await readerStore.CreateReader(cleanReaderData)            
+            const created = await userStore.CreateReader(cleanReaderData)            
             if(created.success){
                 emits('formOk')
                 utilsStore.ShowModal('Success', created.message, 'success')
@@ -171,19 +146,19 @@ const ValidateForm = (async (e) => {
             // Updating the book
             let cleanReaderData = {}
 
-            if(props.targetReader['cedula'] !== String(readerCedula.value)) cleanReaderData['cedula'] = String(readerCedula.value)
-            if(props.targetReader['names'] !== readerNames.value) cleanReaderData['names'] = readerNames.value
-            if(props.targetReader['surnames'] !== readerSurnames.value) cleanReaderData['surnames'] = readerSurnames.value
-            if(props.targetReader['phone'] !== readerPhone.value) cleanReaderData['phone'] = readerPhone.value
-            if(props.targetReader['gender'] !== readerGender.value) cleanReaderData['gender'] = readerGender.value
-            if(props.targetReader['birthdate'] !== readerBirthdate.value) cleanReaderData['birthdate'] = readerBirthdate.value
-            if(props.targetReader['is_teacher'] !== parseInt(readerIsTeacher.value[0])) cleanReaderData['is_teacher'] = readerIsTeacher.value[0]
+            if(props.targetUser['cedula'] !== String(readerCedula.value)) cleanReaderData['cedula'] = String(readerCedula.value)
+            if(props.targetUser['names'] !== readerNames.value) cleanReaderData['names'] = readerNames.value
+            if(props.targetUser['surnames'] !== readerSurnames.value) cleanReaderData['surnames'] = readerSurnames.value
+            if(props.targetUser['phone'] !== readerPhone.value) cleanReaderData['phone'] = readerPhone.value
+            if(props.targetUser['gender'] !== readerGender.value) cleanReaderData['gender'] = readerGender.value
+            if(props.targetUser['birthdate'] !== readerBirthdate.value) cleanReaderData['birthdate'] = readerBirthdate.value
+            if(props.targetUser['is_teacher'] !== parseInt(readerIsTeacher.value[0])) cleanReaderData['is_teacher'] = readerIsTeacher.value[0]
 
             if(Object.keys(cleanReaderData).length === 0)
                 utilsStore.ShowModal('Info', 'No se realizaron cambios', 'info')
             else{
                 console.log(cleanReaderData)
-                const updated = await readerStore.UpdateReader(props.targetReader['id'], cleanReaderData)
+                const updated = await userStore.UpdateReader(props.targetUser['id'], cleanReaderData)
                 if (updated.success){
                     emits('formOk')
                     utilsStore.ShowModal('Success', updated.message, 'success')
@@ -206,63 +181,60 @@ const ValidateForm = (async (e) => {
         <template v-else>
             <div class="col-12 row p-4 pt-5 fs-4 justify-content-around hide-up animated-1">
                 <div class="col-12 col-lg-8 p-2 row myForm shadowed-l rounded lb-bg-terciary-ul justify-content-center">        
+
                     <div :class="formRowStyle">
                         <div :class="labelContainerStyle">
-                            <label :class="labelStyle" for="cedula"><strong>Cédula</strong></label>
+                            <label :class="labelStyle" for="nickname"><strong>Nickname</strong></label>
                         </div>
                         <div :class="inputContainerStyle">
-                            <div class="row col-10 col-lg-5">
-                                <input type="number" class="myInput" maxlength="11" id="cedula" autofocus v-model="readerCedula">
+                            <div class="row col-12 col-lg-8">
+                                <input type="text" class="myInput" maxlength="50" minlength="4" id="nickname" v-model="userNickname">
                             </div>
                         </div>
                     </div>
 
                     <div :class="formRowStyle">
                         <div :class="labelContainerStyle">
-                            <label :class="labelStyle" for="names"><strong>Nombres</strong></label>
+                            <label :class="labelStyle" for="username"><strong>Usuario</strong></label>
                         </div>
                         <div :class="inputContainerStyle">
-                            <div class="row col-10 col-lg-6">
-                                <input type="text" class="myInput" maxlength="60" id="names" v-model="readerNames">
+                            <div class="row col-12 col-lg-8">
+                                <input type="text" class="myInput" maxlength="50" minlength="6" id="username" v-model="userUsername">
                             </div>
                         </div>
                     </div>
 
                     <div :class="formRowStyle">
                         <div :class="labelContainerStyle">
-                            <label :class="labelStyle" for="surnames"><strong>Apellidos</strong></label>
+                            <label :class="labelStyle" for="password"><strong>Password</strong></label>
                         </div>
                         <div :class="inputContainerStyle">
-                            <div class="row col-10 col-lg-6">
-                                <input type="text" class="myInput" maxlength="60" id="surnames" v-model="readerSurnames">
+                            <div class="row col-12 col-lg-8">
+                                <input type="password" class="myInput" maxlength="50" minlength="8" id="password" v-model="userPassword">
                             </div>
                         </div>
                     </div>
 
                     <div :class="formRowStyle">
                         <div :class="labelContainerStyle">
-                            <label :class="labelStyle" for="phone"><strong>Teléfono</strong></label>
-                        </div>
-                        <div :class="inputContainerStyle">
-                            <div class="row col-10 col-lg-5">
-                                <input type="text" class="myInput" minlength="10" maxlength="15" id="phone" v-model="readerPhone">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div :class="formRowStyle">
-                        <div :class="labelContainerStyle">
-                            <label :class="labelStyle" for="gender"><strong>Género</strong></label>
+                            <label :class="labelStyle" for="gender"><strong>Tipo</strong></label>
                         </div>
                         <div :class="inputContainerStyle">
                             <div class="row col-12">
-                                <div class="row col-12 col-lg-3 m-0 p-0 my-1">
-                                    <label class="col-6 text-end" for="gender-m">M</label>
-                                    <input class="col-1 my-auto" type="radio" id="gender-m" name="gender" value="M" v-model="readerGender">
+
+                                <div 
+                                v-if="sessionStore.userData.permissons.includes('Editor')"
+                                class="row col-12 col-lg-5 m-0 p-0 my-1"
+                                >
+                                    <label class="col-6 text-end text-lg-center" for="level-editor">Editor</label>
+                                    <input class="col-1 my-auto" type="radio" id="level-editor" name="gender" value="Editor" v-model="userLevel">
                                 </div>
-                                <div class="row col-12 col-lg-3 m-0 p-0 my-1">
-                                    <label class="col-6 text-end" for="gender-f">F</label>
-                                    <input class="col-1 my-auto" type="radio" id="gender-f" name="gender" value="F" v-model="readerGender">
+                                <div 
+                                v-if="sessionStore.userData.permissons.includes('Admin')"
+                                class="row col-12 col-lg-5 m-0 p-0 my-1"
+                                >
+                                    <label class="col-6 text-end" for="level-admin">Administrador</label>
+                                    <input class="col-1" type="radio" id="level-admin" name="gender" value="Admin" v-model="userLevel">
                                 </div>
                             </div>
                         </div>
@@ -270,25 +242,12 @@ const ValidateForm = (async (e) => {
 
                     <div :class="formRowStyle">
                         <div :class="labelContainerStyle">
-                            <label :class="labelStyle" for="birthdate"><strong>Fecha de nacimiento</strong></label>
+                            <label :class="labelStyle" for="active"><strong>Activo</strong></label>
                         </div>
                         <div :class="inputContainerStyle">
                             <div class="row col-12">
                                 <div class="row col-12 col-lg-5 m-0 p-0 my-1">
-                                    <input class="col-12 myInput" type="date" id="birthdate" name="birthdate" value="" v-model="readerBirthdate">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div :class="formRowStyle">
-                        <div :class="labelContainerStyle">
-                            <label :class="labelStyle" for="teacher"><strong>Es docente</strong></label>
-                        </div>
-                        <div :class="inputContainerStyle">
-                            <div class="row col-12">
-                                <div class="row col-12 col-lg-5 m-0 p-0 my-1">
-                                    <input class="col-1 mx-auto mx-lg-0" type="checkbox" id="teacher" name="teacher" value="1" v-model="readerIsTeacher">
+                                    <input class="col-1 mx-auto mx-lg-0" type="checkbox" id="active" name="active" value="1" v-model="userActive">
                                 </div>
                             </div>
                         </div>
@@ -297,7 +256,7 @@ const ValidateForm = (async (e) => {
                     <div class="row m-0 p-0 justify-content-center my-2 mt-5">
                         <div class="row m-0 p-0 col-12 justify-content-center">
                             <button class="col-6 col-lg-3 myBtn terciary-btn shadowed-l h3">
-                                {{ Object.keys(props.targetReader).length === 0 ? 'Registrar ' : 'Modificar ' }}
+                                {{ Object.keys(props.targetUser).length === 0 ? 'Registrar ' : 'Modificar ' }}
                             </button>
                         </div>
                     </div>

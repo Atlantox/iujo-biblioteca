@@ -32,6 +32,43 @@ def GetConnection():
 
 
 @userController.route('/users', methods=['GET'])
+def GetAllUsers():
+    connection = GetConnection()
+    userModel = UserModel(connection)
+    response = {}
+    statusCode = 200
+    error = ''
+    token = GetTokenOfRequest(request)
+    if token is None:
+        error = 'Acceso denegado. Autenticación requerida'
+        statusCode = 401
+    
+    if error == '':
+        currentUser = userModel.GetUserByToken(token)
+        if type(currentUser) is str:
+            error = currentUser
+            statusCode = 400
+
+    if error == '':
+        if currentUser['level'] not in ['Admin', 'Super']:
+            error = 'Tipo de usuario inválido'
+            statusCode = 400
+
+    if error == '':
+        users = userModel.GetUsersPublicData()
+        if users is not None:
+            response = {'success': True, 'users': users}
+        else:
+            error = 'Ocurrió un error al cargar los usuarios'
+    
+    if error != '':
+        response = {'success': False, 'message': error}
+
+
+    return jsonify(response), statusCode
+
+
+@userController.route('/my_user', methods=['GET'])
 def GetUserData():
     connection = GetConnection()
     userModel = UserModel(connection)
