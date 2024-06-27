@@ -22,7 +22,7 @@ const userNickname = ref('')
 const userLevel = ref('')
 const userUsername = ref('')
 const userPassword = ref('')
-const userActive = ref('')
+const userActive = ref([1])
 
 const formRowStyle = 'row m-0 p-0 justify-content-center my-2'
 const labelContainerStyle = 'row m-0 p-0 col-12 col-md-3'
@@ -38,11 +38,12 @@ const emits = defineEmits(['formOk'])
 onMounted(() => {
     OnAppearAnimation('hide-up')
     if(Object.keys(props.targetUser).length !== 0){
-        userNickname.value = props.targetUser.cedula
-        userLevel.value = props.targetUser.names
-        userUsername.value = props.targetUser.surnames
-        userPassword.value = props.targetUser.phone
-        userActive.value = props.targetUser.gender
+        userNickname.value = props.targetUser.nickname
+        userLevel.value = props.targetUser.level
+        if(props.targetUser.active === 1)
+            userActive.value = [1]
+        else
+            userActive.value = []
     }
     mounted.value = true
 })
@@ -53,36 +54,24 @@ const ValidateForm = (async (e) => {
 
     formErrors.value = [] 
     const validationStructure = {
-        'cedula':{ 
-            'min': 7,
-            'max': 11, 
+        'nickname':{ 
+            'min': 4,
+            'max': 50, 
             'required': true, 
-            'value': readerCedula.value 
+            'value': userNickname.value 
         },
-        'names':{
-            'min': 2, 
-            'max': 60, 
-            'required': true, 
-            'value': readerNames.value 
+        'username':{
+            'min': 6, 
+            'max': 50, 
+            'required': Object.keys(props.targetUser).length === 0, 
+            'value': userUsername.value 
         },
-        'surnames':{
-            'min': 2, 
-            'max': 60, 
-            'required': true, 
-            'value': readerSurnames.value 
-        },
-        'birthdate':{
+        'password':{
             'min': 8, 
-            'max': 10, 
-            'required': true, 
-            'value': readerBirthdate.value 
+            'max': 50, 
+            'required': Object.keys(props.targetUser).length === 0, 
+            'value': userPassword.value 
         },
-        'phone':{
-            'min': 7,
-            'max': 15, 
-            'required': true, 
-            'value': readerPhone.value 
-        }
     }    
 
     const emptyFields = validator.FieldsAreEmpty(validationStructure)
@@ -95,70 +84,69 @@ const ValidateForm = (async (e) => {
     if (lengthOK !== true)
         formErrors.value = formErrors.value.concat(lengthOK)
 
-    if(!['M', 'F'].includes(readerGender.value)){
-        formErrors.value.push('El campo género es requerido')
+
+    if(!sessionStore.userData.permissons.includes(userLevel.value)){
+        formErrors.value.push('Usted carece de permisos para crear usuarios de tipo ' + userLevel.value)
     }
 
-    if(readerIsTeacher.value.length === 0)
-        readerIsTeacher.value = ['0']
+    if(userActive.value.length === 0)
+        userActive.value = ['0']
     else
-        readerIsTeacher.value = ['1']
+        userActive.value = ['1']
 
-    if(!['0', '1'].includes(readerIsTeacher.value[0])){
-        formErrors.value.push('El campo es docente debe ser 1 o 0')
-    }
-
-    if(new Date(readerBirthdate.value) >= new Date()){
-        formErrors.value.push('El cumpleaños debe ser anterior a la fecha actual')
-    }    
+    if(!['0', '1'].includes(userActive.value[0]))
+        formErrors.value.push('El campo "activo" debe ser 1 o 0')
+    
+    if(!['Editor', 'Amin'].includes(userLevel.value))
+        formErrors.value.push('Tipo de usuario inválido')
 
 
 
     if(formErrors.value.length === 0){        
         if(Object.keys(props.targetUser).length === 0){
-            // Creating the reader
-            const cleanReaderData = {
-                'cedula': String(validationStructure['cedula']['value']),
-                'names': validationStructure['names']['value'],
-                'surnames': validationStructure['surnames']['value'],
-                'phone':validationStructure['phone']['value'],
-                'gender': readerGender.value,
-                'birthdate': validationStructure['birthdate']['value'],
-                'is_teacher': readerIsTeacher.value[0],
+            // Creating the user
+            const cleanUserData = {
+                'nickname': validationStructure['nickname']['value'],
+                'username': validationStructure['username']['value'],
+                'password': validationStructure['password']['value'],
+                'level': userLevel.value,
+                'active': userActive.value[0],
             }
 
-            const created = await userStore.CreateReader(cleanReaderData)            
+            const created = await userStore.CreateUser(cleanUserData)            
             if(created.success){
                 emits('formOk')
                 utilsStore.ShowModal('Success', created.message, 'success')
-                readerCedula.value = ''
-                readerNames.value = ''
-                readerSurnames.value = ''
-                readerPhone.value = ''
-                readerGender.value = ''
-                readerBirthdate.value = ''
-                readerIsTeacher.value = []
+                userNickname.value = ''
+                userPassword.value = ''
+                userUsername.value = ''
+                userLevel.value = ''
+                userActive.value = [1]
             }
             else
                 utilsStore.ShowModal('Error', created.message, 'error')
         }
         else{
-            // Updating the book
-            let cleanReaderData = {}
+            // Updating the user
+            let cleanUserData = {}
 
-            if(props.targetUser['cedula'] !== String(readerCedula.value)) cleanReaderData['cedula'] = String(readerCedula.value)
-            if(props.targetUser['names'] !== readerNames.value) cleanReaderData['names'] = readerNames.value
-            if(props.targetUser['surnames'] !== readerSurnames.value) cleanReaderData['surnames'] = readerSurnames.value
-            if(props.targetUser['phone'] !== readerPhone.value) cleanReaderData['phone'] = readerPhone.value
-            if(props.targetUser['gender'] !== readerGender.value) cleanReaderData['gender'] = readerGender.value
-            if(props.targetUser['birthdate'] !== readerBirthdate.value) cleanReaderData['birthdate'] = readerBirthdate.value
-            if(props.targetUser['is_teacher'] !== parseInt(readerIsTeacher.value[0])) cleanReaderData['is_teacher'] = readerIsTeacher.value[0]
+            if(props.targetUser['nickname'] !== userNickname.value) cleanUserData['nickname'] = userNickname.value
+            if(props.targetUser['level'] !== userLevel.value) cleanUserData['level'] = userLevel.value
+            if(props.targetUser['active'] !== parseInt(userActive.value[0])) cleanUserData['active'] = userActive.value[0]
 
-            if(Object.keys(cleanReaderData).length === 0)
+            if(userUsername.value !== ''){
+                cleanUserData['username'] = userNickname.value
+            }
+
+            if(userPassword.value !== ''){
+                cleanUserData['password'] = userPassword.value
+            }
+
+            console.log(cleanUserData)
+            if(Object.keys(cleanUserData).length === 0)
                 utilsStore.ShowModal('Info', 'No se realizaron cambios', 'info')
             else{
-                console.log(cleanReaderData)
-                const updated = await userStore.UpdateReader(props.targetUser['id'], cleanReaderData)
+                const updated = await userStore.UpdateUser(props.targetUser['id'], cleanUserData)
                 if (updated.success){
                     emits('formOk')
                     utilsStore.ShowModal('Success', updated.message, 'success')

@@ -110,6 +110,23 @@ class UserModel(BaseModel):
         targetUser['permissons'] = self.GetUserPermissons(token)
         return targetUser
     
+    def GetUserById(self, id):
+        cursor = self.connection.connection.cursor()
+        sql = '''
+            SELECT 
+            id, 
+            nickname, 
+            level, 
+            CONCAT(YEAR(created_at), '-', LPAD(MONTH(created_at), 2, '0'), '-', LPAD(DAY(created_at), 2, '0')) AS created_at, 
+            active 
+            FROM 
+            user
+            WHERE id = %s'''
+        
+        cursor.execute(sql, (id,))
+        targetUser = cursor.fetchone()
+        return targetUser
+    
     def GetUserPermissons(self, token):
         cursor = self.connection.connection.cursor()
         sql = '''
@@ -206,3 +223,24 @@ class UserModel(BaseModel):
         cursor.execute(sql)
         result = cursor.fetchone()
         return result is not None
+    
+    def UpdateUser(self, userId, userData):
+        result = True
+        cursor = self.connection.connection.cursor()
+        arrayValues = []
+        sql = "UPDATE user SET "
+        for column, value in userData.items():
+            sql += "{0} = %s,".format(column)
+            arrayValues.append(value)
+        
+        sql = sql[0:-1] + " WHERE id = %s"
+        arrayValues.append(userId)
+        args = tuple(arrayValues)
+        
+        try:
+            cursor.execute(sql, args)
+            self.connection.connection.commit()
+        except:
+            result = False
+        
+        return result

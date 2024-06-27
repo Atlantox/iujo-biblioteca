@@ -17,7 +17,11 @@ const field_translator = {
     'surnames': 'Apellidos',
     'gender': 'Género',
     'birthdate': 'Fecha de nacimiento',
-    'is_teacher': 'Es docente'
+    'is_teacher': 'Es docente',
+    'nickname': 'Nickname',
+    'username': 'Usuario',
+    'password': 'Contraseña',
+    'level': 'Tipo'
 }
 
 class FormValidator{
@@ -59,7 +63,7 @@ class FormValidator{
         for(let key in fields){
             const targetField = fields[key]
             if(!(targetField['min'] === 0 && targetField['max'] === 0)){
-                if ((targetField['value'].length < targetField['min'] || targetField['value'].length > targetField['max'])){
+                if ((targetField['value'].length < targetField['min'] || targetField['value'].length > targetField['max']) && targetField['required'] === true){
                     // El campo es requerido y está vacío
                     errors.push('El campo ' + field_translator[key]  + ' no cumple con la longitud de caracteres (' + targetField['min'] + ' - ' + targetField['max'] + ')')
                     this.SetRedBorder(key)

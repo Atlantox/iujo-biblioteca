@@ -78,6 +78,8 @@ const useUserStore = defineStore('users', {
         async FetchUserById(id){
             var targetUser = false
             const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
+
             try{
                 let url = apiConfig.base_url + '/users/' + id
                 var fetchHeaders = {
@@ -97,7 +99,7 @@ const useUserStore = defineStore('users', {
                 let json = await response.json()
                 let result = await json
                 if(result.success){
-                    targetUser = result.user                    
+                    targetUser = result.data                    
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')

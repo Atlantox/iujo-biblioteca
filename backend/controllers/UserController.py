@@ -18,7 +18,8 @@ REQUIRED_FIELDS = [
     'nickname',
     'username',
     'password',
-    'level'
+    'level',
+    'active'
 ]
 
 userController = Blueprint('users', __name__)
@@ -95,6 +96,43 @@ def GetUserData():
     return jsonify(response), statusCode
 
 
+@userController.route('/users/<int:userId>', methods=['GET'])
+def GetUserById(userId):
+    connection = GetConnection()
+    userModel = UserModel(connection)
+    response = {}
+    statusCode = 200
+    error = ''
+    token = GetTokenOfRequest(request)
+    if token is None:
+        error = 'Acceso denegado. Autenticación requerida'
+        statusCode = 401
+    
+    if error == '':
+        currentUser = userModel.GetUserByToken(token)
+        if type(currentUser) is str:
+            error = currentUser
+            statusCode = 400
+
+    if error == '':
+        if currentUser['level'] not in ['Admin', 'Super']:
+            error = 'Tipo de usuario inválido'
+            statusCode = 400
+    
+    if error == '':
+        targetUser = userModel.GetUserById(userId)
+        if targetUser is None:
+            error = "Usuario solicitado no encontrado"
+            statusCode = 400
+    
+    if error == '':
+        response = {'success': True, 'data': targetUser}
+    else:
+        response = {'success': False, 'message': error}
+
+    return jsonify(response), statusCode
+
+
 @userController.route('/users', methods=['POST'])
 def RegisterUser():
     connection = GetConnection()
@@ -136,6 +174,12 @@ def RegisterUser():
     if error == '':
         if userModel.NicknameExists(cleanData['nickname']) is True:
             error = 'Nick ya registrado'
+            statusCode = 400
+
+    if error == '':
+        print(cleanData)
+        if cleanData['active'] not in ['1', '0']:
+            error = 'El campo activo es inválido'
             statusCode = 400
     
     if error == '':
@@ -208,6 +252,85 @@ def TryLogin():
     
     return jsonify(response), statusCode
 
+
+@userController.route('/users/<int:userId>', methods=['PUT'])
+def UpdateUser(userId):
+    connection = GetConnection()
+    userModel = UserModel(connection)
+    
+    recievedData, error, statusCode = JsonExists(request)
+    token = GetTokenOfRequest(request)
+    if token is None:
+        error = 'Acceso denegado. Autenticación requerida'
+        statusCode = 401
+
+    if error == '':
+        currentUser = userModel.GetUserByToken(token)
+        if type(currentUser) is str:
+            error = currentUser
+            statusCode = 400
+    
+    if error == '':
+        targetUser = userModel.GetUserById(userId)
+        if targetUser is None:
+            error = 'Usuario a modificar no encontrado'
+            statusCode = 400
+
+    if error == '':
+        cleanData = ValidateUserData(recievedData, False)
+        if type(cleanData) is str:
+            error = cleanData
+            statusCode = 400
+
+    if error == '' and 'level' in cleanData:
+        if cleanData not in ['Editor', 'Admin']:
+            error = 'Tipo de usuario no encontrado'
+        else:
+            if userModel.UserHasPermisson(targetUser['id'], cleanData['level']) is False:
+                error = 'Acción denegada'
+                statusCode = 401  # Unauthorized
+
+    if error == '' and 'username' in cleanData:
+        if userModel.UsernameExists(cleanData['username']) is True:
+            error = 'Usuario ya registrado'
+            statusCode = 400
+
+    if error == '' and 'password' in cleanData:
+        if userModel.NicknameExists(cleanData['nickname']) is True:
+            error = 'Nick ya registrado'
+            statusCode = 400
+
+    if error == '' and 'active' in cleanData:
+        if cleanData['active'] not in ['1', '0']:
+            error = 'El campo activo es inválido'
+            statusCode = 400
+
+    print(recievedData)
+    if error == '':
+        if cleanData == {}:
+            error = 'Información recibida vacía'
+            statusCode = 400
+    
+    if error == '':
+        updated = userModel.UpdateUser(userId, cleanData)
+        if updated is False:
+            error = 'Hubo un error al intentar actualizar al lector'
+            statusCode = 500
+        else:
+            alteredColumns = ''
+            for key in cleanData.keys():
+                alteredColumns += '{0}, '.format(key)
+            alteredColumns = alteredColumns[0:-2]
+
+            action = 'Editó los campos {0} del usuario de id {1}'.format(alteredColumns, userId)
+            userModel.CreateBinnacle(targetUser['id'], action)
+            message = 'Lector actualizado correctamente'
+
+    if error != '':
+        message = error
+        
+    success = error == ''
+    return jsonify({'success': success, 'message': message}), statusCode
 
 def ValidateUserData(recievedData, exactData = True):
     '''

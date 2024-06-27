@@ -388,11 +388,6 @@ def GetLoansBetweenDaysAndNow(days):
             statusCode = 400 
 
     if error == '':
-        if userModel.UserHasPermisson(targetUser['id'], 'Préstamos') is False:
-            error = 'Acción denegada'
-            statusCode = 401  # Unauthorized
-
-    if error == '':
         loanModel = LoanModel(connection)
         loans = loanModel.GetLoansBetweenDaysAndToday(days)
 
@@ -424,11 +419,6 @@ def GetLoansCountBetweenDateAndNow(days):
         if type(targetUser) is str:
             error = targetUser
             statusCode = 400 
-
-    if error == '':
-        if userModel.UserHasPermisson(targetUser['id'], 'Préstamos') is False:
-            error = 'Acción denegada'
-            statusCode = 401  # Unauthorized
 
     if error == '':
         loanModel = LoanModel(connection)

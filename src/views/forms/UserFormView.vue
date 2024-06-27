@@ -25,7 +25,7 @@ onMounted( async () => {
   if(recievedId !== undefined && recievedId !== ''){
     targetUser.value = await userStore.FetchUserById(recievedId)
   }
-
+  
   fetchReady.value = true
 })
 

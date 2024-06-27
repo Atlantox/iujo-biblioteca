@@ -130,7 +130,7 @@ const ValidateForm = (async (e) => {
         readerIsTeacher.value = ['1']
 
     if(!['0', '1'].includes(readerIsTeacher.value[0])){
-        formErrors.value.push('El campo es docente debe ser 1 o 0')
+        formErrors.value.push('El campo "es docente" debe ser 1 o 0')
     }
 
     if(new Date(readerBirthdate.value) >= new Date()){
@@ -168,7 +168,7 @@ const ValidateForm = (async (e) => {
                 utilsStore.ShowModal('Error', created.message, 'error')
         }
         else{
-            // Updating the book
+            // Updating the reader
             let cleanReaderData = {}
 
             if(props.targetReader['cedula'] !== String(readerCedula.value)) cleanReaderData['cedula'] = String(readerCedula.value)
@@ -182,7 +182,6 @@ const ValidateForm = (async (e) => {
             if(Object.keys(cleanReaderData).length === 0)
                 utilsStore.ShowModal('Info', 'No se realizaron cambios', 'info')
             else{
-                console.log(cleanReaderData)
                 const updated = await readerStore.UpdateReader(props.targetReader['id'], cleanReaderData)
                 if (updated.success){
                     emits('formOk')
