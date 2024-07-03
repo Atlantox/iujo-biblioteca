@@ -85,8 +85,13 @@ const ValidateForm = (async (e) => {
         formErrors.value = formErrors.value.concat(lengthOK)
 
 
-    if(!sessionStore.userData.permissons.includes(userLevel.value)){
-        formErrors.value.push('Usted carece de permisos para crear usuarios de tipo ' + userLevel.value)
+    if(userLevel.value === ''){
+        formErrors.value.push('Debe elegir un tipo de usuario')
+    }
+    else{
+        if(!sessionStore.userData.permissons.includes(userLevel.value)){
+            formErrors.value.push('Usted carece de permisos para crear usuarios de tipo ' + userLevel.value)
+        }
     }
 
     if(userActive.value.length === 0)

@@ -34,10 +34,10 @@ onMounted( async () => {
 
 <template>
   <div class="row m-0 p-0 justify-content-center justify-content-lg-start">
-    <BackButtonGadget :back_to="'dashboard'"/>
+    <BackButtonGadget :back_to="route.params.id === undefined || route.params.id === '' ? 'dashboard' : 'editorials'"/>
   </div>
   <PageTitle
-    :title="(targetEditorial === false ? 'Modificar ' : 'Registrar nueva ') + 'editorial'"
+    :title="(route.params.id === undefined || route.params.id === '' ? 'Registrar nueva ' : 'Modificar ') + 'editorial'"
   />
   <template v-if="fetchReady === false">
     <LoadingGadget />

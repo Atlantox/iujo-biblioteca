@@ -9,6 +9,7 @@ import LoginFormView from '../views/forms/LoginFormView.vue'
 import BookFormView from '../views/forms/BookFormView.vue'
 import LoanFormView from '../views/forms/LoanFormView.vue'
 import ReaderFormView from '../views/forms/ReaderFormView.vue'
+import CategoryFormView from '@/views/forms/CategoryFormView.vue'
 import EditorialFormView from '../views/forms/EditorialFormView.vue'
 import AuthorFormView from '@/views/forms/AuthorFormView.vue'
 import UserFormView from '@/views/forms/UserFormView.vue'
@@ -49,6 +50,12 @@ const router = createRouter({
 
     // BOOKS
     {
+      path: '/add_book/:id?',
+      name: 'add_book',
+      component: BookFormView,
+      meta:{ requireAuth: true, bookPermisson: true }
+    },
+    {
       path: '/search_books',
       name: 'books',
       component: SearchBooksView
@@ -58,38 +65,42 @@ const router = createRouter({
       name: 'see_book',
       component: SeeBookView
     },
-    {
-      path: '/add_book/:id?',
-      name: 'add_book',
-      component: BookFormView,
-      meta:{ requireAuth: true, bookPermisson: true }
-    },
 
     // EDITORIALS
     {
       path: '/add_editorial/:id?',
       name: 'add_editorial',
-      component: EditorialFormView
+      component: EditorialFormView,
+      meta:{ requireAuth: true, editorialPermisson: true }
     },
     {
       path: '/search_editorials',
       name: 'editorials',
-      component: SearchEditorialsView
+      component: SearchEditorialsView,
+      meta:{ requireAuth: true, editorialPermisson: true }
     },
 
     // AUTHORS
     {
       path: '/add_author/:id?',
       name: 'add_author',
-      component: AuthorFormView
+      component: AuthorFormView,
+      meta:{ requireAuth: true, authorPermisson: true }
     },
     {
       path: '/search_authors',
       name: 'authors',
-      component: SearchAuthorsView
+      component: SearchAuthorsView,
+      meta:{ requireAuth: true, authorPermisson: true }
     },
 
     // CATEGORIES
+    {
+      path: '/add_category/:id?',
+      name: 'add_category',
+      component: CategoryFormView,
+      meta:{ requireAuth: true, categoryPermisson: true }
+    },
     {
       path: '/search_categories',
       name: 'categories',
@@ -177,6 +188,14 @@ router.beforeEach((to, from, next) => {
       }
 
       if(to.meta.readerPermisson && !(sessionStore.userData.permissons.includes('Lectores'))){
+        routeOk = false
+      }
+
+      if(to.meta.editorialPermisson && !(sessionStore.userData.permissons.includes('Editoriales'))){
+        routeOk = false
+      }
+
+      if(to.meta.authorPermisson && !(sessionStore.userData.permissons.includes('Autores'))){
         routeOk = false
       }
 

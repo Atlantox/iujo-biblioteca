@@ -1,4 +1,5 @@
 <script setup>
+
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
@@ -7,46 +8,43 @@ import PageTitle from '@/components/PageTitle.vue'
 import BackButtonGadget from '@/components/myGadgets/BackButtonGadget.vue'
 import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue'
 
-import useReaderStore from '@/stores/readers'
+import useCategoryStore from '@/stores/categories'
 
-import ReaderForm from '@/components/forms/ReaderForm.vue'
+import CategoryForm from '@/components/forms/CategoryForm.vue'
 
 const route = useRoute()
 
-const readerStore = useReaderStore()
+const categoryStore = useCategoryStore()
 
-const targetReader = ref([])
+const targetCategory = ref([])
 const fetchReady = ref(false)
 
 onMounted( async () => {
   fetchReady.value = false
   const recievedId = route.params.id
-  
+
   if(recievedId !== undefined && recievedId !== ''){
-    targetReader.value = await readerStore.FetchReaderById(recievedId)
+    targetCategory.value = await categoryStore.FetchCategoryById(recievedId)
   }
 
   fetchReady.value = true
 })
 
-
 </script>
 
 <template>
   <div class="row m-0 p-0 justify-content-center justify-content-lg-start">
-    <BackButtonGadget :back_to="route.params.id === undefined || route.params.id === '' ? 'dashboard' : 'readers'"/>
+    <BackButtonGadget :back_to="route.params.id === undefined || route.params.id === '' ? 'dashboard' : 'categories'"/>
   </div>
-
   <PageTitle
-    :title="(route.params.id === undefined || route.params.id === '' ? 'Registrar nuevo ' : 'Modificar ') + 'lector'"
+    :title="(route.params.id === undefined || route.params.id === '' ? 'Registrar nueva ' : 'Modificar ') + 'categoría'"
   />
-
   <template v-if="fetchReady === false">
     <LoadingGadget />
   </template>
   <template v-else>    
-    <ReaderForm
-    :targetReader="targetReader"
+    <CategoryForm
+    :targetCategory = "targetCategory"
     />
   </template>
 </template>
