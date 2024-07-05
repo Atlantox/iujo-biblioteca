@@ -227,6 +227,10 @@ class BookModel(BaseModel):
             sql += 'book.author IN (%s) AND '
             args.append(filters['author'])
 
+        if 'state' in filters:
+            sql += 'book.state IN (%s) AND '
+            args.append(filters['state'])
+
         if 'editorial' in filters:
             sql += 'book.editorial IN (%s) AND '
             args.append(filters['editorial'])
@@ -290,8 +294,6 @@ class BookModel(BaseModel):
             
             sql = sql[0:-1] + " WHERE id = %s"
             arrayValues.append(bookId)
-            print(sql)
-            print(arrayValues)
             args = tuple(arrayValues)
 
             try:

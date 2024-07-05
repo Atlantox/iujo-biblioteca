@@ -2,14 +2,17 @@
 import { onMounted } from 'vue'
 
 import useUsersStore from '@/stores/users.js'
+import useSessionStore from '@/stores/session'
 
 import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue'
 import BackButtonGadget from '@/components/myGadgets/BackButtonGadget.vue'
+import AddButtonGadget from '@/components/myGadgets/AddButtonGadget.vue'
 
 import UserTable from '@/components/tables/UserTable.vue'
 import PageTitleView from '@/components/PageTitle.vue';
 
 const userStore = useUsersStore()
+const sessionStore = useSessionStore()
 const users = userStore.users
 
 onMounted(async ()  => {
@@ -26,7 +29,12 @@ onMounted(async ()  => {
     <PageTitleView
     :title="'Listado de los usuarios'"
     />
-    <div class="row m-0 p-0 col-12 py-4 shadowed-l rounded lb-bg-terciary-ul">
+    <div class="row m-0 p-0 col-12 py-4 shadowed-l rounded lb-bg-terciary-ul justify-content-center">
+      <AddButtonGadget
+      v-if = "sessionStore.userData.permissons.includes('Editor') || sessionStore.userData.permissons.includes('Admin')"
+      :url = "'add_user'"
+      :title = "'Registrar nuevo usuario'"
+      />
       <template
       v-if="users.value === undefined">
         <LoadingGadget/>

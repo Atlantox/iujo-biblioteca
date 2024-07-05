@@ -7,6 +7,10 @@ const field_translator = {
     'select2-author-container': 'Autor',
     'editorial': 'Editorial',
     'select2-editorial-container': 'Editorial',
+    'books': 'Libro',
+    'select2-books-container': 'Libro',
+    'readers': 'Lector',
+    'select2-readers-container': 'Lector',
     'state': 'Estado',
     'select2-state-container': 'Estado',
     'pages': 'Páginas',
@@ -21,7 +25,9 @@ const field_translator = {
     'nickname': 'Nickname',
     'username': 'Usuario',
     'password': 'Contraseña',
-    'level': 'Tipo'
+    'level': 'Tipo',
+    'observation': 'Obervación',
+    'deliver_date': 'Fecha de entrega',
 }
 
 class FormValidator{

@@ -86,6 +86,19 @@ $quartary: #E5BA71;
     border: black solid 1px !important;
 }
 
+.lb-text-primary{
+    color: $primary;
+}
+
+.lb-text-primary-dark{
+    color: $primary-dark;
+}
+
+.add-button{
+    width:120px;
+    text-align:center;
+}
+
 .shadowed-h{
     box-shadow: 0 0 20px 3px rgb(0 0 0 / 100%);
 }
@@ -470,3 +483,10 @@ input[type="file"] {
 .dropdown-menu{
     border: none !important;
 }
+
+@media (max-width: 850px) {
+    .dt-input{
+        width:100%;
+    }
+}
+  

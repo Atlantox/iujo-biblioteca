@@ -17,6 +17,36 @@ const useLoanStore = defineStore('loans', {
         }
     },
     actions:{
+        async CreateLoan(loanData){
+            const sessionStore = useSessionStore()
+            let result = {}
+            try{
+                let url = apiConfig.base_url + '/loans'
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+
+                if (sessionStore.authenticated === true)
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'POST',
+                    headers: fetchHeaders,
+                    body: JSON.stringify(loanData)
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                result = await json                
+            }
+            catch(error){
+                result = {success: false, message: 'Ocurrió un error inesperado al crear el préstamo'}
+            }
+
+            return result
+        },
+
         async FetchPendingLoans(){
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()

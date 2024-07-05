@@ -8,6 +8,8 @@ import useCategoryStore from '@/stores/categories'
 
 import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue'
 import BackButtonGadget from '@/components/myGadgets/BackButtonGadget.vue'
+import AddButtonGadget from '@/components/myGadgets/AddButtonGadget.vue'
+
 import BooksTable from '@/components/tables/BooksTable.vue'
 import PageTitleView from '@/components/PageTitle.vue'
 
@@ -49,7 +51,6 @@ const ApplyFilters = (async () => {
 
 onMounted(async ()  => {  
   utilsStore.InitializeSelect2()
-  var error = false
   $('#categories').on('select2:select', function (e) {
     categoryFilter.value = e.target.value
     ApplyFilters()
@@ -84,6 +85,14 @@ onMounted(async ()  => {
     :title="'Nuestros libros'"
     />
     <div class="row m-0 p-0 col-12 shadowed-l rounded lb-bg-terciary-ul">
+      <div class="col-12 m-2 d-flex justify-content-center">
+        <AddButtonGadget        
+        v-if = "sessionStore.userData.permissons.includes('Libros')"
+        :url = "'add_book'"
+        :title = "'Registrar nuevo libro'"
+        />
+      </div>
+
       <div class="row w-100 m-0 p-0 fs-5 p-3">
         <h3 class="w-100">
           Filtrar por...
@@ -131,7 +140,8 @@ onMounted(async ()  => {
         </div>
       </div>
       <template
-      v-if="targetFetched === false">
+      v-if="targetFetched === false"
+      >
         <LoadingGadget/>
       </template>
       <template v-else>

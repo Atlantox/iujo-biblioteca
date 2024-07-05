@@ -177,7 +177,6 @@ def RegisterUser():
             statusCode = 400
 
     if error == '':
-        print(cleanData)
         if cleanData['active'] not in ['1', '0']:
             error = 'El campo activo es inválido'
             statusCode = 400
@@ -305,7 +304,6 @@ def UpdateUser(userId):
             error = 'El campo activo es inválido'
             statusCode = 400
 
-    print(recievedData)
     if error == '':
         if cleanData == {}:
             error = 'Información recibida vacía'

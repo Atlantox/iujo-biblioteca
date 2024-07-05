@@ -2,14 +2,17 @@
 import { onMounted } from 'vue'
 
 import useReaderStore from '@/stores/readers.js'
+import useSessionStore from '@/stores/session'
 
 import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue'
 import BackButtonGadget from '@/components/myGadgets/BackButtonGadget.vue'
+import AddButtonGadget from '@/components/myGadgets/AddButtonGadget.vue'
 
 import ReaderTable from '@/components/tables/ReaderTable.vue'
 import PageTitleView from '@/components/PageTitle.vue';
 
 const readerStore = useReaderStore()
+const sessionStore = useSessionStore()
 const readers = readerStore.readers
 
 onMounted(async ()  => {
@@ -26,7 +29,12 @@ onMounted(async ()  => {
     <PageTitleView
     :title="'Listado de los lectores'"
     />
-    <div class="row m-0 p-0 col-12 py-4 shadowed-l rounded lb-bg-terciary-ul">
+    <div class="row m-0 p-0 col-12 py-4 shadowed-l rounded lb-bg-terciary-ul justify-content-center">
+      <AddButtonGadget
+      v-if = "sessionStore.userData.permissons.includes('Lectores')"
+      :url = "'add_reader'"
+      :title = "'Registrar nuevo lector'"
+      />
       <template
       v-if="readers.value === undefined">
         <LoadingGadget/>

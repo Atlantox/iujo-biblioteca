@@ -2,14 +2,17 @@
 import { onMounted } from 'vue'
 
 import useBookStore from '@/stores/books.js'
+import useSessionStore from '@/stores/session'
 
 import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue'
 import BackButtonGadget from '@/components/myGadgets/BackButtonGadget.vue'
+import AddButtonGadget from '@/components/myGadgets/AddButtonGadget.vue'
 
 import EditorialTable from '@/components/tables/EditorialTable.vue'
 import PageTitleView from '@/components/PageTitle.vue';
 
 const bookStore = useBookStore()
+const sessionStore = useSessionStore()
 const editorials = bookStore.editorials
 
 onMounted(async ()  => {
@@ -26,7 +29,12 @@ onMounted(async ()  => {
     <PageTitleView
     :title="'Listado de editoriales'"
     />
-    <div class="row m-0 p-0 col-12 py-4 shadowed-l rounded lb-bg-terciary-ul">
+    <div class="row m-0 p-0 col-12 py-4 shadowed-l rounded lb-bg-terciary-ul justify-content-center">
+      <AddButtonGadget
+      v-if = "sessionStore.userData.permissons.includes('Editoriales')"
+      :url = "'add_editorial'"
+      :title = "'Registrar nueva editorial'"
+      />
       <template
       v-if="editorials.value === undefined">
         <LoadingGadget/>

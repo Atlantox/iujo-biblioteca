@@ -158,16 +158,16 @@ async function ValidateForm() {
         formErrors.value.push('El número de páginas no puede ser mayor a 99999')
 
     if(formErrors.value.length === 0){        
-        if(Objects.keys(props.targetBook).length === 0){
+        if(Object.keys(props.targetBook).length === 0){
             // Creating the book
             const cleanBookData = {
                 'title': validationStructure['title']['value'],
                 'call_number': validationStructure['call_number']['value'],
-                'author': validationStructure['author']['value'],
+                'author': validationStructure['select2-author-container']['value'],
                 'pages':validationStructure['pages']['value'],
                 'shelf': validationStructure['shelf']['value'],
-                'editorial': validationStructure['editorial']['value'],
-                'state': validationStructure['state']['value'],
+                'editorial': validationStructure['select2-editorial-container']['value'],
+                'state': validationStructure['select2-state-container']['value'],
                 'description': validationStructure['description']['value'],
                 'categories': validationStructure['categories']['value'],
             }

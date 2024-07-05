@@ -2,14 +2,17 @@
 import { onMounted } from 'vue'
 
 import useCategoryStore from '@/stores/categories.js'
+import useSessionStore from '@/stores/session'
 
 import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue'
 import BackButtonGadget from '@/components/myGadgets/BackButtonGadget.vue'
+import AddButtonGadget from '@/components/myGadgets/AddButtonGadget.vue'
 
 import CategoryTable from '@/components/tables/CategoryTable.vue'
 import PageTitleView from '@/components/PageTitle.vue';
 
 const categoryStore = useCategoryStore()
+const sessionStore = useSessionStore()
 const categories = categoryStore.categories
 
 onMounted(async ()  => {
@@ -26,7 +29,12 @@ onMounted(async ()  => {
     <PageTitleView
     :title="'Listado de categorías'"
     />
-    <div class="row m-0 p-0 col-12 py-4 shadowed-l rounded lb-bg-terciary-ul">
+    <div class="row m-0 p-0 col-12 py-4 shadowed-l rounded lb-bg-terciary-ul justify-content-center">
+      <AddButtonGadget
+      v-if = "sessionStore.userData.permissons.includes('Categorías')"
+      :url = "'add_category'"
+      :title = "'Registrar nueva categoría'"
+      />
       <template
       v-if="categories.value === undefined">
         <LoadingGadget/>

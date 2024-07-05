@@ -235,6 +235,15 @@ def GetBooksByFilter():
         else:
             filters['category'] = recievedData['category']
 
+    if 'state' in recievedData:
+        bookModel = BookModel(connection)
+        targetState = bookModel.GetStateByName(recievedData['state'])
+        if targetState is None:
+            error ='Estado no encontrado'
+            statusCode = 400
+        else:
+            filters['state'] = recievedData['state']
+
     if error == '':
         if 'author' in recievedData:
             authorModel = AuthorModel(connection)
@@ -256,7 +265,6 @@ def GetBooksByFilter():
                 filters['editorial'] = recievedData['editorial']
 
     if error == '':
-        bookModel = BookModel(connection)
         booksFound = bookModel.FilterBooks(filters)
         if type(booksFound) is str:
             error = booksFound

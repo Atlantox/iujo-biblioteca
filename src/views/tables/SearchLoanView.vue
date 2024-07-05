@@ -5,12 +5,15 @@ import useLoanStore from '@/stores/loans.js'
 
 import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue'
 import BackButtonGadget from '@/components/myGadgets/BackButtonGadget.vue'
+import AddButtonGadget from '@/components/myGadgets/AddButtonGadget.vue'
 
 import LoanTable from '@/components/tables/LoanTable.vue'
 import PageTitleView from '@/components/PageTitle.vue';
+import useSessionStore from '@/stores/session'
 
 
 const loanStore = useLoanStore()
+const sessionStore = useSessionStore()
 const loans = loanStore.loans
 
 onMounted(async ()  => {
@@ -27,7 +30,12 @@ onMounted(async ()  => {
     <PageTitleView
     :title="'Lista de préstamos'"
     />
-    <div class="row m-0 p-0 col-12 py-4 shadowed-l rounded lb-bg-terciary-ul">
+    <div class="row m-0 p-0 col-12 py-4 shadowed-l rounded lb-bg-terciary-ul justify-content-center">
+      <AddButtonGadget
+      v-if = "sessionStore.userData.permissons.includes('Préstamos')"
+      :url = "'add_loan'"
+      :title = "'Registrar nuevo préstamo'"
+      />
       <template
       v-if="loans.value === undefined">
         <LoadingGadget/>
