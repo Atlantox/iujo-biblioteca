@@ -2,10 +2,12 @@
 import { onMounted } from 'vue'
 
 import useUtilsStore from '@/stores/utils';
+import useSessionStore from '@/stores/session';
 
 import OnAppearAnimation from '@/utils/ElegantDisplayer';
 
 const utilsStore = useUtilsStore()
+const sessionStore = useSessionStore()
 
 const props = defineProps({
     loans: Array
@@ -41,11 +43,18 @@ onMounted(() => {
                 <td class="border-1 text-center">{{ loan.return_date === null ? 'N/A' : new Date(loan.return_date).toLocaleDateString() }}</td>
                 <td class="border-1">{{ loan.observation }}</td>
                 <td class="border-1">
-                    <div class="row m-0 p-0 text-center justify-content-center">
-                        <div class="row col-12 m-0 p-1 col-3 fs-2">
+                    <div class="row m-0 p-0 text-center justify-content-around">
+                        <div class="row col-4 m-0 p-0 fs-2">
                             <div class="w-100 hover-bigger text-center m-0 p-0">
                                 <router-link :to="{name:'see_book', params: {id: loan.loan_id}}">
                                     <i class="text-black bi bi-eye text-center m-0 p-0"></i>
+                                </router-link>
+                            </div>
+                        </div>
+                        <div class="row col-4 m-0 p-0 fs-2" v-if="sessionStore.userData.permissons.includes('Préstamos')">
+                            <div class="w-100 hover-bigger text-center m-0 p-0">
+                                <router-link :to="{name:'add_loan', params: {id: loan.loan_id}}">
+                                    <i class="text-black bi bi-pencil text-center m-0 p-0"></i>
                                 </router-link>
                             </div>
                         </div>

@@ -48,7 +48,7 @@ onMounted(() => {
                     <td class="border-1">{{ book.author === null ? 'Desconocido' : book.author }}</td>
                     <td class="border-1">{{ book.editorial === null ? 'Desconocida' : book.editorial}}</td>
                     <td class="border-1">{{ book.category_names.join(', ') }}</td>
-                    <td class="text-center border-1">{{ book.state }}</td>
+                    <td :class="'text-center border-1 fw-bold text-' + (book.state === 'En biblioteca' ? 'success' : 'danger') ">{{ book.state }}</td>
                     <td class="text-center border-1">{{ book.pages }}</td>
                     <template v-if="sessionStore.authenticated === true">
                         <template v-if="'Libros' in sessionStore.userData.permissons">
@@ -57,11 +57,18 @@ onMounted(() => {
                         </template>
                     </template>
                     <td class="border-1">
-                        <div class="row m-0 p-0 text-center justify-content-center">
-                            <div class="row col-12 m-0 p-1 col-3 fs-2">
+                        <div class="row m-0 p-0 text-center justify-content-around">
+                            <div class="row col-4 m-0 p-0 fs-2">
                                 <div class="w-100 hover-bigger text-center m-0 p-0">
                                     <router-link :to="{name:'see_book', params: {id: book.id}}">
                                         <i class="text-black bi bi-eye text-center m-0 p-0"></i>
+                                    </router-link>
+                                </div>
+                            </div>
+                            <div class="row col-4 m-0 p-0 fs-2" v-if="sessionStore.userData.permissons.includes('Libros')">
+                                <div class="w-100 hover-bigger text-center m-0 p-0">
+                                    <router-link :to="{name:'add_book', params: {id: book.id}}">
+                                        <i class="text-black bi bi-pencil text-center m-0 p-0"></i>
                                     </router-link>
                                 </div>
                             </div>

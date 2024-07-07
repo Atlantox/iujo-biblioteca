@@ -47,6 +47,72 @@ const useLoanStore = defineStore('loans', {
             return result
         },
 
+        async FetchLoanById(id){
+            var targetLoan = false
+            const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
+            try{
+                let url = apiConfig.base_url + '/loans/' + id
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+
+                if (sessionStore.authenticated === true)
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'GET',
+                    headers: fetchHeaders
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                let result = await json
+                
+                if(result.success){
+                    targetLoan = result.loan
+                    
+                }
+                else
+                    utilsStore.ShowModal('Error', result.message, 'error')
+            }
+            catch(error){
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar el libro solicitado: ' + error.message, 'error')
+            }
+
+            return targetLoan
+        },
+
+        async FinishLoan(loanId){
+            const sessionStore = useSessionStore()
+            let result = {}
+            try{
+                let url = apiConfig.base_url + '/loans/return/' + loanId
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+
+                if (sessionStore.authenticated === true)
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'POST',
+                    headers: fetchHeaders
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                result = await json                
+            }
+            catch(error){
+                result = {success: false, message: 'Ocurrió un error inesperado al intentar finalizar al préstamo'}
+            }
+
+            return result
+        },
+
         async FetchPendingLoans(){
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
@@ -142,6 +208,36 @@ const useLoanStore = defineStore('loans', {
             catch(error){
                 utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar la cantidad de préstamos recientes', 'error')
             }
+        },
+
+        async UpdateLoan(loanId, loanData){
+            const sessionStore = useSessionStore()
+            let result = {}
+            try{
+                let url = apiConfig.base_url + '/loans/' + loanId
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+
+                if (sessionStore.authenticated === true)
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'PUT',
+                    headers: fetchHeaders,
+                    body: JSON.stringify(loanData)
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                result = await json                
+            }
+            catch(error){
+                result = {success: false, message: 'Ocurrió un error inesperado al intentar actualizar el préstamo'}
+            }
+
+            return result
         }
     }
 })

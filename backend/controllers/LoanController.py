@@ -306,7 +306,7 @@ def ReturnLoan(loanId):
             bookModel.UpdateBook(targetLoan['book_id'], {'state': 'En biblioteca'})
             action = 'Se devolvió el libro {0} del lector {1} del préstamo {2}'.format(targetLoan['book_id'], targetLoan['reader_id'], loanId)
             bookModel.CreateBinnacle(targetUser['id'], action)
-            message = 'Préstamo recibido correctamente'
+            message = 'Devolución de préstamo creada correctamente'
 
         response['success'] = error == ''
 

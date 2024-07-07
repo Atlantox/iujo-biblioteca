@@ -476,6 +476,14 @@ input[type="file"] {
     }
 }
 
+.available-book{
+    color:rgb(104, 190, 104) !important;
+} 
+
+.not-available-book{
+    color:rgb(189, 98, 98) !important;
+}
+
 .single-button{
     border: $primary 1px solid;
 }

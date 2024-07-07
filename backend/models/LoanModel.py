@@ -9,7 +9,7 @@ class LoanModel(BaseModel):
         CONCAT(reader.names, ' ', reader.surnames) as fullname,
         reader.cedula,
         loan.id as loan_id,
-        loan.deliver_date,
+        CONCAT(YEAR(loan.deliver_date), '-', LPAD(MONTH(loan.deliver_date), 2, '0'), '-', LPAD(DAY(loan.deliver_date), 2, '0')) AS deliver_date, 
         loan.observation,
         loan.return_date,
         loan.active
@@ -293,7 +293,8 @@ class LoanModel(BaseModel):
 
         return result
     
-    def DeactivateLoan(self, id):
+    # TODO: UPDATE LOAN
+    def UpdateLoan(self, id):
         cursor = self.connection.connection.cursor()
         result = True
 

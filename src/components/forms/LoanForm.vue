@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
 import FormValidator from '@/utils/FormValidator'
 
@@ -16,6 +17,7 @@ import LargeModalGadget from '../myGadgets/LargeModalGadget.vue'
 
 const utilsStore = useUtilsStore()
 const loanStore = useLoanStore()
+const router = useRouter()
 
 const mounted = ref(false)
 const formErrors = ref([])
@@ -60,8 +62,21 @@ onMounted(async () => {
         loanBook.value = props.targetLoan['book_id']
         loanObservation.value = props.targetLoan['observation']
         loanDeliverDate.value = props.targetLoan['deliver_date']
-        loanReturnDate.value = props.targetLoan['return_date']
-        loanActive.value = props.targetLoan['active']
+
+        if(props.targetLoan['active'] === 1)
+            loanActive.value = [1]
+        else
+            loanActive.value = []
+
+        const myDate = new Date(props.targetLoan['deliver_date'])
+        
+        var year = myDate.getFullYear()
+        var month = myDate.getMonth() + 1
+        if(month < 10) month = '0' + month
+        var day = myDate.getDate() + 1
+        if(day < 10) day = '0' + day
+        
+        deliverDateInput.value = year + '-' + month + '-' + day
 
         $('#readers').val(loanReader.value); $('#readers').trigger('change');
         $('#books').val(loanBook.value); $('#books').trigger('change');
@@ -123,10 +138,20 @@ async function ValidateForm() {
     if (lengthOK !== true)
         formErrors.value = formErrors.value.concat(lengthOK)
 
+    if(Object.keys(props.targetLoan).length !== 0){
+        if(loanActive.value.length === 0)
+            loanActive.value = ['0']
+        else
+            loanActive.value = ['1']
+    
+        if(!['0', '1'].includes(loanActive.value[0]))
+            formErrors.value.push('El campo "activo" debe ser 1 o 0')
+    }
+
 
     if(formErrors.value.length === 0){        
         if(Object.keys(props.targetLoan).length === 0){
-            // Creating the book
+            // Creating the loan
             const cleanLoanData = {
                 'deliver_date': validationStructure['deliver_date']['value'],
                 'book': validationStructure['select2-books-container']['value'],
@@ -149,23 +174,20 @@ async function ValidateForm() {
                 utilsStore.ShowModal('Error', created.message, 'error')
         }
         else{
-            // Updating the book
-            let cleanBookData = {}
+            // Updating the loan
+            let cleanLoanData = {}
 
-            if(props.targetLoan['title'] !== bookTitle.value) cleanBookData['title'] = bookTitle.value
-            if(props.targetLoan['call_number'] !== bookCallNumber.value) cleanBookData['call_number'] = bookCallNumber.value
-            if(props.targetLoan['author_id'] !== loanReader.value) cleanBookData['author'] = loanReader.value
-            if(props.targetLoan['shelf'] !== bookShelf.value) cleanBookData['shelf'] = bookShelf.value
-            if(props.targetLoan['editorial_id'] !== loanBook.value) cleanBookData['editorial'] = loanBook.value
-            if(props.targetLoan['pages'] !== bookPages.value) cleanBookData['pages'] = bookPages.value
-            if(props.targetLoan['state'] !== bookState.value) cleanBookData['state'] = bookState.value
-            if(props.targetLoan['description'] !== bookDescription.value) cleanBookData['description'] = bookDescription.value
-            if(props.targetLoan['category_ids'] !== bookCategories.value) cleanBookData['categories'] = bookCategories.value
+            if(props.targetLoan['deliver_date'] !== loanDeliverDate.value) cleanLoanData['deliver_date'] = loanDeliverDate.value
+            if(props.targetLoan['book_id'] !== loanBook.value) cleanLoanData['book_id'] = loanBook.value
+            if(props.targetLoan['reader_id'] !== loanReader.value) cleanLoanData['reader_id'] = loanReader.value
+            if(props.targetLoan['observation'] !== loanObservation.value) cleanLoanData['observation'] = loanObservation.value
+            if(props.targetLoan['active'] !== parseInt(loanActive.value[0])) cleanLoanData['active'] = loanActive.value[0]
 
-            if(Object.keys(cleanBookData).length === 0)
+
+            if(Object.keys(cleanLoanData).length === 0)
                 utilsStore.ShowModal('Info', 'No se realizaron cambios', 'info')
             else{
-                const updated = await loanStore.UpdateBook(props.targetLoan['id'], cleanBookData)
+                const updated = await loanStore.UpdateLoan(props.targetLoan['loan_id'], cleanLoanData)
                 if (updated.success)
                     utilsStore.ShowModal('Success', updated.message, 'success')
                 else
@@ -177,6 +199,21 @@ async function ValidateForm() {
 
 const DisplayReaderForm = (() => {
     $('#ReaderModal').modal('show')
+})
+
+const FinishLoan = (async () => {
+    const finishConfirmed = await utilsStore.ConfirmModal('¿El préstamo ha sido devuelto?', 'question')
+    
+    if(finishConfirmed === true){
+        const finishResult = await loanStore.FinishLoan(props.targetLoan.loan_id)
+        if (finishResult.success === true){
+            utilsStore.ShowModal('Éxito', finishResult.message, 'success')
+            router.push('/dashboard')
+        }
+        else{
+            utilsStore.ShowModal('Error', finishResult.message, 'error')
+        }
+    }
 })
 
 const FetchAgain = (() => {
@@ -200,7 +237,7 @@ const FetchAgain = (() => {
                         <div :class="inputContainerStyle">
                             <div class="row col-12">
                                 <div class="row col-12 col-lg-4 m-0 p-0 my-1">
-                                    <input class="col-12 myInput" :max="new Date().toLocaleDateString()" type="date" id="deliver_date" name="deliver_date" value="" v-model="loanDeliverDate">
+                                    <input class="col-12 myInput" type="date" id="deliver_date" name="deliver_date" value="" v-model="loanDeliverDate">
                                 </div>
                             </div>
                         </div>
@@ -211,7 +248,7 @@ const FetchAgain = (() => {
                             <label :class="labelStyle" for="readers"><strong>Lector</strong></label>
                         </div>
                         <div :class="inputContainerStyle">
-                            <div class="row col-10 col-lg-6">
+                            <div class="row col-10 col-lg-8">
                                 <select class="myInput select2" id="readers" :v-model="loanReader">
                                     <option value="">&nbsp;</option>
                                     <template
@@ -234,14 +271,14 @@ const FetchAgain = (() => {
                             <label :class="labelStyle" for="books"><strong>Libro</strong></label>
                         </div>
                         <div :class="inputContainerStyle">
-                            <div class="row col-10 col-lg-5">
+                            <div class="row col-10 col-lg-8">
                                 <select class="myInput select2" id="books" :v-model="loanBook">
                                     <option value="">&nbsp;</option>
                                     <template
                                     v-for="book in props.books.value"
                                     :key="book.id">
                                         <option class="fw-normal" :value="book.id" :selected="loanBook == book.id">
-                                            {{ book.title }}
+                                            {{ book.title }} ({{ book.call_number }})
                                         </option>                                    
                                     </template>
                                 </select>
@@ -259,6 +296,27 @@ const FetchAgain = (() => {
                             </div>
                         </div>
                     </div>
+
+                    <template v-if="Object.keys(props.targetLoan).length !== 0">
+                        <div :class="formRowStyle">
+                            <div :class="labelContainerStyle">
+                                <label :class="labelStyle" for="active">Activo</label>
+                            </div>
+                            <div :class="inputContainerStyle">
+                                <div class="row col-12">
+                                    <div class="row col-12 col-lg-5 m-0 p-0 my-1">
+                                        <input class="col-1 mx-auto mx-lg-0" type="checkbox" id="active" name="active" value="1" v-model="loanActive">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row m-0 p-0 col-12 justify-content-center">
+                            <button class="col-6 col-lg-3 myBtn shadowed-l h3 lb-bg-primary rounded-pill border-1 text-white" type="button" @click="FinishLoan">
+                                Devolución recibida
+                            </button>
+                        </div>
+                    </template>
         
                     <div class="row m-0 p-0 justify-content-center my-2 mt-5">
                         <div class="row m-0 p-0 col-12 justify-content-center">

@@ -19,6 +19,20 @@ const useUtilsStore = defineStore('utils', {
       })
     },
 
+    async ConfirmModal(content, type){
+      let confirmed = false
+      await Swal.fire({
+        title: 'Confirmar',
+        text: content,
+        icon: type,
+        showCancelButton: true,
+        confirmButtonText: 'Sí',
+        cancelButtonText: 'No',
+      }).then((result) => { confirmed = result.isConfirmed; })
+
+      return confirmed
+    },
+
     InitializeSelect2(){
       const select2Ids = [
         'books',

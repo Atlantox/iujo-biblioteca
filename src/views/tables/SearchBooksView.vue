@@ -85,7 +85,7 @@ onMounted(async ()  => {
     :title="'Nuestros libros'"
     />
     <div class="row m-0 p-0 col-12 shadowed-l rounded lb-bg-terciary-ul">
-      <div class="col-12 m-2 d-flex justify-content-center">
+      <div class="col-12 m-2 mt-4 d-flex justify-content-center">
         <AddButtonGadget        
         v-if = "sessionStore.userData.permissons.includes('Libros')"
         :url = "'add_book'"

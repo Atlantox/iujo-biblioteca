@@ -27,19 +27,22 @@ const targetLoan = ref([])
 const fetchReady = ref(false)
 
 onMounted( async () => {
+  await FetchData()
+  fetchReady.value = true
+})
+
+const FetchData = ( async () => {
+  await readerStore.FetchReaders()
   const recievedId = route.params.id
 
   if(recievedId !== undefined && recievedId !== ''){
     targetLoan.value = await loanStore.FetchLoanById(recievedId)
   }
 
-  FetchData()
-  fetchReady.value = true
-})
-
-const FetchData = ( async () => {
-  await readerStore.FetchReaders()
-  await bookStore.FetchBooksWithFilter({'state': 'En biblioteca'})
+  if(recievedId !== undefined && recievedId !== '')
+    await bookStore.FetchBooks()
+  else
+    await bookStore.FetchBooksWithFilter({'state': 'En biblioteca'})
 })
 
 </script>

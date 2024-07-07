@@ -220,7 +220,7 @@ const ValidateForm = (async (e) => {
                             <label :class="labelStyle" for="names"><strong>Nombres</strong></label>
                         </div>
                         <div :class="inputContainerStyle">
-                            <div class="row col-10 col-lg-6">
+                            <div class="row col-10 col-lg-7">
                                 <input type="text" class="myInput" maxlength="60" id="names" v-model="readerNames">
                             </div>
                         </div>
@@ -231,7 +231,7 @@ const ValidateForm = (async (e) => {
                             <label :class="labelStyle" for="surnames"><strong>Apellidos</strong></label>
                         </div>
                         <div :class="inputContainerStyle">
-                            <div class="row col-10 col-lg-6">
+                            <div class="row col-10 col-lg-7">
                                 <input type="text" class="myInput" maxlength="60" id="surnames" v-model="readerSurnames">
                             </div>
                         </div>

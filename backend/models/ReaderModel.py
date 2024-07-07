@@ -65,11 +65,7 @@ class ReaderModel(BaseModel):
             gender,
             phone,
             is_teacher,
-<<<<<<< HEAD
             CONCAT(YEAR(birthdate), '-', LPAD(MONTH(birthdate), 2, '0'), '-', LPAD(DAY(birthdate), 2, '0')) AS birthdate 
-=======
-            CONCAT(YEAR(birthdate), '-', LPAD(MONTH(birthdate), 2, '0'), '-', LPAD(DAY(birthdate), 2, '0')) AS birthdate
->>>>>>> 8d00392a393ff23dc4370da33c0298b1a7b3d859
             FROM
             reader
             WHERE
