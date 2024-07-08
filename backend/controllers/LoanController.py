@@ -318,6 +318,62 @@ def ReturnLoan(loanId):
         return jsonify(response), statusCode
     
 
+@loanController.route('/loans/<int:loanId>', methods=['PUT'])
+def UpdateLoanObservation(loanId):
+    connection = GetConnection()
+    userModel = UserModel(connection)
+    response = {}
+    recievedData, error, statusCode = JsonExists(request)
+
+    token = GetTokenOfRequest(request)
+    if token is None:
+        error = 'Acceso denegado. Autenticación requerida'
+        statusCode = 401
+
+    if error == '':
+        targetUser = userModel.GetUserByToken(token)
+        if type(targetUser) is str:
+            error = targetUser
+            statusCode = 400
+
+    if error == '':
+        if userModel.UserHasPermisson(targetUser['id'], 'Préstamos') is False:
+            error = 'Acción denegada'
+            statusCode = 401  # Unauthorized
+    
+    if error == '':
+        if 'observation' not in recievedData:
+            error = 'Observación no encontrada'
+            statusCode = 400
+        
+    if error == '':
+        if len(recievedData['observation']) > 1000:
+            error = 'El campo Observación supera el límite de caracteres'
+            statusCode = 400    
+
+    if error == '':
+        loanModel = LoanModel(connection)
+        targetLoan = loanModel.GetLoanById(loanId)
+        if targetLoan is None:
+            error = 'Préstamo no encontrado'
+            statusCode = 404
+
+    if error == '':
+        updated = loanModel.UpdateLoanObservation(loanId, recievedData['observation'])
+        if updated is False:
+            error = 'Ocurrió un error al actualizar el préstamo'
+            statusCode = 500
+
+    response['success'] = error == ''
+
+    if error == '':
+        response['message'] = 'Observación del préstamo actualizada correctamente'
+    else:
+        response['message'] = error
+
+    return jsonify(response), statusCode
+
+
 @loanController.route('/loans/<int:loanId>', methods=['DELETE'])
 def DeactivateLoan(loanId):
     connection = GetConnection()
@@ -354,8 +410,15 @@ def DeactivateLoan(loanId):
         if deactivated is False:
             error = 'Hubo un error al intentar desactivar el préstamo'
             statusCode = 400
-        else:
+    
+    if error == '':
+        bookModel = BookModel(connection)
+        bookUpdate = {'state': 'En biblioteca'}
+        updated = bookModel.UpdateBook(targetLoan['book_id'], bookUpdate)
+        if updated:
             message = 'Préstamo desactivado correctamente'
+        else:
+            error = 'Hubo un error al cambiar el estado del libro del préstamo a "En biblioteca"'
 
 
     response['success'] = error == ''

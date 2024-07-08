@@ -293,14 +293,29 @@ class LoanModel(BaseModel):
 
         return result
     
-    # TODO: UPDATE LOAN
-    def UpdateLoan(self, id):
+    def DeactivateLoan(self, loanId):
         cursor = self.connection.connection.cursor()
         result = True
 
         sql = "UPDATE loan SET active = 0 WHERE id = %s"
-        args = (id,)
+        args = (loanId,)
 
+        try:
+            cursor.execute(sql, args)
+            self.connection.connection.commit()
+        except:
+            result = False
+        
+        return result
+
+
+    def UpdateLoanObservation(self, loanId, observation):
+        cursor = self.connection.connection.cursor()
+        result = True
+
+        sql = "UPDATE loan SET observation = %s WHERE id = %s"
+        args = (observation, loanId,)
+        
         try:
             cursor.execute(sql, args)
             self.connection.connection.commit()

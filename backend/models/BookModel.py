@@ -293,6 +293,7 @@ class BookModel(BaseModel):
                 arrayValues.append(value)
             
             sql = sql[0:-1] + " WHERE id = %s"
+            
             arrayValues.append(bookId)
             args = tuple(arrayValues)
 

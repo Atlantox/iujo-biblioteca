@@ -27,7 +27,6 @@ const loanReader = ref('')
 const loanBook = ref('')
 const loanObservation = ref('')
 const loanDeliverDate = ref('')
-const loanReturnDate = ref('')
 const loanActive = ref('')
 
 const formRowStyle = 'row m-0 p-0 justify-content-center my-2'
@@ -78,8 +77,13 @@ onMounted(async () => {
         
         deliverDateInput.value = year + '-' + month + '-' + day
 
-        $('#readers').val(loanReader.value); $('#readers').trigger('change');
-        $('#books').val(loanBook.value); $('#books').trigger('change');
+        $('#readers').val(loanReader.value)
+        $('#readers').trigger('change')
+        $('#readers').prop('disabled', true)
+
+        $('#books').val(loanBook.value);
+        $('#books').trigger('change')
+        $('#books').prop('disabled', true)
     }
 
     // Vue.js presenta algunas dificultades para trabajar con Select2, en este caso le indicamos que al cambiar cualquiera de sus valores
@@ -150,6 +154,11 @@ async function ValidateForm() {
 
 
     if(formErrors.value.length === 0){        
+        const confirmAction = await utilsStore.ConfirmModal('¿Cambiar la observación del préstamo?', 'question')
+
+        if(confirmAction === false)
+            return
+
         if(Object.keys(props.targetLoan).length === 0){
             // Creating the loan
             const cleanLoanData = {
@@ -174,20 +183,15 @@ async function ValidateForm() {
                 utilsStore.ShowModal('Error', created.message, 'error')
         }
         else{
-            // Updating the loan
+            // Updating the loan's observation
             let cleanLoanData = {}
-
-            if(props.targetLoan['deliver_date'] !== loanDeliverDate.value) cleanLoanData['deliver_date'] = loanDeliverDate.value
-            if(props.targetLoan['book_id'] !== loanBook.value) cleanLoanData['book_id'] = loanBook.value
-            if(props.targetLoan['reader_id'] !== loanReader.value) cleanLoanData['reader_id'] = loanReader.value
             if(props.targetLoan['observation'] !== loanObservation.value) cleanLoanData['observation'] = loanObservation.value
-            if(props.targetLoan['active'] !== parseInt(loanActive.value[0])) cleanLoanData['active'] = loanActive.value[0]
-
-
+            
             if(Object.keys(cleanLoanData).length === 0)
                 utilsStore.ShowModal('Info', 'No se realizaron cambios', 'info')
             else{
-                const updated = await loanStore.UpdateLoan(props.targetLoan['loan_id'], cleanLoanData)
+                const updated = await loanStore.UpdateLoanObservation(props.targetLoan['loan_id'], cleanLoanData)
+                
                 if (updated.success)
                     utilsStore.ShowModal('Success', updated.message, 'success')
                 else
@@ -201,10 +205,25 @@ const DisplayReaderForm = (() => {
     $('#ReaderModal').modal('show')
 })
 
+const DeactivateLoan = (async () => {
+    const confirmAction = await utilsStore.ConfirmModal('¿Desactivar el préstamo?', 'question')
+
+    if(confirmAction === true){
+        const finishResult = await loanStore.DeactivateLoan(props.targetLoan.loan_id)
+        if (finishResult.success === true){
+            utilsStore.ShowModal('Éxito', finishResult.message, 'success')
+            router.push('/dashboard')
+        }
+        else{
+            utilsStore.ShowModal('Error', finishResult.message, 'error')
+        }
+    }
+})
+
 const FinishLoan = (async () => {
-    const finishConfirmed = await utilsStore.ConfirmModal('¿El préstamo ha sido devuelto?', 'question')
+    const confirmAction = await utilsStore.ConfirmModal('¿El préstamo ha sido devuelto?', 'question')
     
-    if(finishConfirmed === true){
+    if(confirmAction === true){
         const finishResult = await loanStore.FinishLoan(props.targetLoan.loan_id)
         if (finishResult.success === true){
             utilsStore.ShowModal('Éxito', finishResult.message, 'success')
@@ -237,7 +256,7 @@ const FetchAgain = (() => {
                         <div :class="inputContainerStyle">
                             <div class="row col-12">
                                 <div class="row col-12 col-lg-4 m-0 p-0 my-1">
-                                    <input class="col-12 myInput" type="date" id="deliver_date" name="deliver_date" value="" v-model="loanDeliverDate">
+                                    <input class="col-12 myInput" type="date" id="deliver_date" name="deliver_date" value="" v-model="loanDeliverDate" :disabled="Object.keys(props.targetLoan).length !== 0">
                                 </div>
                             </div>
                         </div>
@@ -298,23 +317,18 @@ const FetchAgain = (() => {
                     </div>
 
                     <template v-if="Object.keys(props.targetLoan).length !== 0">
-                        <div :class="formRowStyle">
-                            <div :class="labelContainerStyle">
-                                <label :class="labelStyle" for="active">Activo</label>
+                        <div class="row m-0 p-0 justify-content-center my-3">
+                            <div class="row m-0 p-0 col-4 justify-content-center">
+                                <button class="col-8 myBtn shadowed-l h3 bg-danger border-white rounded-pill border-1 text-white" type="button" @click="DeactivateLoan">
+                                    Desactivar préstamo
+                                </button>
                             </div>
-                            <div :class="inputContainerStyle">
-                                <div class="row col-12">
-                                    <div class="row col-12 col-lg-5 m-0 p-0 my-1">
-                                        <input class="col-1 mx-auto mx-lg-0" type="checkbox" id="active" name="active" value="1" v-model="loanActive">
-                                    </div>
-                                </div>
+    
+                            <div class="row m-0 p-0 col-4 justify-content-center">
+                                <button class="col-8 myBtn shadowed-l h3 lb-bg-primary rounded-pill border-1 text-white" type="button" @click="FinishLoan">
+                                    Préstamo devuelto
+                                </button>
                             </div>
-                        </div>
-
-                        <div class="row m-0 p-0 col-12 justify-content-center">
-                            <button class="col-6 col-lg-3 myBtn shadowed-l h3 lb-bg-primary rounded-pill border-1 text-white" type="button" @click="FinishLoan">
-                                Devolución recibida
-                            </button>
                         </div>
                     </template>
         

@@ -423,6 +423,11 @@ input[type="file"] {
     border-color:black transparent transparent transparent;
 }
 
+.select2-container--disabled .selection .select2-selection .select2-selection__rendered{
+    background-color: #E2F1FA !important;
+    color: #545454;
+}
+
 .myForm{
     label{
         font-weight: 500;

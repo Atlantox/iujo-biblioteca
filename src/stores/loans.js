@@ -210,9 +210,10 @@ const useLoanStore = defineStore('loans', {
             }
         },
 
-        async UpdateLoan(loanId, loanData){
+        async UpdateLoanObservation(loanId, loanData){
             const sessionStore = useSessionStore()
-            let result = {}
+            let updated  = {}
+
             try{
                 let url = apiConfig.base_url + '/loans/' + loanId
                 var fetchHeaders = {
@@ -231,13 +232,51 @@ const useLoanStore = defineStore('loans', {
 
                 let response = await fetch(url, fetchConfig)
                 let json = await response.json()
-                result = await json                
+                let result = await json
+                updated = result
             }
             catch(error){
-                result = {success: false, message: 'Ocurrió un error inesperado al intentar actualizar el préstamo'}
+                updated  = {
+                    'success': false,
+                    'message': 'Ocurrió un error inesperado al intentar actualizar la observación del préstamo'
+                }
             }
 
-            return result
+            return updated
+        },
+
+        async DeactivateLoan(loanId){
+            const sessionStore = useSessionStore()
+            let deactivated = {}
+
+            try{
+                let url = apiConfig.base_url + '/loans/' + loanId
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+
+                if (sessionStore.authenticated === true)
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'DELETE',
+                    headers: fetchHeaders
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                let result = await json
+                deactivated = result
+            }
+            catch(error){
+                deactivated  = {
+                    'success': false,
+                    'message': 'Ocurrió un error inesperado al intentar desactivar el préstamo'
+                }
+            }
+
+            return deactivated
         }
     }
 })
