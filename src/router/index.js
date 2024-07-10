@@ -22,7 +22,7 @@ import SearchAuthorsView from '@/views/tables/SearchAuthorsView.vue'
 import SearchEditorialsView from '@/views/tables/SearchEditorialsView.vue'
 import SearchUsersView from '@/views/tables/SearchUsersView.vue'
 
-import SeeBookView from '../views/SeeBookView.vue'
+import WatchBookView from '../views/watchers/WatchBookView.vue'
 import SeeLoanView from '../views/SeeLoanView.vue'
 import SeeReaderView from '../views/SeeReaderView.vue'
 import SeeUserView from '../views/SeeUserView.vue'
@@ -63,7 +63,7 @@ const router = createRouter({
     {
       path: '/books/:id',
       name: 'see_book',
-      component: SeeBookView
+      component: WatchBookView
     },
 
     // EDITORIALS
@@ -116,7 +116,7 @@ const router = createRouter({
       meta:{ requireAuth: true, loanPermisson: true }
     },
     {
-      path: '/search_loans',
+      path: '/search_loans/:filter?',
       name: 'loans',
       component: SearchLoanView,
       meta:{ requireAuth: true, loanPermisson: true }

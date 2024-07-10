@@ -76,6 +76,20 @@ class LoanModel(BaseModel):
             loans = []
         
         return loans
+    
+    def GetInactiveLoans(self):
+        cursor = self.connection.connection.cursor()
+        sql = self.LOAN_SELECT_TEMPLATE + "WHERE loan.active = 0 ORDER BY loan.deliver_date"
+
+        try:
+            cursor.execute(sql)
+            loans = cursor.fetchall()
+            if loans == tuple():
+                loans = []
+        except:
+            loans = []
+        
+        return loans
 
     def GetAllLoans(self):
         cursor = self.connection.connection.cursor()
@@ -93,7 +107,8 @@ class LoanModel(BaseModel):
     
     def GetPendingLoans(self):
         cursor = self.connection.connection.cursor()
-        sql = self.LOAN_SELECT_TEMPLATE + "WHERE return_date IS NULL ORDER BY loan.deliver_date"
+        sql = self.LOAN_SELECT_TEMPLATE + "WHERE return_date IS NULL AND loan.active = 1 ORDER BY loan.deliver_date"
+        print(sql)
 
         try:
             cursor.execute(sql)
@@ -107,7 +122,7 @@ class LoanModel(BaseModel):
     
     def GetFinishedLoans(self):
         cursor = self.connection.connection.cursor()
-        sql = self.LOAN_SELECT_TEMPLATE + "WHERE return_date IS NOT NULL ORDER BY loan.deliver_date"
+        sql = self.LOAN_SELECT_TEMPLATE + "WHERE return_date IS NOT NULL AND loan.active = 1 ORDER BY loan.deliver_date"
 
         try:
             cursor.execute(sql)

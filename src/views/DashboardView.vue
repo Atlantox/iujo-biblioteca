@@ -11,7 +11,7 @@ const articleStyle = 'col-12 my-4 rounded bg-white shadowed-l'
 const articleWrappedStyle = 'row col-12 m-0 p-0 justify-content-start shadowed p-2 px-4'
 const h4Style = 'h4 col-12 border-bottom fw-bold'
 const linkContainersStyle = 'd-flex col-12 flex-wrap mt-2'
-const linkElementStyle = 'col-12 col-lg-4'
+const linkElementStyle = 'col-12 col-lg-4 my-1'
 const routerLinkStyle = 'w-100 justify-content-start align-items-center p-1'
 const iconStyle = 'text-black col-1 panel-icon fs-5'
 const linkTextStyle = 'text-grey col-10 fs-5 w-auto hover-bold hover-spacing'
@@ -57,10 +57,34 @@ onMounted( async () => {
                     </router-link>
                   </div>
                   <div :class="linkElementStyle">
-                    <router-link :class="routerLinkStyle" :to="{name: 'loans'}">
+                    <router-link :class="routerLinkStyle" :to="{name: 'loans', params:{filter: 'pending'}}">
                       <i :class="'fa fa-file ' + iconStyle" ></i>
                       <span :class="linkTextStyle">
-                        Ver préstamos
+                        Ver préstamos pendientes
+                      </span>
+                    </router-link>
+                  </div>
+                  <div :class="linkElementStyle">
+                    <router-link :class="routerLinkStyle" :to="{name: 'loans', params:{filter: 'returned'}}">
+                      <i :class="'fa fa-rotate-right ' + iconStyle" ></i>
+                      <span :class="linkTextStyle">
+                        Ver préstamos devueltos
+                      </span>
+                    </router-link>
+                  </div>
+                  <div :class="linkElementStyle">
+                    <router-link :class="routerLinkStyle" :to="{name: 'loans', params:{filter: 'active'}}">
+                      <i :class="'fa fa-check ' + iconStyle" ></i>
+                      <span :class="linkTextStyle">
+                        Ver préstamos activos
+                      </span>
+                    </router-link>
+                  </div>
+                  <div :class="linkElementStyle">
+                    <router-link :class="routerLinkStyle" :to="{name: 'loans', params:{filter: 'inactive'}}">
+                      <i :class="'fa fa-close ' + iconStyle" ></i>
+                      <span :class="linkTextStyle">
+                        Ver préstamos inactivos
                       </span>
                     </router-link>
                   </div>

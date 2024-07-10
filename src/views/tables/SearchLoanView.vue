@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 
 import useLoanStore from '@/stores/loans.js'
 
@@ -14,10 +15,22 @@ import useSessionStore from '@/stores/session'
 
 const loanStore = useLoanStore()
 const sessionStore = useSessionStore()
+const route = useRoute()
 const loans = loanStore.loans
 
 onMounted(async ()  => {
-  await loanStore.FetchPendingLoans()
+  const filter = route.params.filter
+
+  if(['', undefined, 'pending'].includes(filter))
+    await loanStore.FetchPendingLoans()
+  else if(filter === 'returned')
+    await loanStore.FetchReturnedLoans()
+  else if(filter === 'active')
+    await loanStore.FetchActiveLoans()
+  else if(filter === 'inactive')
+    await loanStore.FetchInactiveLoans()
+  else
+    await loanStore.FetchPendingLoans()
 })
 
 </script>

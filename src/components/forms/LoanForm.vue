@@ -279,7 +279,7 @@ const FetchAgain = (() => {
                                     </template>
                                 </select>
                             </div>
-                            <div class="col-1 align-middle cursor-pointer" title="Agregar nuevo lector" @click="DisplayReaderForm()">
+                            <div v-if="Object.keys(props.targetLoan).length === 0" class="col-1 align-middle cursor-pointer" title="Agregar nuevo lector" @click="DisplayReaderForm()">
                                 <i class="fa fa-plus my-auto align-middle text-success bg-white border-black p-1 rounded"></i>
                             </div>
                         </div>

@@ -148,6 +148,44 @@ def GetActiveLoans():
 
     return jsonify(response), statusCode
 
+
+@loanController.route('/loans/inactive', methods=['GET'])
+def GetInactiveLoans():
+    connection = GetConnection()
+    userModel = UserModel(connection)
+    error = ''
+    response = {}
+    statusCode = 200
+
+    token = GetTokenOfRequest(request)
+    if token is None:
+        error = 'Acceso denegado. Autenticación requerida'
+        statusCode = 401
+
+    if error == '':
+        targetUser = userModel.GetUserByToken(token)
+        if type(targetUser) is str:
+            error = targetUser
+            statusCode = 400
+
+    if error == '':
+        if userModel.UserHasPermisson(targetUser['id'], 'Préstamos') is False:
+            error = 'Acción denegada'
+            statusCode = 401  # Unauthorized
+
+    if error == '':
+       loanModel = LoanModel(connection)
+       loans = loanModel.GetInactiveLoans()
+
+    response['success'] = error == ''
+
+    if error == '':
+        response['loans'] = loans
+    else:
+        response['message'] = error
+
+    return jsonify(response), statusCode
+
 @loanController.route('/loans/pendings', methods=['GET'])
 def GetPendingLoans():
     connection = GetConnection()
