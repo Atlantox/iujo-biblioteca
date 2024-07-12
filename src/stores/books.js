@@ -441,6 +441,79 @@ const useBookStore = defineStore('books', {
             }
         },
 
+        async GetBooksOfAuthor(authorId, exceptId = null){
+            var books = false
+            const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
+            try{
+                let url = apiConfig.base_url + '/books/by_author/' + authorId
+                if (exceptId !== null) url += '/' + exceptId
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+
+                if (sessionStore.authenticated === true)
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'GET',
+                    headers: fetchHeaders
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                let result = await json
+                if(result.success){
+                    books = result.books
+                }
+                else
+                    utilsStore.ShowModal('Error', result.message, 'error')
+            }
+            catch(error){
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los libros por autor solicitado: ' + error.message, 'error')
+            }
+
+            return books
+        },
+
+        async GetBooksOfCategories(categories, exceptId = null){
+            var books = false
+            const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
+            try{
+                let url = apiConfig.base_url + '/books/by_categories'
+                if (exceptId !== null) url += '/' + exceptId
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+
+                if (sessionStore.authenticated === true)
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'POST',
+                    headers: fetchHeaders,
+                    body: JSON.stringify({'categories': categories})
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                let result = await json
+                if(result.success){
+                    books = result.books
+                }
+                else
+                    utilsStore.ShowModal('Error', result.message, 'error')
+            }
+            catch(error){
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los libros por categorías solicitadas: ' + error.message, 'error')
+            }
+
+            return books
+        },
+
         async UpdateBook(bookId, bookData){
             const sessionStore = useSessionStore()
             let result = {}

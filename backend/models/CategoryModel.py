@@ -50,6 +50,20 @@ class CategoryModel(BaseModel):
             result = None
         
         return result
+    
+    def GetCategoriesByIdList(self, categoryIds):
+        cursor = self.connection.connection.cursor()
+
+        sql = "SELECT * FROM category WHERE id IN (" + ('%s,' * len(categoryIds))[:-1] + ')'
+        args = tuple(categoryIds)
+
+        try:
+            cursor.execute(sql, args,)
+            result = cursor.fetchall()
+        except:
+            result = None
+        
+        return result
 
     def AddCategoriesToBook(self, bookId, categories):
         cursor = self.connection.connection.cursor()

@@ -128,6 +128,79 @@ class BookModel(BaseModel):
 
         return result
     
+    def GetBooksByCategories(self, categoryIds, exceptId):
+        cursor = self.connection.connection.cursor()
+        sql = self.BOOK_SELECT_TEMPLATE + '''
+            INNER JOIN book_category ON book_category.book = book.id
+            WHERE
+            book_category.category IN (
+            '''
+        
+        sql += ('%s,' * len(categoryIds))[:-1] + ')'
+
+        if exceptId is not None:
+            sql += ' AND book.id != %s'
+
+        sql += ' ORDER BY book.title LIMIT 12 '
+        
+        if exceptId is not None:
+            categoryCopy = categoryIds.copy()
+            categoryCopy.append(exceptId)
+            args = tuple(categoryCopy)
+        else:
+            args = tuple(categoryIds)
+
+        cursor.execute(sql, args,)
+        books = cursor.fetchall()
+        result = []
+        
+        if type(books) is tuple:
+            for i in range(len(books)):
+                book = books[i]
+                categoryModel = CategoryModel(self.connection)
+                categories = categoryModel.GetCategoriesOfBook(book['id'])
+                categoryNames = [ c['name'] for c in categories ]
+                categoryIds = [ c['id'] for c in categories ]
+                book['category_names'] = categoryNames
+                book['category_ids'] = categoryIds
+                result.append(book)
+
+        return result
+    
+    def GetBooksByAuthor(self, authorId, exceptId):
+        cursor = self.connection.connection.cursor()
+        sql = self.BOOK_SELECT_TEMPLATE + '''
+            WHERE
+            book.author = %s
+            
+            '''
+        if exceptId is not None:
+            sql += ' AND book.id != %s '
+
+        sql += ' ORDER BY  book.title LIMIT 12 '
+        
+        if exceptId is None:
+            args = (authorId,)
+        else:
+            args = (authorId, exceptId,)
+            
+        cursor.execute(sql, args)
+        books = cursor.fetchall()
+        result = []
+        
+        if type(books) is tuple:
+            for i in range(len(books)):
+                book = books[i]
+                categoryModel = CategoryModel(self.connection)
+                categories = categoryModel.GetCategoriesOfBook(book['id'])
+                categoryNames = [ c['name'] for c in categories ]
+                categoryIds = [ c['id'] for c in categories ]
+                book['category_names'] = categoryNames
+                book['category_ids'] = categoryIds
+                result.append(book)
+
+        return result
+
     def GetBookById(self, id):
         cursor = self.connection.connection.cursor()
         sql = self.BOOK_SELECT_TEMPLATE + 'WHERE book.id = %s ORDER BY title'

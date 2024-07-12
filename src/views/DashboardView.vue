@@ -343,7 +343,7 @@ onMounted( async () => {
                   </td>
                   <td>
                     <router-link class="text-black" :to="{name:'see_book', params: {id: loan.loan_id}}">
-                      {{ new Date(loan.deliver_date).toLocaleDateString('es-ES', { hour: '2-digit', minute: '2-digit', timeZone: 'GMT'}) }}
+                      {{ new Date(loan.deliver_date).toLocaleDateString('es-VE', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Caracas'}) }}
                     </router-link>
                   </td>
                 </tr>

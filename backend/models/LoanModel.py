@@ -179,7 +179,7 @@ class LoanModel(BaseModel):
     
     def GetLoansBetweenDaysAndToday(self, days):
         cursor = self.connection.connection.cursor()
-        sql = self.LOAN_SELECT_TEMPLATE + 'WHERE loan.deliver_date BETWEEN DATE_SUB(loan.deliver_date, INTERVAL %s DAY) AND NOW() ORDER BY loan.deliver_date LIMIT 6'
+        sql = self.LOAN_SELECT_TEMPLATE + 'WHERE loan.return_date IS NULL AND loan.active = 1 AND loan.deliver_date BETWEEN DATE_SUB(loan.deliver_date, INTERVAL %s DAY) AND NOW() ORDER BY loan.deliver_date LIMIT 6'
         args = (days,)
 
         try:
@@ -201,6 +201,7 @@ class LoanModel(BaseModel):
             FROM
             loan
             WHERE
+            loan.active = 1 AND
             deliver_date BETWEEN DATE_SUB(deliver_date, INTERVAL %s DAY) AND NOW() OR
             return_date BETWEEN DATE_SUB(return_date, INTERVAL %s DAY) AND NOW()
         '''

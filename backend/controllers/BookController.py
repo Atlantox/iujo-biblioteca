@@ -182,9 +182,82 @@ def GetBooksByCategory(categoryId):
 
     if error == '':
         books = bookModel.GetBooksByCategory(categoryId)
+        if books is None:
+            error = 'No hay libros disponibles'
+            statusCode = 404
 
-    if books is None:
-        error = 'No hay libros disponibles'
+    response['success'] = error == ''
+    if error == '':
+        response['books'] = books
+    else:
+        response['message'] = error    
+
+    return jsonify(response), statusCode
+
+
+@bookController.route('/books/by_author/', defaults={'exceptId': None}, methods=['POST'])
+@bookController.route('/books/by_categories/<int:exceptId>', methods=['POST'])
+def GetBooksByCategories(exceptId):
+    connection = GetConnection()
+    bookModel = BookModel(connection)
+    categoryModel = CategoryModel(connection)
+    response = {}
+
+    recievedData, error, statusCode = JsonExists(request)
+
+    if recievedData is None:
+        error = 'JSON no encontrado'
+        statusCode = 400
+
+    if error == '':
+        if 'categories' not in recievedData:
+            error = 'Se requieren las categorías'
+            statusCode = 400
+
+    if error == '':
+        targetCategories = categoryModel.GetCategoriesByIdList(recievedData['categories'])
+        if targetCategories is None:
+            error = 'Categorías no encontradas'
+            statusCode = 404
+
+    if error == '':
+        realCategories = [c['id'] for c in targetCategories]
+        books = bookModel.GetBooksByCategories(realCategories, exceptId)
+
+    if error == '':
+        if books is None:
+            error = 'No hay libros disponibles'
+            statusCode = 404
+
+    response['success'] = error == ''
+    if error == '':
+        response['books'] = books
+    else:
+        response['message'] = error    
+
+    return jsonify(response), statusCode
+
+
+@bookController.route('/books/by_author/<int:authorId>', defaults={'exceptId': None}, methods=['GET'])
+@bookController.route('/books/by_author/<int:authorId>/<int:exceptId>', methods=['GET'])
+def GetBooksByAuthor(authorId, exceptId):
+    connection = GetConnection()
+    bookModel = BookModel(connection)
+    authorModel = AuthorModel(connection)
+    response = {}
+    statusCode = 200
+    error = ''
+
+    targetAuthor = authorModel.GetAuthorById(authorId)
+    if targetAuthor is None:
+        error = 'Autor no encontrado'
+        statusCode = 404
+
+    if error == '':
+        books = bookModel.GetBooksByAuthor(targetAuthor['id'], exceptId)
+        if books is None:
+            error = 'No hay libros disponibles'
+            statusCode = 404
 
     response['success'] = error == ''
     if error == '':

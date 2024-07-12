@@ -23,8 +23,18 @@ const targetBook = ref({})
 const fetchReady = ref(false)
 
 onMounted( async () => {
+  await FetchBook()
+})
+
+const FetchBook = (async (id = null) => {
   fetchReady.value = false
-  const recievedId = route.params.id
+  targetBook.value = {}
+  if (id === null){
+    var recievedId = route.params.id
+  }
+  else{
+    var recievedId = id
+  }
 
   
   if(recievedId !== undefined && recievedId !== '')
@@ -34,6 +44,11 @@ onMounted( async () => {
   
   fetchReady.value = true
   OnAppearAnimation('hide-up')
+
+})
+
+const Examplecito = (async (bookId) => {
+  FetchBook(bookId)
 })
 
 </script>
@@ -53,6 +68,7 @@ onMounted( async () => {
   <template v-else>    
     <BookDetails
     :targetBook="targetBook"
+    @changeBook="Examplecito"
     />
   </template>
 </template>
