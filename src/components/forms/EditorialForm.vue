@@ -66,7 +66,11 @@ async function ValidateForm() {
 
     if(formErrors.value.length === 0){        
         if(Object.keys(props.targetEditorial).length === 0){
-            // Creating the state
+            // Creating the editorial
+            const confirmAction = await utilsStore.ConfirmModal('¿Desea registrar esta nueva editorial?', 'question')
+            if(confirmAction === false)
+                return
+
             const cleanEditorialData = {
                 'name': validationStructure['name']['value'],
             }
@@ -81,7 +85,11 @@ async function ValidateForm() {
                 utilsStore.ShowModal('Error', created.message, 'error')
         }
         else{
-            // Updating the book
+            // Updating the editorial
+            const confirmAction = await utilsStore.ConfirmModal('¿Desea editar esta editorial?', 'question')
+            if(confirmAction === false)
+                return
+
             let cleanEditorialData = {}
 
             if(props.targetEditorial['name'] !== stateName.value) cleanEditorialData['name'] = stateName.value

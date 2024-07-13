@@ -10,7 +10,7 @@ const utilsStore = useUtilsStore()
 const sessionStore = useSessionStore()
 
 const props = defineProps({
-    loans: Array
+    loans: {type: Object, default: {}}
 })
 
 onMounted(() => {
@@ -35,23 +35,23 @@ onMounted(() => {
             </thead>
             <tbody>
             <tr 
-            v-for="loan in props.loans"
+            v-for="loan in props.loans.value"
             :key="loan.id">
                 <td class="border-1"><strong>({{ loan.cedula }})</strong> {{ loan.fullname }}</td>
                 <td class="border-1">{{ loan.title }}</td>
-                <td class="border-1 text-center">{{ new Date(loan.deliver_date).toLocaleDateString() }}</td>
-                <td class="border-1 text-center">{{ loan.return_date === null ? 'N/A' : new Date(loan.return_date).toLocaleDateString() }}</td>
+                <td class="border-1 text-center">{{ new Date(loan.full_deliver_date).toLocaleDateString('es-VE', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Caracas'}) }}</td>
+                <td class="border-1 text-center">{{ loan.return_date === null ? 'N/A' : new Date(loan.full_return_date).toLocaleDateString('es-VE', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Caracas'}) }}</td>
                 <td class="border-1">{{ loan.observation }}</td>
                 <td class="border-1">
                     <div class="row m-0 p-0 text-center justify-content-around">
-                        <div class="row col-4 m-0 p-0 fs-2">
+                        <div class="row col-4 m-0 p-0 fs-3">
                             <div class="w-100 hover-bigger text-center m-0 p-0">
                                 <router-link :to="{name:'see_book', params: {id: loan.loan_id}}">
                                     <i class="text-black bi bi-eye text-center m-0 p-0"></i>
                                 </router-link>
                             </div>
                         </div>
-                        <div class="row col-4 m-0 p-0 fs-2" v-if="sessionStore.userData.permissons.includes('Préstamos')">
+                        <div class="row col-4 m-0 p-0 fs-3" v-if="sessionStore.userData.permissons.includes('Préstamos')">
                             <div class="w-100 hover-bigger text-center m-0 p-0">
                                 <router-link :to="{name:'add_loan', params: {id: loan.loan_id}}">
                                     <i class="text-black bi bi-pencil text-center m-0 p-0"></i>

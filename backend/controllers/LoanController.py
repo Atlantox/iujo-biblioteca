@@ -262,6 +262,50 @@ def GetFinishedLoans():
     return jsonify(response), statusCode
 
 
+@loanController.route('/loans/reader/<int:readerId>', methods=['GET'])
+def GetLoansOfReader(readerId):
+    connection = GetConnection()
+    userModel = UserModel(connection)
+    error = ''
+    response = {}
+    statusCode = 200
+
+    token = GetTokenOfRequest(request)
+    if token is None:
+        error = 'Acceso denegado. Autenticación requerida'
+        statusCode = 401
+
+    if error == '':
+        targetUser = userModel.GetUserByToken(token)
+        if type(targetUser) is str:
+            error = targetUser
+            statusCode = 400
+
+    if error == '':
+        if userModel.UserHasPermisson(targetUser['id'], 'Préstamos') is False:
+            error = 'Acción denegada'
+            statusCode = 401  # Unauthorized
+
+    if error == '':
+        readerModel = ReaderModel(connection)
+        if readerModel.GetReaderById(readerId) is False:
+            error = 'Lector no encontrado'
+            statusCode = 404
+
+    if error == '':
+       loanModel = LoanModel(connection)
+       loans = loanModel.GetLoansOfReader(readerId)
+
+    response['success'] = error == ''
+
+    if error == '':
+        response['loans'] = loans
+    else:
+        response['message'] = error
+        
+    return jsonify(response), statusCode
+
+
 @loanController.route('/loans/<int:loanId>', methods=['GET'])
 def GetLoanById(loanId):
     connection = GetConnection()

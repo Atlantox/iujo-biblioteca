@@ -23,13 +23,7 @@ const loansCount = loanStore.counts
 
 onMounted( async () => {
   await loanStore.FetchLatestLoans()
-
-  if (loanStore.errorMessage !== '')
-    sessionStore.ShowModal('Error', loanStore.errorMessage, 'error')
-
   await loanStore.FetchLoansRecentCount()
-  if (loanStore.errorMessage !== '')
-    sessionStore.ShowModal('Error', loanStore.errorMessage, 'error')
 })
 </script>
 
@@ -343,7 +337,7 @@ onMounted( async () => {
                   </td>
                   <td>
                     <router-link class="text-black" :to="{name:'see_book', params: {id: loan.loan_id}}">
-                      {{ new Date(loan.deliver_date).toLocaleDateString('es-VE', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Caracas'}) }}
+                      {{ new Date(loan.full_deliver_date).toLocaleDateString('es-VE', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Caracas'}) }}
                     </router-link>
                   </td>
                 </tr>

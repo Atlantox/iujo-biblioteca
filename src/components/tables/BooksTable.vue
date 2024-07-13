@@ -65,13 +65,15 @@ onMounted(() => {
                                     </router-link>
                                 </div>
                             </div>
-                            <div class="row col-4 m-0 p-0 fs-2" v-if="sessionStore.userData.permissons.includes('Libros')">
-                                <div class="w-100 hover-bigger text-center m-0 p-0">
-                                    <router-link :to="{name:'add_book', params: {id: book.id}}">
-                                        <i class="text-black bi bi-pencil text-center m-0 p-0"></i>
-                                    </router-link>
+                            <template v-if="sessionStore.authenticated === true">
+                                <div class="row col-4 m-0 p-0 fs-2" v-if="sessionStore.userData.permissons.includes('Libros')">
+                                    <div class="w-100 hover-bigger text-center m-0 p-0">
+                                        <router-link :to="{name:'add_book', params: {id: book.id}}">
+                                            <i class="text-black bi bi-pencil text-center m-0 p-0"></i>
+                                        </router-link>
+                                    </div>
                                 </div>
-                            </div>
+                            </template>
                         </div>
                     </td>
                 </tr>

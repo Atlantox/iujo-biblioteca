@@ -12,7 +12,6 @@ const useLoanStore = defineStore('loans', {
     state: () => {
         return {
             loans: ref([]),
-            errorMessage: ref(''),
             counts: ref([]),
         }
     },
@@ -84,6 +83,39 @@ const useLoanStore = defineStore('loans', {
             return targetLoan
         },
 
+        async FetchLoanOfReaderId(id){
+            const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
+            try{
+                let url = apiConfig.base_url + '/loans/reader/' + id
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+
+                if (sessionStore.authenticated === true)
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'GET',
+                    headers: fetchHeaders
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                let result = await json
+                
+                if(result.success){
+                    this.loans.value = result.loans
+                }
+                else
+                    utilsStore.ShowModal('Error', result.message, 'error')
+            }
+            catch(error){
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los préstamos del lector', 'error')
+            }
+        },
+
         async FinishLoan(loanId){
             const sessionStore = useSessionStore()
             let result = {}
@@ -135,7 +167,6 @@ const useLoanStore = defineStore('loans', {
                 let json = await response.json()
                 let result = await json
                 if(result.success){
-                    this.errorMessage = ''
                     this.loans.value = result.loans
                 }
                 else
@@ -168,7 +199,6 @@ const useLoanStore = defineStore('loans', {
                 let json = await response.json()
                 let result = await json
                 if(result.success){
-                    this.errorMessage = ''
                     this.loans.value = result.loans
                 }
                 else
@@ -182,6 +212,7 @@ const useLoanStore = defineStore('loans', {
         async FetchActiveLoans(){
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
+            this.loans.value = []
             try{
                 let url = apiConfig.base_url + '/loans'
                 var fetchHeaders = {
@@ -201,7 +232,6 @@ const useLoanStore = defineStore('loans', {
                 let json = await response.json()
                 let result = await json
                 if(result.success){
-                    this.errorMessage = ''
                     this.loans.value = result.loans
                 }
                 else
@@ -234,7 +264,6 @@ const useLoanStore = defineStore('loans', {
                 let json = await response.json()
                 let result = await json
                 if(result.success){
-                    this.errorMessage = ''
                     this.loans.value = result.loans
                 }
                 else
@@ -267,7 +296,6 @@ const useLoanStore = defineStore('loans', {
                 let json = await response.json()
                 let result = await json
                 if(result.success){
-                    this.errorMessage = ''
                     this.loans.value = result.loans
                 }
                 else

@@ -8,14 +8,19 @@ import OnAppearAnimation from '@/utils/ElegantDisplayer'
 
 import useUtilsStore from '@/stores/utils'
 import useReaderStore from '@/stores/readers'
+import useLoanStore from '@/stores/loans'
+
+import LoanTable from '../tables/LoanTable.vue'
 
 
 const utilsStore = useUtilsStore()
 const readerStore = useReaderStore()
+const loanStore = useLoanStore()
 const today = ref(new Date())
 
 const mounted = ref(false)
 const formErrors = ref([])
+const readerLoans = loanStore.loans
 
 const readerCedula = ref('')
 const readerNames = ref('')
@@ -36,7 +41,7 @@ const props = defineProps({
 
 const emits = defineEmits(['formOk'])
 
-onMounted(() => {
+onMounted(async () => {
     var year = today.value.getFullYear() - 10
     var month = today.value.getMonth() + 1
     if(month < 10) month = '0' + month
@@ -48,6 +53,7 @@ onMounted(() => {
     birthdateInput.max = today.value
     OnAppearAnimation('hide-up')
     if(Object.keys(props.targetReader).length !== 0){
+        await loanStore.FetchLoanOfReaderId(props.targetReader.id)
         readerCedula.value = props.targetReader.cedula
         readerNames.value = props.targetReader.names
         readerSurnames.value = props.targetReader.surnames
@@ -141,6 +147,10 @@ const ValidateForm = (async (e) => {
     if(formErrors.value.length === 0){        
         if(Object.keys(props.targetReader).length === 0){
             // Creating the reader
+            const confirmAction = await utilsStore.ConfirmModal('¿Desea registrar este nuevo lector?', 'question')
+            if(confirmAction === false)
+                return
+
             const cleanReaderData = {
                 'cedula': String(validationStructure['cedula']['value']),
                 'names': validationStructure['names']['value'],
@@ -168,6 +178,10 @@ const ValidateForm = (async (e) => {
         }
         else{
             // Updating the reader
+            const confirmAction = await utilsStore.ConfirmModal('¿Desea editar este lector?', 'question')
+            if(confirmAction === false)
+                return
+
             let cleanReaderData = {}
 
             if(props.targetReader['cedula'] !== String(readerCedula.value)) cleanReaderData['cedula'] = String(readerCedula.value)
@@ -312,6 +326,18 @@ const ValidateForm = (async (e) => {
                     </div>
                     
                 </div>    
+
+                <!-- Reader's loans -->
+                <div v-if="Object.keys(props.targetReader).length !== 0 && mounted === true" class="col-12 col-lg-10 p-2 row shadowed-l rounded lb-bg-terciary-ul justify-content-center mt-5">
+                    <h2 class="w-100 text-center h1 my-3 fw-bold">
+                        Préstamos de {{ props.targetReader.names }}
+                    </h2>
+                    <div class="w-100 p-2 fs-6">
+                        <LoanTable
+                        :loans="readerLoans"
+                        />
+                    </div>
+                </div>
             </div>
         </template>
     </form>

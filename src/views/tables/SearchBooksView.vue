@@ -85,13 +85,16 @@ onMounted(async ()  => {
     :title="'Nuestros libros'"
     />
     <div class="row m-0 p-0 col-12 shadowed-l rounded lb-bg-terciary-ul">
-      <div class="col-12 m-2 mt-4 d-flex justify-content-center">
-        <AddButtonGadget        
-        v-if = "sessionStore.userData.permissons.includes('Libros')"
-        :url = "'add_book'"
-        :title = "'Registrar nuevo libro'"
-        />
-      </div>
+      <template
+      v-if="sessionStore.authenticated === true">
+        <div class="col-12 m-2 mt-4 d-flex justify-content-center">
+          <AddButtonGadget        
+          v-if = "sessionStore.userData.permissons.includes('Libros')"
+          :url = "'add_book'"
+          :title = "'Registrar nuevo libro'"
+          />
+        </div>
+      </template>
 
       <div class="row w-100 m-0 p-0 fs-5 p-3">
         <h3 class="w-100">

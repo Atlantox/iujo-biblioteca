@@ -157,9 +157,14 @@ async function ValidateForm() {
     if(bookPages.value > 99999)
         formErrors.value.push('El número de páginas no puede ser mayor a 99999')
 
-    if(formErrors.value.length === 0){        
+    if(formErrors.value.length === 0){  
+        
         if(Object.keys(props.targetBook).length === 0){
             // Creating the book
+            const confirmAction = await utilsStore.ConfirmModal('¿Desea registrar este nuevo libro?', 'question')
+            if(confirmAction === false)
+                return
+
             const cleanBookData = {
                 'title': validationStructure['title']['value'],
                 'call_number': validationStructure['call_number']['value'],
@@ -194,6 +199,9 @@ async function ValidateForm() {
         }
         else{
             // Updating the book
+            const confirmAction = await utilsStore.ConfirmModal('¿Desea editar este libro?', 'question')
+            if(confirmAction === false)
+                return
             let cleanBookData = {}
 
             if(props.targetBook['title'] !== bookTitle.value) cleanBookData['title'] = bookTitle.value

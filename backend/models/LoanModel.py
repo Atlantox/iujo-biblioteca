@@ -9,9 +9,12 @@ class LoanModel(BaseModel):
         CONCAT(reader.names, ' ', reader.surnames) as fullname,
         reader.cedula,
         loan.id as loan_id,
+        CONCAT(YEAR(loan.created_at), '-', LPAD(MONTH(loan.created_at), 2, '0'), '-', LPAD(DAY(loan.created_at), 2, '0')) AS created_at, 
         CONCAT(YEAR(loan.deliver_date), '-', LPAD(MONTH(loan.deliver_date), 2, '0'), '-', LPAD(DAY(loan.deliver_date), 2, '0')) AS deliver_date, 
+        CONCAT(YEAR(loan.deliver_date), '-', LPAD(MONTH(loan.deliver_date), 2, '0'), '-', LPAD(DAY(loan.deliver_date), 2, '0'), ' ', TIME(loan.deliver_date)) AS full_deliver_date, 
         loan.observation,
-        loan.return_date,
+        CONCAT(YEAR(loan.return_date), '-', LPAD(MONTH(loan.return_date), 2, '0'), '-', LPAD(DAY(loan.return_date), 2, '0')) AS return_date, 
+        CONCAT(YEAR(loan.return_date), '-', LPAD(MONTH(loan.return_date), 2, '0'), '-', LPAD(DAY(loan.return_date), 2, '0'), ' ', TIME(loan.return_date)) AS full_return_date, 
         loan.active
         FROM
         loan
@@ -108,7 +111,6 @@ class LoanModel(BaseModel):
     def GetPendingLoans(self):
         cursor = self.connection.connection.cursor()
         sql = self.LOAN_SELECT_TEMPLATE + "WHERE return_date IS NULL AND loan.active = 1 ORDER BY loan.deliver_date"
-        print(sql)
 
         try:
             cursor.execute(sql)
@@ -126,6 +128,20 @@ class LoanModel(BaseModel):
 
         try:
             cursor.execute(sql)
+            loans = cursor.fetchall()
+            if loans == tuple():
+                loans = []
+        except:
+            loans = []
+        
+        return loans
+    
+    def GetLoansOfReader(self, readerId):
+        cursor = self.connection.connection.cursor()
+        sql = self.LOAN_SELECT_TEMPLATE + "WHERE loan.active = 1 AND loan.reader = %s ORDER BY loan.deliver_date"
+        args = (readerId,)
+        try:
+            cursor.execute(sql, args)
             loans = cursor.fetchall()
             if loans == tuple():
                 loans = []
@@ -170,16 +186,22 @@ class LoanModel(BaseModel):
         try:
             cursor.execute(sql, args)
             loans = cursor.fetchall()
-            if loans is tuple():
+            if loans == tuple():
                 loans = []
         except:
             loans = []
-        
+
         return loans
     
     def GetLoansBetweenDaysAndToday(self, days):
         cursor = self.connection.connection.cursor()
-        sql = self.LOAN_SELECT_TEMPLATE + 'WHERE loan.return_date IS NULL AND loan.active = 1 AND loan.deliver_date BETWEEN DATE_SUB(loan.deliver_date, INTERVAL %s DAY) AND NOW() ORDER BY loan.deliver_date LIMIT 6'
+        sql = self.LOAN_SELECT_TEMPLATE
+        sql += '''WHERE 
+            loan.return_date IS NULL AND 
+            loan.active = 1 AND
+            loan.deliver_date BETWEEN DATE_SUB(loan.deliver_date, INTERVAL %s DAY) AND NOW() 
+            ORDER BY 
+            loan.deliver_date DESC LIMIT 6'''
         args = (days,)
 
         try:

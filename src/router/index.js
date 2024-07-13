@@ -23,9 +23,6 @@ import SearchEditorialsView from '@/views/tables/SearchEditorialsView.vue'
 import SearchUsersView from '@/views/tables/SearchUsersView.vue'
 
 import WatchBookView from '../views/watchers/WatchBookView.vue'
-import SeeLoanView from '../views/SeeLoanView.vue'
-import SeeReaderView from '../views/SeeReaderView.vue'
-import SeeUserView from '../views/SeeUserView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -121,12 +118,6 @@ const router = createRouter({
       component: SearchLoanView,
       meta:{ requireAuth: true, loanPermisson: true }
     },
-    {
-      path: '/see_loan/:id',
-      name: 'see_loan',
-      component: SeeLoanView,
-      meta:{ requireAuth: true, loanPermisson: true }
-    },
 
     // READERS
     {
@@ -141,12 +132,6 @@ const router = createRouter({
       component: SearchReadersView,
       meta:{ requireAuth: true, readerPermisson: true }
     },
-    {
-      path: '/see_reader/:id',
-      name: 'see_reader',
-      component: SeeReaderView,
-      meta:{ requireAuth: true, readerPermisson: true }
-    },
 
     // USERS
     {
@@ -159,12 +144,6 @@ const router = createRouter({
       path: '/search_users',
       name: 'users',
       component: SearchUsersView,
-      meta:{ requireAuth: true, editorPermisson: true }
-    },
-    {
-      path: '/see_user/:id',
-      name: 'see_user',
-      component: SeeUserView,
       meta:{ requireAuth: true, editorPermisson: true }
     },
   ]

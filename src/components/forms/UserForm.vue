@@ -110,6 +110,10 @@ const ValidateForm = (async (e) => {
     if(formErrors.value.length === 0){        
         if(Object.keys(props.targetUser).length === 0){
             // Creating the user
+            const confirmAction = await utilsStore.ConfirmModal('¿Desea registrar este nuevo usuario?', 'question')
+            if(confirmAction === false)
+                return
+
             const cleanUserData = {
                 'nickname': validationStructure['nickname']['value'],
                 'username': validationStructure['username']['value'],
@@ -133,6 +137,10 @@ const ValidateForm = (async (e) => {
         }
         else{
             // Updating the user
+            const confirmAction = await utilsStore.ConfirmModal('¿Desea editar este nuevo usuario?', 'question')
+            if(confirmAction === false)
+                return
+
             let cleanUserData = {}
 
             if(props.targetUser['nickname'] !== userNickname.value) cleanUserData['nickname'] = userNickname.value

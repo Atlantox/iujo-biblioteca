@@ -67,6 +67,10 @@ async function ValidateForm() {
     if(formErrors.value.length === 0){        
         if(Object.keys(props.targetCategory).length === 0){
             // Creating the category
+            const confirmAction = await utilsStore.ConfirmModal('¿Desea registrar esta nueva categoría?', 'question')
+            if(confirmAction === false)
+                return
+
             const cleanCategoryData = {
                 'name': validationStructure['name']['value'],
             }
@@ -82,6 +86,10 @@ async function ValidateForm() {
         }
         else{
             // Updating the category
+            const confirmAction = await utilsStore.ConfirmModal('¿Desea editar esta categoría?', 'question')
+            if(confirmAction === false)
+                return
+
             let cleanCategoryData = {}
 
             if(props.targetCategory['name'] !== categoryName.value) cleanCategoryData['name'] = categoryName.value

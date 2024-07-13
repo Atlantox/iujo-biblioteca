@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 import useLoanStore from '@/stores/loans.js'
@@ -17,21 +17,31 @@ const loanStore = useLoanStore()
 const sessionStore = useSessionStore()
 const route = useRoute()
 const loans = loanStore.loans
+const fetched = ref(false)
 
 onMounted(async ()  => {
   const filter = route.params.filter
-
   if(['', undefined, 'pending'].includes(filter))
     await loanStore.FetchPendingLoans()
   else if(filter === 'returned')
     await loanStore.FetchReturnedLoans()
-  else if(filter === 'active')
+  else if(filter === 'active'){
     await loanStore.FetchActiveLoans()
+  }
   else if(filter === 'inactive')
     await loanStore.FetchInactiveLoans()
   else
     await loanStore.FetchPendingLoans()
+
+  fetched.value = true
 })
+
+const stateTranslator = {
+  'pending': 'pendientes',
+  'active': 'activos',
+  'returned': 'devueltos',
+  'inactive': 'inactivos'
+}
 
 </script>
 
@@ -41,7 +51,7 @@ onMounted(async ()  => {
         <BackButtonGadget :back_to="'dashboard'"/>
     </div>
     <PageTitleView
-    :title="'Lista de préstamos'"
+    :title="'Lista de préstamos ' + stateTranslator[route.params.filter]"
     />
     <div class="row m-0 p-0 col-12 py-4 shadowed-l rounded lb-bg-terciary-ul justify-content-center">
       <AddButtonGadget
@@ -50,13 +60,14 @@ onMounted(async ()  => {
       :title = "'Registrar nuevo préstamo'"
       />
       <template
-      v-if="loans.value === undefined">
+      v-if="fetched === false">
         <LoadingGadget/>
       </template>
       <template v-else>
         <div class="w-100 m-0 p-3 px-5 table-container">
           <LoanTable
-            :loans="loans.value"/>
+            :loans="loans"
+          />
         </div>
       </template>
     </div>

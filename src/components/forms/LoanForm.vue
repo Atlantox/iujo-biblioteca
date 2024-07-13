@@ -46,7 +46,7 @@ onMounted(async () => {
     utilsStore.InitializeSelect2()
     OnAppearAnimation('hide-up')
 
-    var year = today.value.getFullYear() - 10
+    var year = today.value.getFullYear()
     var month = today.value.getMonth() + 1
     if(month < 10) month = '0' + month
     var day = today.value.getDate()
@@ -154,12 +154,11 @@ async function ValidateForm() {
 
 
     if(formErrors.value.length === 0){        
-        const confirmAction = await utilsStore.ConfirmModal('¿Cambiar la observación del préstamo?', 'question')
-
-        if(confirmAction === false)
-            return
-
         if(Object.keys(props.targetLoan).length === 0){
+            const confirmAction = await utilsStore.ConfirmModal('¿Desea registrar nuevo préstamo?', 'question')
+            if(confirmAction === false)
+                return
+
             // Creating the loan
             const cleanLoanData = {
                 'deliver_date': validationStructure['deliver_date']['value'],
@@ -182,8 +181,12 @@ async function ValidateForm() {
             else
                 utilsStore.ShowModal('Error', created.message, 'error')
         }
-        else{
+        else{    
             // Updating the loan's observation
+            const confirmAction = await utilsStore.ConfirmModal('¿Desea editar la observación del préstamo?', 'question')
+            if(confirmAction === false)
+                return
+
             let cleanLoanData = {}
             if(props.targetLoan['observation'] !== loanObservation.value) cleanLoanData['observation'] = loanObservation.value
             
@@ -206,7 +209,7 @@ const DisplayReaderForm = (() => {
 })
 
 const DeactivateLoan = (async () => {
-    const confirmAction = await utilsStore.ConfirmModal('¿Desactivar el préstamo?', 'question')
+    const confirmAction = await utilsStore.ConfirmModal('¿Desea desactivar el préstamo?', 'question')
 
     if(confirmAction === true){
         const finishResult = await loanStore.DeactivateLoan(props.targetLoan.loan_id)
@@ -255,8 +258,21 @@ const FetchAgain = (() => {
                         </div>
                         <div :class="inputContainerStyle">
                             <div class="row col-12">
-                                <div class="row col-12 col-lg-4 m-0 p-0 my-1">
+                                <div class="row col-12 col-lg-4 m-0 p-0">
                                     <input class="col-12 myInput" type="date" id="deliver_date" name="deliver_date" value="" v-model="loanDeliverDate" :disabled="Object.keys(props.targetLoan).length !== 0">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div :class="formRowStyle" v-if="Object.keys(props.targetLoan).length !== 0">
+                        <div :class="labelContainerStyle">
+                            <label :class="labelStyle" for="deliver_date"><strong>Fecha de creación</strong></label>
+                        </div>
+                        <div :class="inputContainerStyle">
+                            <div class="row col-12">
+                                <div class="row col-12 col-lg-4 m-0 p-0">
+                                    <input class="col-12 myInput" type="date" id="deliver_date" name="deliver_date" :value="props.targetLoan.created_at" :disabled="Object.keys(props.targetLoan).length !== 0">
                                 </div>
                             </div>
                         </div>

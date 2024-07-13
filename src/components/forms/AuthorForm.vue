@@ -65,7 +65,11 @@ async function ValidateForm() {
 
     if(formErrors.value.length === 0){        
         if(Object.keys(props.targetAuthor).length === 0){
-            // Creating the state
+            // Creating the author
+            const confirmAction = await utilsStore.ConfirmModal('¿Desea registrar este nuevo autor?', 'question')
+            if(confirmAction === false)
+                return
+            
             const cleanAuthorData = {
                 'name': validationStructure['name']['value'],
             }
@@ -80,7 +84,11 @@ async function ValidateForm() {
                 utilsStore.ShowModal('Error', created.message, 'error')
         }
         else{
-            // Updating the book
+            // Updating the author
+            const confirmAction = await utilsStore.ConfirmModal('¿Desea editar este libro?', 'question')
+            if(confirmAction === false)
+                return
+
             let cleanAuthorData = {}
 
             if(props.targetAuthor['name'] !== authorName.value) cleanAuthorData['name'] = authorName.value
