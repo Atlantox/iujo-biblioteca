@@ -7,6 +7,7 @@ import DashboardView from '../views/DashboardView.vue'
 
 import LoginFormView from '../views/forms/LoginFormView.vue'
 import BookFormView from '../views/forms/BookFormView.vue'
+import BooksByExcelView from '../views/forms/BooksByExcelView.vue'
 import LoanFormView from '../views/forms/LoanFormView.vue'
 import ReaderFormView from '../views/forms/ReaderFormView.vue'
 import CategoryFormView from '@/views/forms/CategoryFormView.vue'
@@ -50,6 +51,12 @@ const router = createRouter({
       path: '/add_book/:id?',
       name: 'add_book',
       component: BookFormView,
+      meta:{ requireAuth: true, bookPermisson: true }
+    },
+    {
+      path: '/add_book_excel',
+      name: 'add_book_excel',
+      component: BooksByExcelView,
       meta:{ requireAuth: true, bookPermisson: true }
     },
     {

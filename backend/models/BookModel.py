@@ -346,6 +346,35 @@ class BookModel(BaseModel):
         
         return states
     
+    def BookAreRepeated(self, bookData):
+        ''' Recibe un title, author y editorial, si se encontró un libro con esas coincidencias, entonces está repetido y retorna True '''
+        cursor = self.connection.connection.cursor()
+        bookTitle = bookData['title']
+        bookAuthor = bookData['author']
+        bookEditorial = bookData['editorial']
+
+        sql = '''SELECT
+            book.id
+            FROM
+            book
+            LEFT JOIN author ON author.id = book.author 
+            LEFT JOIN editorial ON editorial.id = book.editorial
+            WHERE
+            book.title = %s AND
+            author.name = %s AND
+            editorial.name = %s'''
+        
+        args = (bookTitle, bookAuthor, bookEditorial,)
+        try:
+            cursor.execute(sql, args)
+            booksFound = cursor.fetchall()
+            found = booksFound is not tuple()
+        except:
+            found = False
+        
+        return found
+
+    
     def UpdateBook(self, bookId, bookData):
         result = True
         if 'categories' in bookData:

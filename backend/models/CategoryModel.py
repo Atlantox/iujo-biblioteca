@@ -6,6 +6,19 @@ class CategoryModel(BaseModel):
         sql = "SELECT * FROM category"
         cursor.execute(sql)
         return cursor.fetchall()
+    
+    def GetCategoryNames(self):
+        ''' Return a list of the names of all categories '''
+        cursor = self.connection.connection.cursor()
+        sql = "SELECT name FROM category"
+        cursor.execute(sql)
+        categories = cursor.fetchall()
+        categoryNames = []
+        if categories is not None:
+            categoryNames = [c['name'] for c in categories]
+
+        return categoryNames
+            
 
     def CreateCategory(self, categoryData):
         name = categoryData['name']

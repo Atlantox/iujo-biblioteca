@@ -47,6 +47,36 @@ const useBookStore = defineStore('books', {
             return result
         },
 
+        async CreateBooks(booksData){
+            const sessionStore = useSessionStore()
+            let result = {}
+            try{
+                let url = apiConfig.base_url + '/books/excel'
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+
+                if (sessionStore.authenticated === true)
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'POST',
+                    headers: fetchHeaders,
+                    body: JSON.stringify(booksData)
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                result = await json                
+            }
+            catch(error){
+                result = {success: false, message: 'Ocurrió un error inesperado al crear los libros'}
+            }
+
+            return result
+        },
+
         async CreateEditorial(editorialData){
             const sessionStore = useSessionStore()
             let result = {}

@@ -12,7 +12,7 @@ const useUtilsStore = defineStore('utils', {
     ShowModal(title, content, type){
       Swal.fire({
         title: title,
-        text: content,
+        html: content,
         icon: type,
         confirmButtonColor: '#71E580',
         cancelButtonColor: '#71E580'

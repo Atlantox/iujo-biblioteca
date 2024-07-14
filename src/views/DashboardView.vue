@@ -110,6 +110,14 @@ onMounted( async () => {
                       </span>
                     </router-link>
                   </div>
+                  <div :class="linkElementStyle">
+                    <router-link :class="routerLinkStyle" :to="{name: 'add_book_excel'}">
+                      <i :class="'fa fa-table ' + iconStyle" ></i>
+                      <span :class="linkTextStyle">
+                        Añadir libros por Excel
+                      </span>
+                    </router-link>
+                  </div>
                 </div>
               </div>
             </article>

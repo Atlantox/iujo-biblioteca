@@ -38,33 +38,14 @@ def GetConnection():
     
     return connection
 
-@bookController.route('/books', methods=['POST'])
-def CreateBook():
-    connection = GetConnection()
-    userModel = UserModel(connection)
-    
-    recievedData, error, statusCode = JsonExists(request)
-    token = GetTokenOfRequest(request)
-    if token is None:
-        error = 'Acceso denegado. Autenticación requerida'
-        statusCode = 401
-
+def DoCreateBook(bookData, connection):
+    error = ''
+    statusCode = 200
     if error == '':
-        targetUser = userModel.GetUserByToken(token)
-        if type(targetUser) is str:
-            error = targetUser
-            statusCode = 400
-    
-    if error == '':
-        cleanData = ValidateBookData(recievedData)
+        cleanData = ValidateBookData(bookData)
         if type(cleanData) is str:
             error = cleanData
             statusCode = 400
-
-    if error == '':
-        if userModel.UserHasPermisson(targetUser['id'], 'Libros') is False:
-            error = 'Acción denegada'
-            statusCode = 401  # Unauthorized
 
     if error == '':
         bookModel = BookModel(connection)
@@ -112,18 +93,202 @@ def CreateBook():
     
     if error == '':
         created = bookModel.CreateBook(cleanData)
+    else:
+        created = error
+
+    return created, statusCode
+
+
+@bookController.route('/books', methods=['POST'])
+def CreateBook():
+    connection = GetConnection()
+    userModel = UserModel(connection)
+    
+    recievedData, error, statusCode = JsonExists(request)
+    token = GetTokenOfRequest(request)
+    if token is None:
+        error = 'Acceso denegado. Autenticación requerida'
+        statusCode = 401
+
+    if error == '':
+        targetUser = userModel.GetUserByToken(token)
+        if type(targetUser) is str:
+            error = targetUser
+            statusCode = 400
+
+    if error == '':
+        if userModel.UserHasPermisson(targetUser['id'], 'Libros') is False:
+            error = 'Acción denegada'
+            statusCode = 401  # Unauthorized
+    
+    if error == '':
+        created, statusCode = DoCreateBook(recievedData, connection)
         if type(created) is str:
             error = created
             statusCode = 500
         else:
-            action = 'Creó el Libro "{0}"'.format(cleanData['title'])
-            bookModel.CreateBinnacle(targetUser['id'], action)
+            action = 'Creó el Libro "{0}"'.format(recievedData['title'])
+            userModel.CreateBinnacle(targetUser['id'], action)
             message = 'Libro creado correctamente'
 
     if error != '':
         message = error
         
     success = error == ''
+    return jsonify({'success': success, 'message': message}), statusCode
+
+
+@bookController.route('/books/excel', methods=['POST'])
+def CreateBooksByExcel():
+    connection = GetConnection()
+    userModel = UserModel(connection)
+    bookModel = BookModel(connection)
+    
+    recievedData, error, statusCode = JsonExists(request)
+
+    token = GetTokenOfRequest(request)
+    if token is None:
+        error = 'Acceso denegado. Autenticación requerida'
+        statusCode = 401
+
+    if error == '':
+        targetUser = userModel.GetUserByToken(token)
+        if type(targetUser) is str:
+            error = targetUser
+            statusCode = 400
+
+    if error == '':
+        if userModel.UserHasPermisson(targetUser['id'], 'Libros') is False:
+            error = 'Acción denegada'
+            statusCode = 401  # Unauthorized
+
+    if error == '':
+        if type(recievedData) is not list:
+            error = 'Información recibida en el formato incorrecto'
+            statusCode = 400
+
+    creationError = ''
+    booksCreated = 0
+    if error == '':
+        categoryModel = CategoryModel(connection)
+        authorModel = AuthorModel(connection)
+        editorialModel = EditorialModel(connection)
+        EXCEL_FIELDS = {
+            'Título': 'title', 
+            'Autor': 'author', 
+            'Cota': 'call_number', 
+            'Editorial': 'editorial', 
+            'Categorías': 'categories', 
+            'Páginas': 'pages', 
+            'Estante': 'shelf', 
+            'Descripción': 'description'
+        }
+        bookCount = 1        
+        # Convertimos la información para que sea legible
+        for book in recievedData:
+            if error != '': break
+            bookCount += 1
+
+            currentBook = {}
+            for spanishField, englishField in EXCEL_FIELDS.items():
+                if spanishField not in book:
+                    error = 'El campo {0} no existe para el libro {1}'.format(spanishField, bookCount)
+                    statusCode = 400
+                    break
+
+                currentBook[englishField] = str(book[spanishField]).strip()
+
+            bookAreRepeated = bookModel.BookAreRepeated(currentBook)
+            if bookAreRepeated is True:
+                creationError += f'El libro de la <strong>fila {bookCount}</strong> ya está registrado así que se obvió<br><br>'
+                continue
+
+            # Aquí tendríamos el libro con los campos en inglés
+            # Debemos crear las categorías, editoriales y autores si no existen
+            realCategoryNames = categoryModel.GetCategoryNames()
+
+            bookCategories = currentBook['categories'].split(',')
+            finalBookCategories = []
+
+            for bookCategory in bookCategories:
+                strippedName = bookCategory.strip()
+                if len(strippedName) > 50:
+                    error = f'La categoría {strippedName} sobrepasa el límite de caracteres (50)'
+                    statusCode = 400
+                    break
+                
+                if strippedName not in realCategoryNames:
+                    if categoryModel.CreateCategory({'name': strippedName}) == False:
+                        error = f'Hubo un error inesperado al intentar crear la categoría {strippedName}'
+                        statusCode = 500
+                        break
+
+                targetCategory = categoryModel.GetCategoryByName(strippedName)
+                finalBookCategories.append(targetCategory['id'])
+            
+            if error != '':
+                break
+
+            currentBook['categories'] = finalBookCategories
+
+            targetAuthor = authorModel.GetAuthorByName(currentBook['author'])
+            if targetAuthor == None:
+                if len(currentBook['author']) > 100:
+                    error = 'El autor {0} sobrepasa el límite de caracteres (100)'.format(currentBook['author'])
+                    statusCode = 400
+                    break
+                if authorModel.CreateAuthor({'name': currentBook['author']}) == False:
+                    error = 'Hubo un error inesperado al intentar crear el autor {0}'.format(currentBook['author'])
+                    statusCode = 500
+                    break
+
+                finalAuthor = authorModel.GetAuthorByName(currentBook['author'])
+                currentBook['author'] = finalAuthor['id']
+            else:
+                currentBook['author'] = targetAuthor['id']
+                
+            targetEditorial = editorialModel.GetEditorialByName(currentBook['editorial'])
+            if targetEditorial == None:
+                if len(currentBook['editorial']) > 100:
+                    error = 'La editorial {0} sobrepasa el límite de caracteres (100)'.format(currentBook['editorial'])
+                    statusCode = 400
+                    break
+                if editorialModel.CreateEditorial({'name': currentBook['editorial']}) == False:
+                    error = 'Hubo un error inesperado al intentar crear la editorial {0}'.format(currentBook['editorial'])
+                    statusCode = 500
+                    break
+
+                finalEditorial = editorialModel.GetEditorialByName(currentBook['editorial'])
+                currentBook['editorial'] = finalEditorial['id']
+            else:
+                currentBook['editorial'] = targetEditorial['id']
+            
+            currentBook['state'] = 'En biblioteca'
+
+            if error == '':
+                created, statusCode = DoCreateBook(currentBook, connection)
+                if type(created) is str:
+                    creationError += '<span class="text-left">Error en el libro de la <strong>fila {0}</strong>: {1}</span><br><br>'.format(bookCount, created)
+                else:
+                    booksCreated += 1
+                    
+    message = 'Libros insertados correctamente'
+    success = True
+    if error != '':
+        message = error
+        success = False
+
+    if creationError != '':
+        message = creationError
+        success = False
+
+    if booksCreated > 0:
+        action = 'Insertó {0} libros mediante un excel'.format(booksCreated)
+        bookModel.CreateBinnacle(targetUser['id'], action)
+        message = 'Libro creado correctamente'
+    
+    message = f'Se crearon {booksCreated} libros<br><br>' + message
+        
     return jsonify({'success': success, 'message': message}), statusCode
 
 

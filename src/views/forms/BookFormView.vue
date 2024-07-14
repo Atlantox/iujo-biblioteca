@@ -95,22 +95,6 @@ const SpinSymbol = (() =>{
 </template>
 
 <style scoped>
-
-.spin-on{
-  animation: spin 0.7s
-}
-
-@keyframes spin {
-    0% {
-        transform:rotate(0deg);
-    }
-    
-    100%{
-      transform:rotate(-360deg);
-    }
-    
-}
-
  .tooltiptext {
   visibility: hidden;
   width: 120px;

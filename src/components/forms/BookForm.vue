@@ -202,6 +202,7 @@ async function ValidateForm() {
             const confirmAction = await utilsStore.ConfirmModal('¿Desea editar este libro?', 'question')
             if(confirmAction === false)
                 return
+            
             let cleanBookData = {}
 
             if(props.targetBook['title'] !== bookTitle.value) cleanBookData['title'] = bookTitle.value
