@@ -462,6 +462,7 @@ def GetBooksByFilter():
     connection = GetConnection()
     response = {}
     recievedData, error, statusCode = JsonExists(request)
+    bookModel = BookModel(connection)
     filters = {}
 
     if 'category' in recievedData:
@@ -473,8 +474,7 @@ def GetBooksByFilter():
         else:
             filters['category'] = recievedData['category']
 
-    if 'state' in recievedData:
-        bookModel = BookModel(connection)
+    if 'state' in recievedData:        
         targetState = bookModel.GetStateByName(recievedData['state'])
         if targetState is None:
             error ='Estado no encontrado'

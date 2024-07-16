@@ -24,6 +24,7 @@ import SearchEditorialsView from '@/views/tables/SearchEditorialsView.vue'
 import SearchUsersView from '@/views/tables/SearchUsersView.vue'
 
 import WatchBookView from '../views/watchers/WatchBookView.vue'
+import WatchStatisticsView from '../views/watchers/WatchStatisticsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -153,6 +154,15 @@ const router = createRouter({
       component: SearchUsersView,
       meta:{ requireAuth: true, editorPermisson: true }
     },
+
+    // STATISTICS
+    {
+      path: '/see_statistics',
+      name: 'statistics',
+      component: WatchStatisticsView,
+      meta:{ requireAuth: true, statisticsPermisson: true }
+    },
+    
   ]
 })
 
@@ -190,6 +200,10 @@ router.beforeEach((to, from, next) => {
       }
 
       if(to.meta.editorPermisson && !(sessionStore.userData.permissons.includes('Editor'))){
+        routeOk = false
+      }
+
+      if(to.meta.statisticsPermisson && !(sessionStore.userData.permissons.includes('Estadísticas'))){
         routeOk = false
       }
     }

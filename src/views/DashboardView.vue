@@ -271,7 +271,7 @@ onMounted( async () => {
                 </h4>
                 <div :class="linkContainersStyle">
                   <div :class="linkElementStyle">
-                    <router-link :class="routerLinkStyle" :to="{name: 'books'}">
+                    <router-link :class="routerLinkStyle" :to="{name: 'statistics'}">
                       <i :class="'fa fa-star ' + iconStyle" ></i>
                       <span :class="linkTextStyle">
                         Ver estadísticas

@@ -47,7 +47,7 @@ const FetchBook = (async (id = null) => {
 
 })
 
-const Examplecito = (async (bookId) => {
+const ChangeBook = (async (bookId) => {
   FetchBook(bookId)
 })
 
@@ -68,7 +68,7 @@ const Examplecito = (async (bookId) => {
   <template v-else>    
     <BookDetails
     :targetBook="targetBook"
-    @changeBook="Examplecito"
+    @changeBook="ChangeBook"
     />
   </template>
 </template>

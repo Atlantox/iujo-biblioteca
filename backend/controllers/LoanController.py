@@ -547,7 +547,7 @@ def GetLoansBetweenDaysAndNow(days):
 
 
 @loanController.route('/loans/latest_count/<int:days>', methods=['GET'])
-def GetLoansCountBetweenDateAndNow(days):
+def GetLoansCountBetweenDaysAndNow(days):
     connection = GetConnection()
     userModel = UserModel(connection)
     response = {}
@@ -580,11 +580,58 @@ def GetLoansCountBetweenDateAndNow(days):
     return jsonify(response), statusCode
 
 
+@loanController.route('/loans/between_dates', methods=['POST'])
+def GetLoansCountsBetweenDates():
+    connection = GetConnection()
+    userModel = UserModel(connection)
+    response = {}
+    error = ''
+    statusCode = 200
+    
+    recievedData, error, statusCode = JsonExists(request)
+    token = GetTokenOfRequest(request)
+    if token is None:
+        error = 'Acceso denegado. Autenticación requerida'
+        statusCode = 401
+
+    if error == '':
+        targetUser = userModel.GetUserByToken(token)
+        if type(targetUser) is str:
+            error = targetUser
+            statusCode = 400
+
+    if error == '':
+        cleanData = ValidateStatisticsDate(recievedData)
+        if type(cleanData) is str:
+            error = cleanData
+            statusCode = 400    
+
+    if error == '':
+        if userModel.UserHasPermisson(targetUser['id'], 'Préstamos') is False:
+            error = 'Acción denegada'
+            statusCode = 401  # Unauthorized
+
+    if error == '':
+        loanModel = LoanModel(connection)
+        loansByDate = loanModel.GetLoansDeliveredAndReturnedCountBetweenDates(cleanData['initial_date'], cleanData['final_date'])
+
+    response['success'] = error == ''
+
+    if error == '':
+        response['counts'] = loansByDate
+    else:
+        response['message'] = error
+
+    return jsonify(response), statusCode
+
+
 @loanController.route('/loans/by_gender', methods=['POST'])
 def GetLoansByGender():
     connection = GetConnection()
     userModel = UserModel(connection)
     response = {}
+    error = ''
+    statusCode = 200
 
     recievedData, error, statusCode = JsonExists(request)
     token = GetTokenOfRequest(request)
@@ -628,6 +675,8 @@ def GetLoansByTeacher():
     connection = GetConnection()
     userModel = UserModel(connection)
     response = {}
+    error = ''
+    statusCode = 200
 
     recievedData, error, statusCode = JsonExists(request)
     token = GetTokenOfRequest(request)
@@ -640,12 +689,12 @@ def GetLoansByTeacher():
         if type(targetUser) is str:
             error = targetUser
             statusCode = 400
-    
+
     if error == '':
         cleanData = ValidateStatisticsDate(recievedData)
         if type(cleanData) is str:
             error = cleanData
-            statusCode = 400
+            statusCode = 400    
 
     if error == '':
         if userModel.UserHasPermisson(targetUser['id'], 'Préstamos') is False:
@@ -683,12 +732,12 @@ def GetLoansByCategories():
         if type(targetUser) is str:
             error = targetUser
             statusCode = 400
-    
+
     if error == '':
         cleanData = ValidateStatisticsDate(recievedData)
         if type(cleanData) is str:
             error = cleanData
-            statusCode = 400
+            statusCode = 400    
 
     if error == '':
         if userModel.UserHasPermisson(targetUser['id'], 'Préstamos') is False:
@@ -697,12 +746,13 @@ def GetLoansByCategories():
 
     if error == '':
         loanModel = LoanModel(connection)
-        loansByGender = loanModel.GetLoansQuantityByCategoriesBetweenDates(cleanData['initial_date'], cleanData['final_date'])
+        loansByCategories = loanModel.GetLoansQuantityByCategoriesBetweenDates(cleanData['initial_date'], cleanData['final_date'])
+
 
     response['success'] = error == ''
 
     if error == '':
-        response['loans'] = loansByGender
+        response['loans'] = loansByCategories
     else:
         response['message'] = error
 

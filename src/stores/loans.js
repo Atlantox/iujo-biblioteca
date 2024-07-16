@@ -337,6 +337,157 @@ const useLoanStore = defineStore('loans', {
             }
         },
 
+        async GetLoansCountByGenderBetweenDates(initialDate, finalDate){
+            var statistics = false
+            const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
+            try{
+                let url = apiConfig.base_url + '/loans/by_gender'
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+
+                if (sessionStore.authenticated === true)
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'POST',
+                    headers: fetchHeaders,
+                    body:JSON.stringify({"initial_date":initialDate, "final_date": finalDate})
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                let result = await json
+                
+                if(result.success){
+                    statistics = result.loans
+                    
+                }
+                else
+                    utilsStore.ShowModal('Error', result.message, 'error')
+            }
+            catch(error){
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar las estadísticas de préstamos por género: ' + error.message, 'error')
+            }
+
+            return statistics
+        },
+
+        async GetLoansCountByTeacherBetweenDates(initialDate, finalDate){
+            var statistics = false
+            const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
+            try{
+                let url = apiConfig.base_url + '/loans/by_teacher'
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+
+                if (sessionStore.authenticated === true)
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'POST',
+                    headers: fetchHeaders,
+                    body:JSON.stringify({'initial_date':initialDate, 'final_date': finalDate})
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                let result = await json
+                
+                if(result.success){
+                    statistics = result.loans
+                    
+                }
+                else
+                    utilsStore.ShowModal('Error', result.message, 'error')
+            }
+            catch(error){
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar las estadísticas de préstamos por profesores: ' + error.message, 'error')
+            }
+
+            return statistics
+        },
+
+        async GetLoansCountByCategoriesrBetweenDates(initialDate, finalDate){
+            var statistics = false
+            const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
+            try{
+                let url = apiConfig.base_url + '/loans/by_categories'
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+
+                if (sessionStore.authenticated === true)
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'POST',
+                    headers: fetchHeaders,
+                    body:JSON.stringify({'initial_date':initialDate, 'final_date': finalDate})
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                let result = await json
+                
+                if(result.success){
+                    statistics = result.loans
+                    
+                }
+                else
+                    utilsStore.ShowModal('Error', result.message, 'error')
+            }
+            catch(error){
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar las estadísticas de préstamos por categoría: ' + error.message, 'error')
+            }
+
+            return statistics
+        },
+        async GetDeliveredAndReturnedLoansCountBetweenDates(initialDate, finalDate){
+            var statistics = false
+            const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
+            try{
+                let url = apiConfig.base_url + '/loans/between_dates'
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+
+                if (sessionStore.authenticated === true)
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'POST',
+                    headers: fetchHeaders,
+                    body:JSON.stringify({'initial_date':initialDate, 'final_date': finalDate})
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                let result = await json
+                
+                if(result.success){
+                    statistics = result.counts
+                    
+                }
+                else
+                    utilsStore.ShowModal('Error', result.message, 'error')
+            }
+            catch(error){
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar las estadísticas de préstamos entre fechas: ' + error.message, 'error')
+            }
+
+            return statistics
+        },
+
         async UpdateLoanObservation(loanId, loanData){
             const sessionStore = useSessionStore()
             let updated  = {}

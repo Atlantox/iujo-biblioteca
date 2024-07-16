@@ -245,8 +245,8 @@ class LoanModel(BaseModel):
         cursor = self.connection.connection.cursor()
         sql = '''
             SELECT 
-            reader.gender,
-            COUNT(loan.id) as quantity
+            reader.gender as name,
+            COUNT(loan.id) as y
             FROM
             loan
             INNER JOIN reader ON reader.id = loan.reader
@@ -269,8 +269,8 @@ class LoanModel(BaseModel):
         cursor = self.connection.connection.cursor()
         sql = '''
             SELECT 
-            reader.is_teacher,
-            COUNT(loan.id) as quantity
+            reader.is_teacher as name,
+            COUNT(loan.id) as y
             FROM
             loan
             INNER JOIN reader ON reader.id = loan.reader
@@ -294,8 +294,8 @@ class LoanModel(BaseModel):
         cursor = self.connection.connection.cursor()
         sql = '''
             SELECT 
-            category.name as category,
-            COUNT(loan.id) as quantity
+            category.name as name,
+            COUNT(loan.id) as y
             FROM
             loan
             INNER JOIN book_category ON book_category.book = loan.book
@@ -315,6 +315,32 @@ class LoanModel(BaseModel):
         except:
             loans = []
         return loans
+    
+    def GetLoansDeliveredAndReturnedCountBetweenDates(self, initialDate, finalDate):
+        cursor = self.connection.connection.cursor()
+        sql = '''
+            SELECT 
+            COUNT(deliver_date) as delivered,
+            COUNT(return_date) as returned
+            FROM
+            loan
+            WHERE
+            loan.active = 1 AND
+            deliver_date BETWEEN %s AND %s OR
+            return_date BETWEEN %s AND %s
+        '''
+        args = (initialDate, finalDate, initialDate, finalDate,)
+        try:
+            cursor.execute(sql, args)
+            counters = cursor.fetchall()
+            if counters is tuple():
+                counters = []
+            else:
+                counters = {'delivered': counters[0]['delivered'], 'returned': counters[0]['returned']}
+        except:
+            counters = []
+            
+        return counters
 
     def ReturnLoan(self, id):
         cursor = self.connection.connection.cursor()
