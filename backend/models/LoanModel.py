@@ -282,13 +282,21 @@ class LoanModel(BaseModel):
             '''
         
         args = (initialDate, finalDate,)
+        result = []
     
         try:
             cursor.execute(sql, args)
             loans = cursor.fetchall()
         except:
             loans = []
-        return loans
+
+        for loan in loans:
+            if loan['name'] == '1':
+                result.append({'name':'Docente', 'y': loan['y']})
+            else:
+                result.append({'name':'NO docente', 'y': loan['y']})
+                
+        return result
     
     def GetLoansQuantityByCategoriesBetweenDates(self, initialDate, finalDate):
         cursor = self.connection.connection.cursor()

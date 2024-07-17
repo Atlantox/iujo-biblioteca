@@ -55,7 +55,7 @@ const ToggleDropdown = ((id) => {
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle fs-5" @click="ToggleDropdown('userOptions')" data-bs-toggle="dropdown">{{ sessionStore.userData.nickname }}</a>
                             <div class="dropdown-menu m-0" id="userOptions">
-                                <router-link class="dropdown-item text-decoration-none fs-4 hover-bold hover-spacing" :to="{name:'books'}">
+                                <router-link class="dropdown-item text-decoration-none fs-4 hover-bold hover-spacing" :to="{name:'account'}">
                                     Mi cuenta
                                 </router-link>
                                 <router-link class="dropdown-item text-decoration-none fs-4 hover-bold hover-spacing" :to="{name:'dashboard'}">

@@ -23,10 +23,8 @@ onMounted( async () => {
   fetchReady.value = false
   const recievedId = route.params.id
 
-  console.log(route.params.id)
   if(recievedId !== undefined && recievedId !== ''){
     targetAuthor.value = await bookStore.FetchAuthorById(recievedId)
-    console.log(targetAuthor)
   }
 
   fetchReady.value = true

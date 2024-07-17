@@ -45,7 +45,7 @@ onMounted(async () => {
                 }, {
                     enabled: true,
                     distance: -40,
-                    format: '{point.percentage:.1f}%',
+                    format: '{point.y}',
                     style: {
                         fontSize: '1.2em',
                         textOutline: 'none',
@@ -81,7 +81,7 @@ onMounted(async () => {
                 }, {
                     enabled: true,
                     distance: -40,
-                    format: '{point.percentage:.1f}%',
+                    format: '{point.y}',
                     style: {
                         fontSize: '1.2em',
                         textOutline: 'none',
@@ -117,7 +117,7 @@ onMounted(async () => {
                 }, {
                     enabled: true,
                     distance: -40,
-                    format: '{point.percentage:.1f}%',
+                    format: '{point.y}',
                     style: {
                         fontSize: '1.2em',
                         textOutline: 'none',
@@ -162,7 +162,6 @@ onMounted(async () => {
             <div class="row col-12 p-2 text-center shadowed-l rounded lb-bg-terciary-ul">
                 <h2 class="col-12 m-0">Préstamos realizados: <strong>{{ totalLoans['delivered'] }}</strong></h2>
                 <h2 class="col-12 m-0">Préstamos devueltos: <strong>{{ totalLoans['returned'] }}</strong></h2>
-                <h2 class="col-12 m-0">Préstamos totales: <strong>{{ totalLoans['delivered'] +  totalLoans['returned'] }}</strong></h2>
             </div>
         </div>
     </div>

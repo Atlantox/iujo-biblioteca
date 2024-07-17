@@ -14,6 +14,7 @@ import CategoryFormView from '@/views/forms/CategoryFormView.vue'
 import EditorialFormView from '../views/forms/EditorialFormView.vue'
 import AuthorFormView from '@/views/forms/AuthorFormView.vue'
 import UserFormView from '@/views/forms/UserFormView.vue'
+import MyAccountFormView from '@/views/forms/MyAccountFormView.vue'
 
 import SearchBooksView from '../views/tables/SearchBooksView.vue'
 import SearchLoanView from '../views/tables/SearchLoanView.vue'
@@ -153,6 +154,12 @@ const router = createRouter({
       name: 'users',
       component: SearchUsersView,
       meta:{ requireAuth: true, editorPermisson: true }
+    },
+    {
+      path: '/account',
+      name: 'account',
+      component: MyAccountFormView,
+      meta:{ requireAuth: true }
     },
 
     // STATISTICS
