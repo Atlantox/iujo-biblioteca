@@ -283,6 +283,26 @@ onMounted( async () => {
             </article>
           </template>
 
+          <template v-if="sessionStore.userData.permissons.includes('Bitácora')">
+            <article :class="articleStyle">
+              <div :class="articleWrappedStyle">
+                <h4 :class="h4Style">
+                    Bitácora
+                </h4>
+                <div :class="linkContainersStyle">
+                  <div :class="linkElementStyle">
+                    <router-link :class="routerLinkStyle" :to="{name: 'statistics'}">
+                      <i :class="'fa fa-list ' + iconStyle" ></i>
+                      <span :class="linkTextStyle">
+                        Ver bitácora
+                      </span>
+                    </router-link>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </template>
+
         </div>
       </div>
 

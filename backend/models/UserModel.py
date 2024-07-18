@@ -228,10 +228,14 @@ class UserModel(BaseModel):
         result = True
         cursor = self.connection.connection.cursor()
         arrayValues = []
+        hasher = PasswordHasher()
         sql = "UPDATE user SET "
         for column, value in userData.items():
             sql += "{0} = %s,".format(column)
-            arrayValues.append(value)
+            if column in ['password', 'username']:
+                arrayValues.append(hasher.hash(value))
+            else:
+                arrayValues.append(value)
         
         sql = sql[0:-1] + " WHERE id = %s"
         arrayValues.append(userId)

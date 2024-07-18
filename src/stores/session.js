@@ -47,6 +47,38 @@ const useSessionStore = defineStore('session', {
       }
     },
 
+    async MyUserIsActive(){
+      const sessionStore = useSessionStore()
+      var userIsActive = false
+      try{
+          let url = apiConfig.base_url + '/my_user'
+          var fetchHeaders = {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+          }
+
+          if (sessionStore.authenticated === true)
+              fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+          let fetchConfig = {
+              method: 'GET',
+              headers: fetchHeaders
+          }
+
+          let response = await fetch(url, fetchConfig)
+          let json = await response.json()
+          let result = await json
+          if(result.success)
+            userIsActive = result.data.active === 1
+            
+      }
+      catch(error){
+          return false
+      }
+
+      return userIsActive
+    },
+
     DestroySession(){
       this.token = ''
       this.authenticated = false

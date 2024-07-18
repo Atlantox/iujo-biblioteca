@@ -33,14 +33,15 @@ def GetBinnacle():
         if type(targetUser) is str:
             error = targetUser
             statusCode = 400
+
+    if error == '':
+        if userModel.UserHasPermisson(targetUser['id'], 'Bitácora') is False:
+            error = 'Acción denegada'
+            statusCode = 401  # Unauthorized
     
     if error == '':
-        if targetUser['level'] in ['Admin', 'Super']:
-            binacleModel = BinnacleModel(connection)
-            binnacles = binacleModel.GetBinnacle()
-        else:
-            error = 'Usted no tiene los permisos'
-            statusCode = 401
+        binacleModel = BinnacleModel(connection)
+        binnacles = binacleModel.GetBinnacle()
     
     response['success'] = error == ''
     if error == '':

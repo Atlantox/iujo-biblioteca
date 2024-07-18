@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-06-2024 a las 02:40:33
+-- Tiempo de generación: 18-07-2024 a las 03:03:39
 -- Versión del servidor: 10.4.18-MariaDB
 -- Versión de PHP: 8.0.3
 
@@ -39,9 +39,13 @@ CREATE TABLE `author` (
 INSERT INTO `author` (`id`, `name`) VALUES
 (2, 'Atlantox'),
 (4, 'Edgar Allan Poe'),
+(8, 'H. P. Lovecraft'),
 (1, 'Kentaro Miura'),
+(6, 'Mamma Mia'),
+(9, 'Miguel de Cervantes'),
 (5, 'Miguelito'),
-(3, 'Nadie');
+(3, 'Nadie'),
+(7, 'Sun Tzu');
 
 -- --------------------------------------------------------
 
@@ -221,7 +225,50 @@ INSERT INTO `binnacle` (`id`, `user`, `action`, `date`) VALUES
 (158, 10, 'Editó los campos birthdate, is_teacher del lector de id 9', '2024-06-25 19:23:22'),
 (159, 10, 'Editó los campos phone, is_teacher del lector de id 9', '2024-06-25 19:23:34'),
 (160, 10, 'Atlantox ha ingresado al sistema', '2024-06-25 19:45:08'),
-(161, 10, 'Atlantox ha ingresado al sistema', '2024-06-25 19:46:04');
+(161, 10, 'Atlantox ha ingresado al sistema', '2024-06-25 19:46:04'),
+(162, 2, 'Editó los campos nickname del usuario de id 2', '2024-06-26 20:20:24'),
+(163, 2, 'Editó los campos active del usuario de id 2', '2024-06-26 20:23:17'),
+(164, 2, 'Editó los campos active del usuario de id 2', '2024-06-26 20:23:24'),
+(165, 2, 'Editó los campos active del usuario de id 2', '2024-06-26 20:23:38'),
+(166, 2, 'Editó los campos active del usuario de id 2', '2024-06-26 20:24:05'),
+(167, 10, 'Atlantox ha creado al usuario DonPancho', '2024-06-26 20:34:27'),
+(168, 11, 'DonPancho ha ingresado al sistema', '2024-06-26 20:34:59'),
+(169, 10, 'Atlantox ha ingresado al sistema', '2024-07-02 20:31:50'),
+(170, 10, 'Atlantox ha creado al usuario Atlantox2', '2024-07-02 20:35:53'),
+(171, 12, 'Atlantox2 ha ingresado al sistema', '2024-07-02 20:36:05'),
+(172, 10, 'Renombró la categoría \"Comedia\" por \"Comedia2\" ', '2024-07-02 21:12:32'),
+(173, 10, 'Renombró la categoría \"Comedia2\" por \"Comedia\" ', '2024-07-02 21:12:38'),
+(174, 10, 'Creó la categoría nuevcita', '2024-07-02 21:13:25'),
+(175, 10, 'Creó un préstamo 7 al lector 2 y el libro 5', '2024-07-05 17:59:54'),
+(176, 10, 'Creó al lector Pedritongo de cédula 4718529', '2024-07-05 18:03:43'),
+(177, 10, 'Creó al lector vxbxfvfsgfdgfd de cédula 741852963', '2024-07-05 18:07:35'),
+(178, 10, 'Creó al lector sdfgsdgdghd de cédula 65746743563', '2024-07-05 18:08:08'),
+(179, 10, 'Creó un préstamo 8 al lector 12 y el libro 7', '2024-07-05 18:08:19'),
+(180, 10, 'Se devolvió el libro 5 del lector 2 del préstamo 7', '2024-07-07 11:17:45'),
+(181, 10, 'Se devolvió el libro 5 del lector 2 del préstamo 7', '2024-07-07 11:18:40'),
+(182, 10, 'Se devolvió el libro 5 del lector 2 del préstamo 7', '2024-07-07 11:19:50'),
+(183, 10, 'Se devolvió el libro 5 del lector 2 del préstamo 7', '2024-07-07 11:21:45'),
+(184, 10, 'Se devolvió el libro 5 del lector 2 del préstamo 7', '2024-07-07 11:57:12'),
+(185, 10, 'Se devolvió el libro 7 del lector 12 del préstamo 8', '2024-07-08 19:14:53'),
+(186, 10, 'Creó un préstamo 9 al lector 2 y el libro 2', '2024-07-10 17:37:58'),
+(187, 10, 'Se devolvió el libro 2 del lector 2 del préstamo 9', '2024-07-10 17:40:32'),
+(188, 10, 'Editó los campos:  del Libro de id 2', '2024-07-11 20:09:01'),
+(189, 10, 'Editó los campos: description del Libro de id 2', '2024-07-11 20:12:57'),
+(190, 10, 'Creó un préstamo 10 al lector 2 y el libro 2', '2024-07-11 21:23:49'),
+(191, 10, 'Creó un préstamo 11 al lector 5 y el libro 5', '2024-07-13 09:17:59'),
+(192, 10, 'Editó los campos: description del Libro de id 3', '2024-07-13 10:31:14'),
+(193, 10, 'Creó el autor Mamma Mia', '2024-07-13 10:35:13'),
+(194, 10, 'Atlantox ha ingresado al sistema', '2024-07-13 14:32:15'),
+(195, 2, 'Editó los campos username, password, active del usuario de id 2', '2024-07-17 20:23:26'),
+(196, 2, 'Editó los campos username, password, active del usuario de id 2', '2024-07-17 20:25:56'),
+(197, 2, 'KingPepito ha ingresado al sistema', '2024-07-17 20:26:01'),
+(198, 2, 'KingPepito ha ingresado al sistema', '2024-07-17 20:34:30'),
+(199, 2, 'KingPepito ha ingresado al sistema', '2024-07-17 20:35:41'),
+(200, 2, 'KingPepito ha ingresado al sistema', '2024-07-17 20:36:11'),
+(201, 2, 'KingPepito ha ingresado al sistema', '2024-07-17 20:36:30'),
+(202, 10, 'Atlantox ha ingresado al sistema', '2024-07-17 20:37:52'),
+(203, 2, 'Editó los campos active del usuario de id 2', '2024-07-17 20:38:06'),
+(204, 10, 'Atlantox ha ingresado al sistema', '2024-07-17 20:59:52');
 
 -- --------------------------------------------------------
 
@@ -247,14 +294,18 @@ CREATE TABLE `book` (
 --
 
 INSERT INTO `book` (`id`, `call_number`, `author`, `title`, `editorial`, `pages`, `shelf`, `description`, `created_at`, `state`) VALUES
-(2, 'BE-01', 1, 'Berserk Vol. 1', 1, 26, 'A2', '', '2024-05-07 09:25:33', 'Prestado'),
-(3, 'BE3-01', 1, 'Berserk Vol. 3', 1, 25, 'A2', '', '2024-05-09 08:07:56', 'Prestado'),
+(2, 'BE-01', 1, 'Berserk Vol. 1', 1, 26, 'A2', 'Va de un pibe que deambula con una espada más grande que él y mata monstruos demoniacos en busca de venganza', '2024-05-07 09:25:33', 'Prestado'),
+(3, 'BE3-01', 1, 'Berserk Vol. 3', 1, 25, 'A2', 'Muestra el pasado de Guts y como se unió a la banda del halcón', '2024-05-09 08:07:56', 'En biblioteca'),
 (4, 'BE4-01', 1, 'Berserk Vol. 4', 1, 22, 'A2', '', '2024-05-09 08:31:38', 'En biblioteca'),
-(5, 'IFA-115', 2, '¿Cómo ser tu propio jefe?', 1, 40, 'A62', 'Trata sobre como estafar personas sin que estas se den cuenta así mismo explica como lidiar con los clientes difíciles dándoles una muerte inmediata y secreta', '2024-05-12 12:15:27', 'En biblioteca'),
-(6, 'PHP2-1', 3, 'Curso de PHP 2', 3, 596, 'A2', '', '2024-05-12 12:17:59', 'Prestado'),
+(5, 'IFA-115', 2, '¿Cómo ser tu propio jefe?', 1, 40, 'A62', 'Trata sobre como estafar personas sin que estas se den cuenta así mismo explica como lidiar con los clientes difíciles dándoles una muerte inmediata y secreta', '2024-05-12 12:15:27', 'Prestado'),
+(6, 'PHP2-1', 3, 'Curso de PHP 2', 3, 596, 'A2', '', '2024-05-12 12:17:59', 'En biblioteca'),
 (7, 'MK-23', 2, 'Mein Kaphf', 2, 123, 'A1-S', '', '2024-06-07 11:27:16', 'En biblioteca'),
 (8, 'Cota02', 3, 'Libro nuevo', 2, 666, 'AE-5', 'Trata sobre como escribir libros nuevos', '2024-06-07 11:52:34', 'En biblioteca'),
-(10, '123ASng', 4, 'Other book', NULL, 123, 'A654', '', '2024-06-07 14:14:23', 'En biblioteca');
+(10, '123ASng', 4, 'Other book', NULL, 123, 'A654', '', '2024-06-07 14:14:23', 'En biblioteca'),
+(16, '151s', 7, 'El arte de la guerra', 7, 40, '1', 'Explica diversas estrategias para persuadir personas y ganar batallas o discusiones con el poder de la elocuencia y la mente', '2024-07-14 17:59:04', 'En biblioteca'),
+(17, 'e82', 8, 'La llamada de Cthulhu', 8, 24, '1', 'Relata el ficticio nacimiento de un horror cósmico cuya presencia resuena en las mentes y cuerpos de todas las personas y seres', '2024-07-14 17:59:04', 'En biblioteca'),
+(18, 'RF34', 9, 'Don Quijote de la Mancha', 9, 225, '2', 'Trata de las ocurrencias, aventuras y vivencias de un caballero medieval delirantemente obsesionado con las costumbres caballerescas de la edad media', '2024-07-14 17:59:04', 'En biblioteca'),
+(19, '35FS', 1, 'Berserk Vol. 1', 10, 220, '1', 'Cuenta la historia de un misterioso y oscuro espadachín que lucha contra monstruos que se alzan en su contra por alguna razón', '2024-07-14 17:59:04', 'En biblioteca');
 
 -- --------------------------------------------------------
 
@@ -273,20 +324,29 @@ CREATE TABLE `book_category` (
 --
 
 INSERT INTO `book_category` (`id`, `book`, `category`) VALUES
-(4, 2, 3),
 (6, 3, 3),
 (12, 7, 3),
-(13, 7, 7),
 (14, 7, 15),
 (15, 8, 5),
 (16, 8, 4),
 (17, 10, 8),
 (18, 10, 17),
 (56, 5, 17),
-(57, 5, 7),
 (60, 6, 17),
 (61, 4, 3),
-(62, 4, 6);
+(62, 4, 6),
+(67, 2, 3),
+(68, 2, 2),
+(69, 2, 9),
+(70, 2, 5),
+(80, 16, 19),
+(81, 17, 20),
+(82, 17, 3),
+(83, 17, 21),
+(84, 18, 4),
+(85, 18, 22),
+(86, 19, 6),
+(87, 19, 4);
 
 -- --------------------------------------------------------
 
@@ -305,12 +365,15 @@ CREATE TABLE `category` (
 
 INSERT INTO `category` (`id`, `name`) VALUES
 (6, 'Acción'),
+(22, 'Clásico'),
 (15, 'Comedia'),
-(7, 'Crecimiento personal'),
+(19, 'Crecimiento personal'),
 (17, 'Curso'),
 (8, 'Enciclopedia'),
 (4, 'Fantasía'),
+(20, 'Ficción'),
 (5, 'Historia'),
+(21, 'Misterio'),
 (9, 'Normativo'),
 (2, 'Romance'),
 (3, 'Terror');
@@ -331,10 +394,14 @@ CREATE TABLE `editorial` (
 --
 
 INSERT INTO `editorial` (`id`, `name`) VALUES
+(8, 'Capriles'),
 (4, 'Editorial editada'),
 (3, 'Editorial vieja'),
 (2, 'El EteSechu'),
+(10, 'Hakusensha'),
+(7, 'La Flor'),
 (6, 'nuevote'),
+(9, 'Santillana'),
 (1, 'Shizukazin'),
 (5, 'UwU Cats2');
 
@@ -360,12 +427,11 @@ CREATE TABLE `loan` (
 --
 
 INSERT INTO `loan` (`id`, `book`, `reader`, `observation`, `deliver_date`, `return_date`, `created_at`, `active`) VALUES
-(1, 2, 2, '', '2024-01-10 00:00:00', '2024-05-10 11:13:10', '2024-05-10 09:31:43', 0),
-(2, 3, 2, 'Será usado para una clase', '2024-01-10 00:00:00', NULL, '2024-05-10 09:50:33', 1),
 (3, 2, 2, 'Ninguna', '2024-05-10 00:00:00', NULL, '2024-05-12 10:41:25', 1),
-(4, 6, 5, '', '2024-05-12 00:00:00', NULL, '2024-05-12 12:20:45', 1),
-(5, 5, 5, '', '2024-05-12 00:00:00', NULL, '2024-05-12 12:20:53', 1),
-(6, 4, 4, '', '2024-05-08 00:00:00', '2024-05-12 12:56:46', '2024-05-12 12:34:34', 1);
+(6, 4, 4, '', '2024-05-08 00:00:00', '2024-05-12 12:56:46', '2024-05-12 12:34:34', 1),
+(8, 7, 12, 'Ninguna', '2024-07-01 18:08:19', '2024-07-08 19:14:53', '2024-07-05 18:08:19', 1),
+(10, 2, 2, 'Es una furra2', '2024-07-11 21:23:49', NULL, '2024-07-11 21:23:49', 1),
+(11, 5, 5, '', '2024-07-13 09:17:59', NULL, '2024-07-13 09:17:59', 1);
 
 -- --------------------------------------------------------
 
@@ -404,7 +470,11 @@ INSERT INTO `permisson` (`id`, `name`, `level`) VALUES
 (21, 'Editoriales', 'Super'),
 (22, 'Autores', 'Editor'),
 (23, 'Autores', 'Admin'),
-(24, 'Autores', 'Super');
+(24, 'Autores', 'Super'),
+(25, 'Estadísticas', 'Admin'),
+(26, 'Estadísticas', 'Super'),
+(27, 'Bitácora', 'Admin'),
+(28, 'Bitácora', 'Super');
 
 -- --------------------------------------------------------
 
@@ -435,7 +505,10 @@ INSERT INTO `reader` (`id`, `cedula`, `names`, `surnames`, `gender`, `birthdate`
 (6, '12345678', 'Jaime Pedro', 'Altozano Rajoy', 'M', '1975-08-26', '04168759225', 0),
 (7, '13434114', 'adfaefdasdas', 'sfgfsgsfgfssdfg', 'M', '2014-06-06', 'sfsdfsdfsdfsdf', 0),
 (8, '32165498', 'Raul', 'Sequera', 'M', '2014-06-19', '04163567008', 0),
-(9, '3563630', 'Ramón Luis', 'Gallegos', 'F', '2014-03-05', '8684562451', 0);
+(9, '3563630', 'Ramón Luis', 'Gallegos', 'F', '2014-03-05', '8684562451', 0),
+(10, '4718529', 'Pedritongo', 'Falasito', 'M', '2014-07-01', '04163567008', 0),
+(11, '741852963', 'vxbxfvfsgfdgfd', 'hhhhhhhhhh', 'F', '2014-06-30', '04163567008', 1),
+(12, '65746743563', 'sdfgsdgdghd', 'tytttttttttt', 'M', '2014-06-30', '04163567008', 1);
 
 -- --------------------------------------------------------
 
@@ -479,7 +552,7 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`id`, `nickname`, `level`, `created_at`, `username`, `password`, `token`, `active`) VALUES
 (1, 'Atlantox7', 'Admin', '2024-06-25 19:49:47', '$argon2id$v=19$m=65536,t=3,p=4$3AS4idk0Vww0t4Sb01WeTA$jGz2iJeNl6gDxT2fMeWDqSoxQFQDGMiKysTEl77zrtE', '$argon2id$v=19$m=65536,t=3,p=4$ZdHbxL0d8wcfNPlDgenj+A$fl4pfvgOkUwHLCjxIAP5d794CGpc13YWcDrOWgrvtak', 'd4239cd0-77e5-4d73-bb73-7ba3e9ecbc00-b4828893-f47d-47fe-a5f0-128b13e8a786', 1),
-(2, 'El pepito', 'Editor', '2024-06-25 19:49:47', '$argon2id$v=19$m=65536,t=3,p=4$sp8mhZbVtyUACABltP8eCg$XlidoVZSzekOnHySDnU/kRYAKs8Ud8B4N/HMyxLQCuE', '$argon2id$v=19$m=65536,t=3,p=4$rQF6bSodODC/FDhfDiAsyw$tmoSw54ricWjwJdTi2wjuox93J5FEt9JHDly3tcDFco', '9559e961-3d82-4013-ac43-1071ae4bbea9-48f22212-d27f-439d-a32e-9c7facdc62c2', 1),
+(2, 'KingPepito', 'Editor', '2024-06-25 19:49:47', '$argon2id$v=19$m=65536,t=3,p=4$8UZyhH7/YQKpgg2BSLWMKQ$JZdATk50aVy3c65APOFXkySRzQhodo6cW/zICTsxINQ', '$argon2id$v=19$m=65536,t=3,p=4$l/9fkk5EhOwo+1EpOkKihg$srAta6y+0YKv1ev70s8lfqFaKLzj4b0CHcxW4BrnBeg', '9559e961-3d82-4013-ac43-1071ae4bbea9-48f22212-d27f-439d-a32e-9c7facdc62c2', 0),
 (3, 'El pepito2', 'Admin', '2024-06-25 19:49:47', '$argon2id$v=19$m=65536,t=3,p=4$sC68eq03u8/8VvWIlE7V2w$8zFKttxeLrzFfxzoCv38GzAnNGEdln7SamRwOV+1GRY', '$argon2id$v=19$m=65536,t=3,p=4$bHwiNX9DS0r6cPzgUELkUA$XBm8tql9z9n6rvaSX1YAcbyI5ht97u8lLTnFczr4uak', '73361c62-9340-4c9e-9dd3-33a73547d761-029002f7-f5a7-4c99-bdd4-2d179f024977', 1),
 (4, 'El pepito3', 'Editor', '2024-06-25 19:49:47', '$argon2id$v=19$m=65536,t=3,p=4$LpxdH78OEo+g1pjBUaK04Q$HqgbgCdtTM4GaXFZ2ZqLmQv6gMs46Ot5c3Y5Am9LMsY', '$argon2id$v=19$m=65536,t=3,p=4$pkySPKBSNnOnewqZdy67Ww$gUgbBU6aqv5xEtiSdWYRDqoYcBVxCVafxysh4vvxnaY', '08bc0ff1-132b-40b4-ad58-c196890dee56-2ded1689-f8da-4534-9abe-67247860d3ab', 0),
 (5, 'El pepito4', 'Editor', '2024-06-25 19:49:47', '$argon2id$v=19$m=65536,t=3,p=4$cpWY38BOtU9Obhe3DR3bhA$XLJGqZHPj1WwsM9OL6JMR2yxTWkzjXwPO1Mw6KP1t2I', '$argon2id$v=19$m=65536,t=3,p=4$Wlmnwt6OoPS40ziRz3qwAQ$yFOrGDhX1sE5VjMiOzZgPz+fbwDBGGIwRWl/DkgL8vY', '876bbab3-5890-457b-888b-69c2acfc8a00-c0938fd2-a87d-4451-a865-fe8405df6122', 1),
@@ -487,7 +560,9 @@ INSERT INTO `user` (`id`, `nickname`, `level`, `created_at`, `username`, `passwo
 (7, 'El pepito6', 'Editor', '2024-06-25 19:49:47', '$argon2id$v=19$m=65536,t=3,p=4$NqtGczl0CGAQlsjt55K79g$NdQWA4SWVJ/h+I14AA6CWZOJ0sBs6asyrNzPJpK8N0U', '$argon2id$v=19$m=65536,t=3,p=4$TMNXWRrkjSqdYirkW/q7DQ$1JXU038KTPR6PX0LBZuf9FtEbJ9P7J6a79NKi5tSoco', '1ccd1e8a-8272-49a9-a93b-af486ec03a8b-e33f60bc-38b5-4811-a889-04fec04acc4a', 1),
 (8, 'El pepito7', 'Editor', '2024-06-25 19:49:47', '$argon2id$v=19$m=65536,t=3,p=4$wkHf2sGs7rzpZr8NnxVpCg$qEP5Xdq2Ug2woLQZGgsVYr/ZcO7rm5jaP3SR0P37UGE', '$argon2id$v=19$m=65536,t=3,p=4$0oU/JC3TILOLMY8MHLgQbg$fa5pLqaom4IjiaL6In8wM0BTCYcBEW3yiN5JuKJ1ny0', 'bc7b23dd-63e4-4624-83d4-e2deeb0f3b05-ec23053e-925d-4e4f-ba67-6eff9ea464b3', 1),
 (9, 'El pepito8', 'Editor', '2024-06-25 19:49:47', '$argon2id$v=19$m=65536,t=3,p=4$vQfLmfv2+sGfhhFgruSzfA$PgYiH9XFyggzKsZA4P7tZozj32u8NXi0pPhpvd/RLtY', '$argon2id$v=19$m=65536,t=3,p=4$8vf2Q2qT5OoGFfOpMcCC1A$D9CvCFc2PBJI51YAW4uW8ZswGEgJZWVmCzy7VlLGi68', '45ec7c08-aca4-4c1a-9cdf-cbb9c54ff128-27f6b3b2-50c9-48ac-ba63-3103b995561c', 0),
-(10, 'Atlantox', 'Admin', '2024-06-25 19:49:47', '$argon2id$v=19$m=65536,t=3,p=4$am1VC7JJtJEwA6YHympJfA$g7uf84pTXJKeq5QsUGqDacFoj54gR35J9uwf9KFsX7M', '$argon2id$v=19$m=65536,t=3,p=4$ISIMPRqNxz8MHYV3iuBYWg$tiPy3KFUbTTRqoormbEbXOcPnVogoDvwppMvGtUYjO8', 'dcd78902-70b4-40a2-9c17-b7a0486e9980-5f031834-7798-4cb4-a77b-114b3a7b8d6f', 1);
+(10, 'Atlantox', 'Admin', '2024-06-25 19:49:47', '$argon2id$v=19$m=65536,t=3,p=4$am1VC7JJtJEwA6YHympJfA$g7uf84pTXJKeq5QsUGqDacFoj54gR35J9uwf9KFsX7M', '$argon2id$v=19$m=65536,t=3,p=4$ISIMPRqNxz8MHYV3iuBYWg$tiPy3KFUbTTRqoormbEbXOcPnVogoDvwppMvGtUYjO8', 'dcd78902-70b4-40a2-9c17-b7a0486e9980-5f031834-7798-4cb4-a77b-114b3a7b8d6f', 1),
+(11, 'DonPancho', 'Editor', '2024-06-26 20:34:27', '$argon2id$v=19$m=65536,t=3,p=4$7y5aQNLihofWYQnkBfP7AQ$iLx1BHVf91i4+xygJ8ik7ktrSKDe7FbjqfCO0H9lyP4', '$argon2id$v=19$m=65536,t=3,p=4$Sj06V0NS178Nr1Y77e80Jg$js0aCrjiL6BIyCpwAXWmaUwqRtJVTrsbu2gqQ1GSSBw', '7a04b361-00b1-4f61-98eb-0799e9728f42-a24a222f-099d-4763-b8e4-1433ad347a58', 1),
+(12, 'Atlantox2', 'Editor', '2024-07-02 20:35:53', '$argon2id$v=19$m=65536,t=3,p=4$8c1HJ2Rwl9qPc5tf5q4pDQ$F/MJnarJgP24d/x1NfKLMgs75kLZbPVczmMetI+aJvQ', '$argon2id$v=19$m=65536,t=3,p=4$jakjClp3Hl6lVxsGu4/i1w$jRd5Tg6sMRVVqNkY0bX+Hp/U/TvdVm9e2CUooL2GLrg', '439265b4-72b7-4ffe-9223-ae309e09a1aa-a65a350b-8eca-4370-a0c9-8f2d958cc177', 1);
 
 -- --------------------------------------------------------
 
@@ -610,61 +685,61 @@ ALTER TABLE `user_level`
 -- AUTO_INCREMENT de la tabla `author`
 --
 ALTER TABLE `author`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `binnacle`
 --
 ALTER TABLE `binnacle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=162;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=205;
 
 --
 -- AUTO_INCREMENT de la tabla `book`
 --
 ALTER TABLE `book`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `book_category`
 --
 ALTER TABLE `book_category`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
 
 --
 -- AUTO_INCREMENT de la tabla `category`
 --
 ALTER TABLE `category`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT de la tabla `editorial`
 --
 ALTER TABLE `editorial`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `loan`
 --
 ALTER TABLE `loan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `permisson`
 --
 ALTER TABLE `permisson`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de la tabla `reader`
 --
 ALTER TABLE `reader`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Restricciones para tablas volcadas

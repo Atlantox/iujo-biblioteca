@@ -92,7 +92,7 @@ def GetUserData():
         response = {'success': True, 'data': publicData}
     else:
         response = {'success': False, 'message': error}
-
+    print(response)
     return jsonify(response), statusCode
 
 
@@ -282,7 +282,7 @@ def UpdateUser(userId):
             statusCode = 400
 
     if error == '' and 'level' in cleanData:
-        if cleanData not in ['Editor', 'Admin']:
+        if cleanData['level'] not in ['Editor', 'Admin']:
             error = 'Tipo de usuario no encontrado'
         else:
             if userModel.UserHasPermisson(targetUser['id'], cleanData['level']) is False:
@@ -294,7 +294,7 @@ def UpdateUser(userId):
             error = 'Usuario ya registrado'
             statusCode = 400
 
-    if error == '' and 'password' in cleanData:
+    if error == '' and 'nickname' in cleanData:
         if userModel.NicknameExists(cleanData['nickname']) is True:
             error = 'Nick ya registrado'
             statusCode = 400

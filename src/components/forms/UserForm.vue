@@ -17,11 +17,13 @@ const sessionStore = useSessionStore()
 
 const mounted = ref(false)
 const formErrors = ref([])
+const selfUser = ref(false)
 
 const userNickname = ref('')
 const userLevel = ref('')
 const userUsername = ref('')
 const userPassword = ref('')
+const userPasswordConfirm = ref('')
 const userActive = ref([1])
 
 const formRowStyle = 'row m-0 p-0 justify-content-center my-2'
@@ -38,6 +40,7 @@ const emits = defineEmits(['formOk'])
 onMounted(() => {
     OnAppearAnimation('hide-up')
     if(Object.keys(props.targetUser).length !== 0){
+        selfUser.value = props.targetUser.id === sessionStore.userData.id
         userNickname.value = props.targetUser.nickname
         userLevel.value = props.targetUser.level
         if(props.targetUser.active === 1)
@@ -72,6 +75,12 @@ const ValidateForm = (async (e) => {
             'required': Object.keys(props.targetUser).length === 0, 
             'value': userPassword.value 
         },
+        'passwordConfirm':{
+            'min': 8, 
+            'max': 50, 
+            'required': Object.keys(props.targetUser).length === 0, 
+            'value': userPasswordConfirm.value 
+        },
     }    
 
     const emptyFields = validator.FieldsAreEmpty(validationStructure)
@@ -105,6 +114,9 @@ const ValidateForm = (async (e) => {
     if(!['Editor', 'Amin'].includes(userLevel.value))
         formErrors.value.push('Tipo de usuario inválido')
 
+    if(userPassword.value !== userPasswordConfirm.value){
+        formErrors.value.push('Las contraseñas no coinciden')
+    }
 
 
     if(formErrors.value.length === 0){        
@@ -148,7 +160,7 @@ const ValidateForm = (async (e) => {
             if(props.targetUser['active'] !== parseInt(userActive.value[0])) cleanUserData['active'] = userActive.value[0]
 
             if(userUsername.value !== ''){
-                cleanUserData['username'] = userNickname.value
+                cleanUserData['username'] = userUsername.value
             }
 
             if(userPassword.value !== ''){
@@ -181,18 +193,45 @@ const ValidateForm = (async (e) => {
         </template>
         <template v-else>
             <div class="col-12 row p-4 pt-5 fs-4 justify-content-around hide-up animated-1">
-                <div class="col-12 col-lg-8 p-2 row myForm shadowed-l rounded lb-bg-terciary-ul justify-content-center">        
-
-                    <div :class="formRowStyle">
-                        <div :class="labelContainerStyle">
-                            <label :class="labelStyle" for="nickname"><strong>Nickname</strong></label>
-                        </div>
-                        <div :class="inputContainerStyle">
-                            <div class="row col-12 col-lg-8">
-                                <input type="text" class="myInput" maxlength="50" minlength="4" id="nickname" v-model="userNickname">
+                <div class="col-12 col-lg-8 p-2 row myForm shadowed-l rounded lb-bg-terciary-ul justify-content-center">   
+                    
+                    <template v-if="Object.keys(props.targetUser).length !== 0">
+                        <div :class="formRowStyle">
+                            <div :class="labelContainerStyle">
+                                <label :class="labelStyle" for="created_at"><strong>Fecha de creación</strong></label>
+                            </div>
+                            <div :class="inputContainerStyle">
+                                <div class="row col-12 col-lg-8">
+                                    <input type="date" class="myInput" minlength="4" id="created_at" :value="props.targetUser.created_at" disabled>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </template>
+
+                    <template v-if="selfUser === false">
+                        <div :class="formRowStyle">
+                            <div :class="labelContainerStyle">
+                                <label :class="labelStyle" for="nickname"><strong>Nickname</strong></label>
+                            </div>
+                            <div :class="inputContainerStyle">
+                                <div class="row col-12 col-lg-8">
+                                    <input type="text" class="myInput" maxlength="50" minlength="4" id="nickname" v-model="userNickname">
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div :class="formRowStyle">
+                            <div :class="labelContainerStyle">
+                                <label :class="labelStyle" for="nickname"><strong>Nickname</strong></label>
+                            </div>
+                            <div :class="inputContainerStyle">
+                                <div class="row col-12 col-lg-8">
+                                    {{ props.targetUser.nickname }}
+                                </div>
+                            </div>
+                        </div>
+                    </template>
 
                     <div :class="formRowStyle">
                         <div :class="labelContainerStyle">
@@ -207,7 +246,7 @@ const ValidateForm = (async (e) => {
 
                     <div :class="formRowStyle">
                         <div :class="labelContainerStyle">
-                            <label :class="labelStyle" for="password"><strong>Password</strong></label>
+                            <label :class="labelStyle" for="password"><strong>Contraseña</strong></label>
                         </div>
                         <div :class="inputContainerStyle">
                             <div class="row col-12 col-lg-8">
@@ -218,41 +257,83 @@ const ValidateForm = (async (e) => {
 
                     <div :class="formRowStyle">
                         <div :class="labelContainerStyle">
-                            <label :class="labelStyle" for="gender"><strong>Tipo</strong></label>
+                            <label :class="labelStyle" for="passwordConfirm"><strong>Repetir contraseña</strong></label>
                         </div>
                         <div :class="inputContainerStyle">
-                            <div class="row col-12">
-
-                                <div 
-                                v-if="sessionStore.userData.permissons.includes('Editor')"
-                                class="row col-12 col-lg-5 m-0 p-0 my-1"
-                                >
-                                    <label class="col-6 text-end text-lg-center" for="level-editor">Editor</label>
-                                    <input class="col-1 my-auto" type="radio" id="level-editor" name="gender" value="Editor" v-model="userLevel">
-                                </div>
-                                <div 
-                                v-if="sessionStore.userData.permissons.includes('Admin')"
-                                class="row col-12 col-lg-5 m-0 p-0 my-1"
-                                >
-                                    <label class="col-6 text-end" for="level-admin">Administrador</label>
-                                    <input class="col-1" type="radio" id="level-admin" name="gender" value="Admin" v-model="userLevel">
-                                </div>
+                            <div class="row col-12 col-lg-8">
+                                <input type="password" class="myInput" maxlength="50" minlength="8" id="passwordConfirm" v-model="userPasswordConfirm">
                             </div>
                         </div>
                     </div>
 
-                    <div :class="formRowStyle">
-                        <div :class="labelContainerStyle">
-                            <label :class="labelStyle" for="active"><strong>Activo</strong></label>
-                        </div>
-                        <div :class="inputContainerStyle">
-                            <div class="row col-12">
-                                <div class="row col-12 col-lg-5 m-0 p-0 my-1">
-                                    <input class="col-1 mx-auto mx-lg-0" type="checkbox" id="active" name="active" value="1" v-model="userActive">
+                    <template v-if="selfUser === false">
+                        <div :class="formRowStyle">
+                            <div :class="labelContainerStyle">
+                                <label :class="labelStyle" for="gender"><strong>Tipo</strong></label>
+                            </div>
+                            <div :class="inputContainerStyle">
+                                <div class="row col-12">
+    
+                                    <div 
+                                    v-if="sessionStore.userData.permissons.includes('Editor')"
+                                    class="row col-12 col-lg-5 m-0 p-0 my-1"
+                                    >
+                                        <label class="col-6 text-end text-lg-center" for="level-editor">Editor</label>
+                                        <input class="col-1 my-auto" type="radio" id="level-editor" name="gender" value="Editor" v-model="userLevel">
+                                    </div>
+                                    <div 
+                                    v-if="sessionStore.userData.permissons.includes('Admin')"
+                                    class="row col-12 col-lg-5 m-0 p-0 my-1"
+                                    >
+                                        <label class="col-6 text-end" for="level-admin">Administrador</label>
+                                        <input class="col-1" type="radio" id="level-admin" name="gender" value="Admin" v-model="userLevel">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>       
+
+                        <div :class="formRowStyle">
+                            <div :class="labelContainerStyle">
+                                <label :class="labelStyle" for="active"><strong>Activo</strong></label>
+                            </div>
+                            <div :class="inputContainerStyle">
+                                <div class="row col-12">
+                                    <div class="row col-12 col-lg-5 m-0 p-0 my-1">
+                                        <input class="col-1 mx-auto mx-lg-0" type="checkbox" id="active" name="active" value="1" v-model="userActive">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div :class="formRowStyle">
+                            <div :class="labelContainerStyle">
+                                <label :class="labelStyle" for="active"><strong>Tipo</strong></label>
+                            </div>
+                            <div :class="inputContainerStyle">
+                                <div class="row col-12">
+                                    <div class="row col-12 col-lg-5 m-0 p-0 my-1">
+                                        {{ props.targetUser.level }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div :class="formRowStyle">
+                            <div :class="labelContainerStyle">
+                                <label :class="labelStyle" for="active"><strong>Activo</strong></label>
+                            </div>
+                            <div :class="inputContainerStyle">
+                                <div class="row col-12">
+                                    <div class="row col-12 col-lg-5 m-0 p-0 my-1">
+                                        {{ props.targetUser.active === 1 ? 'Sí' : 'No' }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                           
 
                     <div class="row m-0 p-0 justify-content-center my-2 mt-5">
                         <div class="row m-0 p-0 col-12 justify-content-center">

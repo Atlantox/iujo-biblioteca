@@ -169,19 +169,32 @@ const router = createRouter({
       component: WatchStatisticsView,
       meta:{ requireAuth: true, statisticsPermisson: true }
     },
+
+    // BINNACLE
     
   ]
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   
   const sessionStore = useSessionStore()
   var routeOk = true
+
+  if(sessionStore.authenticated){
+    // Si está autenticado, validamos que el usuario esté activo, sino le cerramos la sesión
+    var userIsActive = await sessionStore.MyUserIsActive()
+      if(userIsActive === false){
+        sessionStore.DestroySession()
+        routeOk = false
+      }
+  }
 
   if(to.meta.requireAuth){
     if(!sessionStore.authenticated)
       routeOk = false
     else{
+      
+
       if(to.meta.bookPermisson && !(sessionStore.userData.permissons.includes('Libros'))){
         routeOk = false
       }
@@ -211,6 +224,10 @@ router.beforeEach((to, from, next) => {
       }
 
       if(to.meta.statisticsPermisson && !(sessionStore.userData.permissons.includes('Estadísticas'))){
+        routeOk = false
+      }
+
+      if(to.meta.binnaclePermisson && !(sessionStore.userData.permissons.includes('Bitácora'))){
         routeOk = false
       }
     }

@@ -12,6 +12,7 @@ import useUserStore from '@/stores/users'
 import useSessionStore from '@/stores/session'
 
 import MyAccountForm from '@/components/forms/MyAccountForm.vue'
+import UserForm from '@/components/forms/UserForm.vue'
 
 const route = useRoute()
 
@@ -23,16 +24,13 @@ const targetUser = ref({})
 
 onMounted( async () => {
     fetchReady.value = false
-
     targetUser.value = await userStore.FetchUserById(sessionStore.userData.id)
-
-    //fetchReady.value = true
+    fetchReady.value = true
 })
 
 </script>
 
 <template>
-    {{ targetUser }}
   <div class="row m-0 p-0 justify-content-center justify-content-lg-start">
     <BackButtonGadget :back_to="'dashboard'"/>
   </div>
@@ -43,7 +41,7 @@ onMounted( async () => {
     <LoadingGadget />
   </template>
   <template v-else>    
-    <MyAccountForm
+    <UserForm
     :targetUser = "targetUser"
     />
   </template>
