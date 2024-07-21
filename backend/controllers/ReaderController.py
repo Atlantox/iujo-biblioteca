@@ -105,7 +105,7 @@ def CreateReader():
             statusCode = 500
         else:
             action = 'Creó al lector {0} de cédula {1}'.format(cleanData['names'], cleanData['cedula'])
-            readerModel.CreateBinnacle(targetUser['id'], action)
+            readerModel.CreateBinnacle(targetUser['id'],action, request.remote_addr)
             message = 'Lector creado correctamente'
 
     if error != '':
@@ -262,7 +262,7 @@ def UpdateReader(readerId):
             alteredColumns = alteredColumns[0:-2]
 
             action = 'Editó los campos {0} del lector de id {1}'.format(alteredColumns, readerId)
-            readerModel.CreateBinnacle(targetUser['id'], action)
+            readerModel.CreateBinnacle(targetUser['id'],action, request.remote_addr)
             message = 'Lector actualizado correctamente'
 
     if error != '':
@@ -316,7 +316,7 @@ def DeleteReader(readerId):
             statusCode = 500
         else:
             action = 'Borró al lector {0} de cédula {1} y id {2}'.format(targetReader['names'], targetReader['cedula'], targetReader['id'])
-            readerModel.CreateBinnacle(targetUser['id'], action)
+            readerModel.CreateBinnacle(targetUser['id'],action, request.remote_addr)
             message = 'Lector eliminado correctamente'
 
     if error != '':

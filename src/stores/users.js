@@ -38,13 +38,14 @@ const useUserStore = defineStore('users', {
                 result = await json                
             }
             catch(error){
-                result = {success: false, message: 'Ocurrió un error inesperado al crear el usuario'}
+                result = {success: false, message: 'Ocurrió un error inesperado al crear el usuario: ' + error.message}
             }
 
             return result
         },
 
         async FetchUsers(){
+            this.users.value = []
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -71,7 +72,7 @@ const useUserStore = defineStore('users', {
                     utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los usuarios', 'error')
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los usuarios: ' + error.message, 'error')
             }
         },
 
@@ -135,7 +136,7 @@ const useUserStore = defineStore('users', {
                 result = await json                
             }
             catch(error){
-                result = {success: false, message: 'Ocurrió un error inesperado al intentar actualizar el usuario'}
+                result = {success: false, message: 'Ocurrió un error inesperado al intentar actualizar el usuario: ' + error.message}
             }
 
             return result

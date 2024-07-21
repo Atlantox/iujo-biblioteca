@@ -6,16 +6,21 @@ import FormValidator from '@/utils/FormValidator'
 import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue'
 import OnAppearAnimation from '@/utils/ElegantDisplayer'
 
+import BinnacleTable from '../tables/BinnacleTable.vue'
+
 import useUtilsStore from '@/stores/utils'
 import useSessionStore from '@/stores/session'
 import useUserStore from '@/stores/users'
+import useBinnacleStore from '@/stores/binnacle'
 
 
 const utilsStore = useUtilsStore()
 const userStore = useUserStore()
 const sessionStore = useSessionStore()
+const binnacleStore = useBinnacleStore()
 
 const mounted = ref(false)
+const binnacleFetched = ref(false)
 const formErrors = ref([])
 const selfUser = ref(false)
 
@@ -25,6 +30,7 @@ const userUsername = ref('')
 const userPassword = ref('')
 const userPasswordConfirm = ref('')
 const userActive = ref([1])
+const userBinnacle = binnacleStore.binnacle
 
 const formRowStyle = 'row m-0 p-0 justify-content-center my-2'
 const labelContainerStyle = 'row m-0 p-0 col-12 col-md-3'
@@ -37,9 +43,10 @@ const props = defineProps({
 
 const emits = defineEmits(['formOk'])
 
-onMounted(() => {
+onMounted(async () => {
     OnAppearAnimation('hide-up')
     if(Object.keys(props.targetUser).length !== 0){
+        await binnacleStore.FetchBinnacleOfUser(props.targetUser.id)
         selfUser.value = props.targetUser.id === sessionStore.userData.id
         userNickname.value = props.targetUser.nickname
         userLevel.value = props.targetUser.level
@@ -49,6 +56,7 @@ onMounted(() => {
             userActive.value = []
     }
     mounted.value = true
+    binnacleFetched.value = true
 })
 
 
@@ -184,6 +192,19 @@ const ValidateForm = (async (e) => {
 
 
 })
+
+const ChangeDate = (async (data) => {
+    binnacleFetched.value = false
+    await binnacleStore.FetchBinnacleOfUserBetweenDates(props.targetUser.id, data['initial_date'], data['final_date'])
+    binnacleFetched.value = true    
+})
+
+const ResetBinnacle = (async () => {
+    binnacleFetched.value = false
+    await binnacleStore.FetchBinnacleOfUser(props.targetUser.id)
+    binnacleFetched.value = true
+})
+
 </script>
 
 <template>
@@ -355,6 +376,27 @@ const ValidateForm = (async (e) => {
                     </div>
                     
                 </div>    
+
+                <template v-if="Object.keys(props.targetUser).length !== 0">
+                    <div class="col-10 mt-5 p-2 row myForm shadowed-l rounded lb-bg-terciary-ul justify-content-center">
+
+                        <h2 class="w-100 text-center h1 my-3 fw-bold">
+                            Historial de acciones de {{ props.targetUser.nickname }}
+                        </h2>
+                        <template v-if="binnacleFetched === false">
+                            <LoadingGadget/>
+                        </template>
+                        <template v-else>
+                            <div class="w-100 p-2 fs-6">
+                                <BinnacleTable
+                                :binnacle="userBinnacle"
+                                @ChangeDate="ChangeDate"
+                                @ResetBinnacle="ResetBinnacle"
+                                />
+                            </div>
+                        </template>
+                    </div>            
+                </template>
             </div>
         </template>
     </form>

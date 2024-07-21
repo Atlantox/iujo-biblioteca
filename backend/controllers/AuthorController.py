@@ -61,7 +61,7 @@ def CreateAuthor():
             statusCode = 500
         else:
             action = 'Creó el autor {0}'.format(cleanData['name'])
-            authorModel.CreateBinnacle(targetUser['id'], action)
+            authorModel.CreateBinnacle(targetUser['id'], action, request.remote_addr)
             message = 'Autor creado correctamente'
 
     if error != '':
@@ -175,7 +175,7 @@ def UpdateAuthor(authorId):
             statusCode = 500
         else:
             action = 'Renombró el autor "{0}" por "{1}" '.format(targetAuthor['name'], cleanData['name'])
-            authorModel.CreateBinnacle(targetUser['id'], action)
+            authorModel.CreateBinnacle(targetUser['id'], action, request.remote_addr)
             message = 'Autor renombrado correctamente'
 
     if error != '':
@@ -222,7 +222,7 @@ def DeleteAuthor(authorId):
             statusCode = 500
         else:
             action = 'Eliminó el autor "{0}"'.format(targetAuthor['name'])
-            authorModel.CreateBinnacle(targetUser['id'], action)
+            authorModel.CreateBinnacle(targetUser['id'], action, request.remote_addr)
             message = 'Autor eliminado correctamente'
 
     if error != '':

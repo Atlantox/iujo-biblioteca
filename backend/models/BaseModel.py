@@ -2,7 +2,7 @@ class BaseModel():
     def __init__(self, connection):
         self.connection = connection
 
-    def CreateBinnacle(self, userId, action):
+    def CreateBinnacle(self, userId, action, ip):
         cursor = self.connection.connection.cursor()
         created = True
         sql = '''
@@ -10,15 +10,18 @@ class BaseModel():
             binnacle
             (
                 user,
-                action
+                action,
+                ip_address
             )
             VALUES
             (
                 %s,
+                %s,
+                %s,
                 %s
             )
             '''
-        args = (userId, action, )
+        args = (userId, action, ip,)
         
         try:
             cursor.execute(sql, args)

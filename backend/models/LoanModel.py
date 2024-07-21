@@ -291,7 +291,7 @@ class LoanModel(BaseModel):
             loans = []
 
         for loan in loans:
-            if loan['name'] == '1':
+            if loan['name'] == 1:
                 result.append({'name':'Docente', 'y': loan['y']})
             else:
                 result.append({'name':'NO docente', 'y': loan['y']})

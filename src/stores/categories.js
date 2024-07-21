@@ -14,7 +14,38 @@ const useCategoryStore = defineStore('categories', {
         }
     },
     actions:{
+        async CreateCategory(categoryData){
+            const sessionStore = useSessionStore()
+            let result = {}
+            try{
+                let url = apiConfig.base_url + '/categories'
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+
+                if (sessionStore.authenticated === true)
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'POST',
+                    headers: fetchHeaders,
+                    body: JSON.stringify(categoryData)
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                result = await json                
+            }
+            catch(error){
+                result = {success: false, message: 'Ocurrió un error inesperado al crear la categoría: ' + error.message}
+            }
+
+            return result
+        },
+
         async FetchCategories(){
+            this.categories.value = []
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -42,38 +73,8 @@ const useCategoryStore = defineStore('categories', {
                     utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar las categorías', 'error')
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar las categorías: ' + error.message, 'error')
             }
-        },
-
-        async CreateCategory(categoryData){
-            const sessionStore = useSessionStore()
-            let result = {}
-            try{
-                let url = apiConfig.base_url + '/categories'
-                var fetchHeaders = {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                }
-
-                if (sessionStore.authenticated === true)
-                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
-
-                let fetchConfig = {
-                    method: 'POST',
-                    headers: fetchHeaders,
-                    body: JSON.stringify(categoryData)
-                }
-
-                let response = await fetch(url, fetchConfig)
-                let json = await response.json()
-                result = await json                
-            }
-            catch(error){
-                result = {success: false, message: 'Ocurrió un error inesperado al crear la categoría'}
-            }
-
-            return result
         },
 
         async FetchCategoryById(id){
@@ -134,7 +135,7 @@ const useCategoryStore = defineStore('categories', {
                 result = await json                
             }
             catch(error){
-                result = {success: false, message: 'Ocurrió un error inesperado al intentar actualizar la categoría'}
+                result = {success: false, message: 'Ocurrió un error inesperado al intentar actualizar la categoría: ' + error.message}
             }
 
             return result

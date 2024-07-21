@@ -1,6 +1,11 @@
 import re 
 from datetime import datetime
 
+DATES_LENGTH_CONFIG = {
+    'initial_date': {'min': 8, 'max': 10},
+    'final_date': {'min': 8, 'max': 10}
+}
+
 def ValidateLength(validations, data):
     lengthOK = True
     for field, value in validations.items():
@@ -75,6 +80,33 @@ def StringToDatetime(strDate):
     return result
 
 
+def ValidateInitialAndFinalDate(data):
+    error = ''
+
+    cleanData = HasEmptyFields(['initial_date', 'final_date'], data)
+    if type(cleanData) is str:
+        error = cleanData
+
+    if error == '':
+        lengthOK = ValidateLength(DATES_LENGTH_CONFIG, cleanData)
+        if lengthOK is not True:
+            error = lengthOK
+
+    if error == '':
+        if StringToDatetime(cleanData['initial_date']) is False:
+            error = 'Fecha de inicio inválida'
+
+        if StringToDatetime(cleanData['final_date']) is False:
+            error = 'Fecha de fin inválida'
+    
+    if error == '':
+        datesOk = ValidateDateRange(cleanData['initial_date'], cleanData['final_date'])
+        if datesOk is False:
+            error = 'La fecha de inicio debe ser más temprana que la de fin'
+    
+    return cleanData if error == '' else error
+
+
 def ValidateDateRange(initialDate, finalDate):
     result = True
     try:
@@ -83,7 +115,7 @@ def ValidateDateRange(initialDate, finalDate):
 
         year, month, day = finalDate.split('-')
         final = datetime(int(year), int(month), int(day))
-        result = final > initial
+        result = final >= initial
     except:
         result = False
 

@@ -128,7 +128,7 @@ def CreateBook():
             statusCode = 500
         else:
             action = 'Creó el Libro "{0}"'.format(recievedData['title'])
-            userModel.CreateBinnacle(targetUser['id'], action)
+            userModel.CreateBinnacle(targetUser['id'],action, request.remote_addr)
             message = 'Libro creado correctamente'
 
     if error != '':
@@ -284,7 +284,7 @@ def CreateBooksByExcel():
 
     if booksCreated > 0:
         action = 'Insertó {0} libros mediante un excel'.format(booksCreated)
-        bookModel.CreateBinnacle(targetUser['id'], action)
+        bookModel.CreateBinnacle(targetUser['id'],action, request.remote_addr)
         message = 'Libro creado correctamente'
     
     message = f'Se crearon {booksCreated} libros<br><br>' + message
@@ -613,7 +613,7 @@ def UpdateBook(updateId):
             alteredColumns = alteredColumns[0:-2]
 
             action = 'Editó los campos: {0} del Libro de id {1}'.format(alteredColumns, updateId)
-            bookModel.CreateBinnacle(targetUser['id'], action)
+            bookModel.CreateBinnacle(targetUser['id'],action, request.remote_addr)
             message = 'Libro actualizado correctamente'
 
     if error != '':
@@ -672,7 +672,7 @@ def DeleteBook(deleteId):
         else:
             message = 'Libro borrado correctamente'
             action = 'Borró el libro "{0}" de id {1}'.format(targetBook['title'], targetBook['id'])
-            bookModel.CreateBinnacle(targetUser['id'], action)
+            bookModel.CreateBinnacle(targetUser['id'],action, request.remote_addr)
     
     if error != '':
         message = error

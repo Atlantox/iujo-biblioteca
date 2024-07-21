@@ -7,81 +7,19 @@ import useUtilsStore from './utils'
 import useSessionStore from '@/stores/session.js'
 
 const apiConfig = new ApiConfig()
-const useReaderStore = defineStore('readers', {
+
+const useBinnacleStore = defineStore('binnacle', {
     state: () => {
         return {
-            readers: ref([]),
-            errorMessage: ref('')
+            binnacle: ref([]),
         }
     },
     actions:{
-        async CreateReader(readerData){
-            const sessionStore = useSessionStore()
-            let result = {}
-            try{
-                let url = apiConfig.base_url + '/readers'
-                var fetchHeaders = {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                }
-
-                if (sessionStore.authenticated === true)
-                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
-
-                let fetchConfig = {
-                    method: 'POST',
-                    headers: fetchHeaders,
-                    body: JSON.stringify(readerData)
-                }
-
-                let response = await fetch(url, fetchConfig)
-                let json = await response.json()
-                result = await json                
-            }
-            catch(error){
-                result = {success: false, message: 'Ocurrió un error inesperado al crear el lector: ' + error.message}
-            }
-
-            return result
-        },
-
-        async FetchReaders(){
-            this.readers.value = []
+        async FetchBinnacle(){
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
-                let url = apiConfig.base_url + '/readers'
-                var fetchHeaders = {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                }
-
-                if (sessionStore.authenticated === true)
-                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
-
-                let fetchConfig = {
-                    method: 'GET',
-                    headers: fetchHeaders
-                }
-
-                let response = await fetch(url, fetchConfig)
-                let json = await response.json()
-                let result = await json
-                if(result.success)
-                    this.readers.value = result.readers
-                else
-                    utilsStore.ShowModal('Error', result.message, 'error')
-            }
-            catch(error){
-                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los lectores: ' + error.message, 'error')
-            }
-        },
-
-        async FetchReaderById(id){
-            var targetReader = false
-            const sessionStore = useSessionStore()
-            try{
-                let url = apiConfig.base_url + '/readers/' + id
+                let url = apiConfig.base_url + '/binnacle'
                 var fetchHeaders = {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -99,24 +37,20 @@ const useReaderStore = defineStore('readers', {
                 let json = await response.json()
                 let result = await json
                 if(result.success){
-                    targetReader = result.reader
-                    
+                    this.binnacle.value = result.binnacle
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar el lector solicitado: ' + error.message, 'error')
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar la bitácora: ' + error.message, 'error')
             }
-
-            return targetReader
         },
-
-        async UpdateReader(readerId, readerData){
+        async FetchBinnacleOfUser(userId){
             const sessionStore = useSessionStore()
-            let result = {}
+            const utilsStore = useUtilsStore()
             try{
-                let url = apiConfig.base_url + '/readers/' + readerId
+                let url = apiConfig.base_url + '/binnacle/user/' + userId
                 var fetchHeaders = {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -126,22 +60,92 @@ const useReaderStore = defineStore('readers', {
                     fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
 
                 let fetchConfig = {
-                    method: 'PUT',
-                    headers: fetchHeaders,
-                    body: JSON.stringify(readerData)
+                    method: 'GET',
+                    headers: fetchHeaders
                 }
 
                 let response = await fetch(url, fetchConfig)
                 let json = await response.json()
-                result = await json                
+                let result = await json
+                if(result.success){
+                    this.binnacle.value = result.binnacle
+                }
+                else
+                    utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                result = {success: false, message: 'Ocurrió un error inesperado al intentar actualizar el lector: ' + error.message}
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar la bitácora del usuario solicitado: ' + error.message, 'error')
             }
-
-            return result
         },
+
+        async FetchBinnacleBetweenDates(initialDate, finalDate){
+            const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
+            try{
+                let url = apiConfig.base_url + '/binnacle/between_dates'
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+
+                if (sessionStore.authenticated === true)
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'POST',
+                    headers: fetchHeaders,
+                    body:JSON.stringify({'initial_date':initialDate, 'final_date': finalDate})
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                let result = await json
+                
+                if(result.success){
+                    this.binnacle.value = result.binnacle
+                }
+                else
+                    utilsStore.ShowModal('Error', result.message, 'error')
+            }
+            catch(error){
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar la bitácora entre las fechas seleccionadas: ' + error.message, 'error')
+            }
+        },
+
+        async FetchBinnacleOfUserBetweenDates(userId, initialDate, finalDate){
+            const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
+            try{
+                let url = apiConfig.base_url + '/binnacle/between_dates/' + userId
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+
+                if (sessionStore.authenticated === true)
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'POST',
+                    headers: fetchHeaders,
+                    body:JSON.stringify({'initial_date':initialDate, 'final_date': finalDate})
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                let result = await json
+                
+                if(result.success){
+                    this.binnacle.value = result.binnacle
+                }
+                else
+                    utilsStore.ShowModal('Error', result.message, 'error')
+            }
+            catch(error){
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar la bitácora entre las fechas seleccionadas: ' + error.message, 'error')
+            }
+        }
     }
 })
 
-export default useReaderStore
+export default useBinnacleStore

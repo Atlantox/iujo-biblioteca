@@ -7,24 +7,14 @@ import PageTitle from '@/components/PageTitle.vue'
 import Statistics from '@/components/detailers/Statistics.vue'
 
 import BackButtonGadget from '@/components/myGadgets/BackButtonGadget.vue'
-import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue'
-
-import useBookStore from '@/stores/books'
-import useSessionStore from '@/stores/session'
 
 import OnAppearAnimation from '@/utils/ElegantDisplayer'
-
-const route = useRoute()
-
-const bookStore = useBookStore()
-const sessionStore = useSessionStore()
 
 const formRowStyle = 'row m-0 col-6 p-0 justify-content-center my-2'
 const labelContainerStyle = 'row m-0 p-0 col-12 col-md-5'
 const labelStyle = 'text-center text-md-end'
 const inputContainerStyle = 'row m-0 p-0 col-12 col-md-7 justify-content-center justify-content-md-start'
 
-const fetchReady = ref(false)
 const initialDate = ref('')
 const finalDate = ref('')
 const displayStatistics = ref(false)

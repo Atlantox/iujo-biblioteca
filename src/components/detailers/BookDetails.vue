@@ -4,17 +4,22 @@ import OnAppearAnimation from '@/utils/ElegantDisplayer';
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router'
 
+import LoanTable from '../tables/LoanTable.vue';
+
 import useBookStore from '@/stores/books';
+import useLoanStore from '@/stores/loans';
 
 const labelStyle = 'fw-bold text-end p-2 w-50 w-lg-auto'
 
 const bookStore = useBookStore()
+const loanStore = useLoanStore()
 const route = useRoute()
 
 const emit = defineEmits(['changeBook'])
 
 const sameAuthorBooks = ref([])
 const sameCategoryBooks = ref([])
+const bookLoans = loanStore.loans
 
 const props = defineProps({
     'targetBook': {type: Object, default: {}}
@@ -26,6 +31,7 @@ const ChangeBook = ((bookId) => {
 
 onMounted(async () => {
   OnAppearAnimation('hide-up')
+  await loanStore.FetchLoansOfBook(route.params.id)
   sameAuthorBooks.value = await bookStore.GetBooksOfAuthor(props.targetBook.author_id, route.params.id)
   sameCategoryBooks.value = await bookStore.GetBooksOfCategories(props.targetBook.category_ids, route.params.id)
 })
@@ -112,6 +118,18 @@ onMounted(async () => {
               @click="ChangeBook(book.id)">
                 {{ book.title }}
               </a>   
+            </div>
+          </div>
+
+          <!-- Book's loans -->
+          <div v-if="bookLoans.value !== undefined" class="col-12 col-lg-10 p-2 row shadowed-l rounded lb-bg-terciary-ul justify-content-center mt-5">
+            <h2 class="w-100 text-center h1 my-3 fw-bold">
+                Préstamos del libro
+            </h2>
+            <div class="w-100 p-2 fs-6">
+                <LoanTable
+                :loans="bookLoans"
+                />
             </div>
           </div>
     </div>

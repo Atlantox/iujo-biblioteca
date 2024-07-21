@@ -61,7 +61,7 @@ def CreateCategory():
             statusCode = 500
         else:
             action = 'Creó la categoría {0}'.format(cleanData['name'])
-            categoryModel.CreateBinnacle(targetUser['id'], action)
+            categoryModel.CreateBinnacle(targetUser['id'],action, request.remote_addr)
             message = 'Categoría creada correctamente'
 
     if error != '':
@@ -176,7 +176,7 @@ def UpdateCategory(categoryId):
             statusCode = 500
         else:
             action = 'Renombró la categoría "{0}" por "{1}" '.format(targetCategory['name'], cleanData['name'])
-            categoryModel.CreateBinnacle(targetUser['id'], action)
+            categoryModel.CreateBinnacle(targetUser['id'],action, request.remote_addr)
             message = 'Categoría renombrada correctamente'
 
     if error != '':
@@ -223,7 +223,7 @@ def DeleteCategory(categoryId):
             statusCode = 500
         else:
             action = 'Eliminó la categoría "{0}"'.format(targetCategory['name'])
-            categoryModel.CreateBinnacle(targetUser['id'], action)
+            categoryModel.CreateBinnacle(targetUser['id'],action, request.remote_addr)
             message = 'Categoría eliminada correctamente'
 
     if error != '':

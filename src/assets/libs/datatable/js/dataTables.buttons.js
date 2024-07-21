@@ -160,7 +160,7 @@ $.extend(Buttons.prototype, {
 	 * @param  {function} action Function to set
 	 * @return {Buttons} Self for chaining
 	 */
-	action: function (node, action) {
+	action: function (node, action ) {
 		var button = this._nodeToButton(node);
 
 		if (action === undefined) {
@@ -2264,7 +2264,7 @@ DataTable.Api.registerPlural(
 		}
 
 		return this.each(function (set) {
-			set.inst.action(set.node, action);
+			set.inst.action(set.node, action );
 		});
 	}
 );

@@ -11,10 +11,7 @@ import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue'
 import useUserStore from '@/stores/users'
 import useSessionStore from '@/stores/session'
 
-import MyAccountForm from '@/components/forms/MyAccountForm.vue'
 import UserForm from '@/components/forms/UserForm.vue'
-
-const route = useRoute()
 
 const userStore = useUserStore()
 const sessionStore = useSessionStore()

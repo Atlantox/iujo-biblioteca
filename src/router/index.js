@@ -23,6 +23,7 @@ import SearchCategoryView from '@/views/tables/SearchCategoryView.vue'
 import SearchAuthorsView from '@/views/tables/SearchAuthorsView.vue'
 import SearchEditorialsView from '@/views/tables/SearchEditorialsView.vue'
 import SearchUsersView from '@/views/tables/SearchUsersView.vue'
+import SearchBinnacleView from '@/views/tables/SearchBinnacleView.vue'
 
 import WatchBookView from '../views/watchers/WatchBookView.vue'
 import WatchStatisticsView from '../views/watchers/WatchStatisticsView.vue'
@@ -171,7 +172,12 @@ const router = createRouter({
     },
 
     // BINNACLE
-    
+    {
+      path: '/binnacle',
+      name: 'binnacle',
+      component: SearchBinnacleView,
+      meta:{ requireAuth: true, binnaclePermisson: true }
+    },
   ]
 })
 

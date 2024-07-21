@@ -51,7 +51,7 @@ const stateTranslator = {
         <BackButtonGadget :back_to="'dashboard'"/>
     </div>
     <PageTitleView
-    :title="'Lista de préstamos ' + stateTranslator[route.params.filter]"
+    :title="'Lista de préstamos ' + (['', undefined, 'pending'].includes(route.params.filter) ? '' : stateTranslator[route.params.filter])"
     />
     <div class="row m-0 p-0 col-12 py-4 shadowed-l rounded lb-bg-terciary-ul justify-content-center">
       <AddButtonGadget

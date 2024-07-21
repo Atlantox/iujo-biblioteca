@@ -41,7 +41,7 @@ const useBookStore = defineStore('books', {
                 result = await json                
             }
             catch(error){
-                result = {success: false, message: 'Ocurrió un error inesperado al crear el libro'}
+                result = {success: false, message: 'Ocurrió un error inesperado al crear el libro: ' + error.message}
             }
 
             return result
@@ -71,7 +71,7 @@ const useBookStore = defineStore('books', {
                 result = await json                
             }
             catch(error){
-                result = {success: false, message: 'Ocurrió un error inesperado al crear los libros'}
+                result = {success: false, message: 'Ocurrió un error inesperado al crear los libros: ' + error.message}
             }
 
             return result
@@ -101,7 +101,7 @@ const useBookStore = defineStore('books', {
                 result = await json                
             }
             catch(error){
-                result = {success: false, message: 'Ocurrió un error inesperado al crear el libro'}
+                result = {success: false, message: 'Ocurrió un error inesperado al crear el libro: ' + error.message}
             }
 
             return result
@@ -131,7 +131,7 @@ const useBookStore = defineStore('books', {
                 result = await json                
             }
             catch(error){
-                result = {success: false, message: 'Ocurrió un error inesperado al crear el autor'}
+                result = {success: false, message: 'Ocurrió un error inesperado al crear el autor: ' + error.message}
             }
 
             return result
@@ -161,7 +161,7 @@ const useBookStore = defineStore('books', {
                 result = await json                
             }
             catch(error){
-                result = {success: false, message: 'Ocurrió un error inesperado al crear el estado de libro'}
+                result = {success: false, message: 'Ocurrió un error inesperado al crear el estado de libro: ' + error.message}
             }
 
             return result
@@ -310,6 +310,7 @@ const useBookStore = defineStore('books', {
         },
 
         async FetchBooks(){
+            this.books.value = []
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -337,11 +338,12 @@ const useBookStore = defineStore('books', {
                     utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los libros', 'error')
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los libros: ' + error.message, 'error')
             }
         },
 
         async FetchBooksWithFilter(filters){
+            this.books.value = []
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -371,11 +373,12 @@ const useBookStore = defineStore('books', {
                     utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los libros con filtros', 'error')
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los libros con filtros: ' + error.message, 'error')
             }
         },
 
         async FetchAuthors(){
+            this.authors.value = []
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -403,11 +406,12 @@ const useBookStore = defineStore('books', {
                     utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los autores', 'error')
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los autores: ' + error.message, 'error')
             }
         },
 
         async FetchEditorials(){
+            this.editorials.value = []
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -435,11 +439,12 @@ const useBookStore = defineStore('books', {
                     utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar las editoriales', 'error')
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar las editoriales: ' + error.message, 'error')
             }
         },
 
         async FetchBookStates(){
+            this.bookStates.value = []
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -467,7 +472,7 @@ const useBookStore = defineStore('books', {
                     utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los estados de libros', 'error')
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los estados de libros: ' + error.message, 'error')
             }
         },
 
@@ -568,7 +573,7 @@ const useBookStore = defineStore('books', {
                 result = await json                
             }
             catch(error){
-                result = {success: false, message: 'Ocurrió un error inesperado al intentar actualizar el libro'}
+                result = {success: false, message: 'Ocurrió un error inesperado al intentar actualizar el libro: ' + error.message}
             }
 
             return result
@@ -598,7 +603,7 @@ const useBookStore = defineStore('books', {
                 result = await json                
             }
             catch(error){
-                result = {success: false, message: 'Ocurrió un error inesperado al intentar actualizar la editorial'}
+                result = {success: false, message: 'Ocurrió un error inesperado al intentar actualizar la editorial: ' + error.message}
             }
 
             return result
@@ -628,37 +633,7 @@ const useBookStore = defineStore('books', {
                 result = await json                
             }
             catch(error){
-                result = {success: false, message: 'Ocurrió un error inesperado al intentar actualizar al autor'}
-            }
-
-            return result
-        },
-
-        async UpdateState(oldName, stateData){
-            const sessionStore = useSessionStore()
-            let result = {}
-            try{
-                let url = apiConfig.base_url + '/states/' + oldName
-                var fetchHeaders = {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                }
-
-                if (sessionStore.authenticated === true)
-                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
-
-                let fetchConfig = {
-                    method: 'PUT',
-                    headers: fetchHeaders,
-                    body: JSON.stringify(stateData)
-                }
-
-                let response = await fetch(url, fetchConfig)
-                let json = await response.json()
-                result = await json                
-            }
-            catch(error){
-                result = {success: false, message: 'Ocurrió un error inesperado al intentar actualizar al autor'}
+                result = {success: false, message: 'Ocurrió un error inesperado al intentar actualizar al autor: ' + error.message}
             }
 
             return result

@@ -92,7 +92,6 @@ def GetUserData():
         response = {'success': True, 'data': publicData}
     else:
         response = {'success': False, 'message': error}
-    print(response)
     return jsonify(response), statusCode
 
 
@@ -186,7 +185,7 @@ def RegisterUser():
         if created:
             message = 'Usuario creado correctamente'
             action = '{0} ha creado al usuario {1}'.format(targetUser['nickname'], cleanData['nickname'])
-            userModel.CreateBinnacle(targetUser['id'], action)
+            userModel.CreateBinnacle(targetUser['id'],action, request.remote_addr)
         else:
             error = 'Hubo un error al crear al usuario'
             statusCode = 500
@@ -235,7 +234,7 @@ def TryLogin():
             userData = userModel.GetUserPublicData(token)
             message = token
             action = '{0} ha ingresado al sistema'.format(userData['nickname'])
-            userModel.CreateBinnacle(userData['id'], action)
+            userModel.CreateBinnacle(userData['id'],action, request.remote_addr)
             
     if error != '':
         message = error
@@ -321,7 +320,7 @@ def UpdateUser(userId):
             alteredColumns = alteredColumns[0:-2]
 
             action = 'Editó los campos {0} del usuario de id {1}'.format(alteredColumns, userId)
-            userModel.CreateBinnacle(targetUser['id'], action)
+            userModel.CreateBinnacle(targetUser['id'],action, request.remote_addr)
             message = 'Lector actualizado correctamente'
 
     if error != '':

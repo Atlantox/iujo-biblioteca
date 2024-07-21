@@ -291,7 +291,7 @@ onMounted( async () => {
                 </h4>
                 <div :class="linkContainersStyle">
                   <div :class="linkElementStyle">
-                    <router-link :class="routerLinkStyle" :to="{name: 'statistics'}">
+                    <router-link :class="routerLinkStyle" :to="{name: 'binnacle'}">
                       <i :class="'fa fa-list ' + iconStyle" ></i>
                       <span :class="linkTextStyle">
                         Ver bitácora
@@ -354,7 +354,7 @@ onMounted( async () => {
                 :key="loan.id"
                 >
                   <td>
-                    <router-link class="text-black" :to="{name:'see_book', params: {id: loan.reader_id}}">
+                    <router-link class="text-black" :to="{name:'add_reader', params: {id: loan.reader_id}}">
                       {{ loan.fullname }}
                     </router-link>
                   </td>
@@ -364,7 +364,7 @@ onMounted( async () => {
                     </router-link>
                   </td>
                   <td>
-                    <router-link class="text-black" :to="{name:'see_book', params: {id: loan.loan_id}}">
+                    <router-link class="text-black" :to="{name:'add_loan', params: {id: loan.loan_id}}">
                       {{ new Date(loan.full_deliver_date).toLocaleDateString('es-VE', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Caracas'}) }}
                     </router-link>
                   </td>

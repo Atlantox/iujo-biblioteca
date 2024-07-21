@@ -14,11 +14,6 @@ LOAN_LENGTH_CONFIG = {
     'deliver_date': {'min': 8, 'max':10}
 }
 
-DATES_LENGTH_CONFIG = {
-    'initial_date': {'min': 8, 'max': 10},
-    'final_date': {'min': 8, 'max': 10}
-}
-
 REQUIRED_FIELDS = [
     'book',
     'reader',
@@ -101,7 +96,7 @@ def CreateLoan():
         else:
             bookModel.UpdateBook(cleanData['book'], {'state': 'Prestado'})
             action = 'Creó un préstamo {0} al lector {1} y el libro {2}'.format(created, cleanData['reader'], cleanData['book'])
-            readerModel.CreateBinnacle(targetUser['id'], action)
+            readerModel.CreateBinnacle(targetUser['id'],action, request.remote_addr)
             message = 'Préstamo creado correctamente'
 
     if error != '':
@@ -306,6 +301,50 @@ def GetLoansOfReader(readerId):
     return jsonify(response), statusCode
 
 
+@loanController.route('/loans/book/<int:bookId>', methods=['GET'])
+def GetLoansOfBook(bookId):
+    connection = GetConnection()
+    userModel = UserModel(connection)
+    error = ''
+    response = {}
+    statusCode = 200
+
+    token = GetTokenOfRequest(request)
+    if token is None:
+        error = 'Acceso denegado. Autenticación requerida'
+        statusCode = 401
+
+    if error == '':
+        targetUser = userModel.GetUserByToken(token)
+        if type(targetUser) is str:
+            error = targetUser
+            statusCode = 400
+
+    if error == '':
+        if userModel.UserHasPermisson(targetUser['id'], 'Préstamos') is False:
+            error = 'Acción denegada'
+            statusCode = 401  # Unauthorized
+
+    if error == '':
+        bookModel = BookModel(connection)
+        if bookModel.GetBookById(bookId) is None:
+            error = 'Libro no encontrado'
+            statusCode = 404
+
+    if error == '':
+       loanModel = LoanModel(connection)
+       loans = loanModel.GetLoansOfBook(bookId)
+
+    response['success'] = error == ''
+
+    if error == '':
+        response['loans'] = loans
+    else:
+        response['message'] = error
+        
+    return jsonify(response), statusCode
+
+
 @loanController.route('/loans/<int:loanId>', methods=['GET'])
 def GetLoanById(loanId):
     connection = GetConnection()
@@ -387,7 +426,7 @@ def ReturnLoan(loanId):
             bookModel = BookModel(connection)
             bookModel.UpdateBook(targetLoan['book_id'], {'state': 'En biblioteca'})
             action = 'Se devolvió el libro {0} del lector {1} del préstamo {2}'.format(targetLoan['book_id'], targetLoan['reader_id'], loanId)
-            bookModel.CreateBinnacle(targetUser['id'], action)
+            bookModel.CreateBinnacle(targetUser['id'],action, request.remote_addr)
             message = 'Devolución de préstamo creada correctamente'
 
         response['success'] = error == ''
@@ -601,7 +640,7 @@ def GetLoansCountsBetweenDates():
             statusCode = 400
 
     if error == '':
-        cleanData = ValidateStatisticsDate(recievedData)
+        cleanData = ValidateInitialAndFinalDate(recievedData)
         if type(cleanData) is str:
             error = cleanData
             statusCode = 400    
@@ -646,7 +685,7 @@ def GetLoansByGender():
             statusCode = 400
 
     if error == '':
-        cleanData = ValidateStatisticsDate(recievedData)
+        cleanData = ValidateInitialAndFinalDate(recievedData)
         if type(cleanData) is str:
             error = cleanData
             statusCode = 400    
@@ -691,7 +730,7 @@ def GetLoansByTeacher():
             statusCode = 400
 
     if error == '':
-        cleanData = ValidateStatisticsDate(recievedData)
+        cleanData = ValidateInitialAndFinalDate(recievedData)
         if type(cleanData) is str:
             error = cleanData
             statusCode = 400    
@@ -734,7 +773,7 @@ def GetLoansByCategories():
             statusCode = 400
 
     if error == '':
-        cleanData = ValidateStatisticsDate(recievedData)
+        cleanData = ValidateInitialAndFinalDate(recievedData)
         if type(cleanData) is str:
             error = cleanData
             statusCode = 400    
@@ -769,31 +808,5 @@ def ValidateLoanData(recievedData, exactData = True):
         lengthOK = ValidateLength(LOAN_LENGTH_CONFIG, cleanData)
         if lengthOK is not True:
             error = lengthOK
-    
-    return cleanData if error == '' else error
-
-def ValidateStatisticsDate(data):
-    error = ''
-
-    cleanData = HasEmptyFields(['initial_date', 'final_date'], data)
-    if type(cleanData) is str:
-        error = cleanData
-
-    if error == '':
-        lengthOK = ValidateLength(DATES_LENGTH_CONFIG, cleanData)
-        if lengthOK is not True:
-            error = lengthOK
-
-    if error == '':
-        if StringToDatetime(cleanData['initial_date']) is False:
-            error = 'Fecha de inicio inválida'
-
-        if StringToDatetime(cleanData['final_date']) is False:
-            error = 'Fecha de fin inválida'
-    
-    if error == '':
-        datesOk = ValidateDateRange(cleanData['initial_date'], cleanData['final_date'])
-        if datesOk is False:
-            error = 'La fecha de inicio debe ser más temprana que la de fin'
     
     return cleanData if error == '' else error

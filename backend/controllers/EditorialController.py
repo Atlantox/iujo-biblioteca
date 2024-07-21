@@ -61,7 +61,7 @@ def CreateEditorial():
             statusCode = 500
         else:
             action = 'Creó la editorial {0}'.format(cleanData['name'])
-            editorialModel.CreateBinnacle(targetUser['id'], action)
+            editorialModel.CreateBinnacle(targetUser['id'],action, request.remote_addr)
             message = 'Editorial creada correctamente'
 
     if error != '':
@@ -175,7 +175,7 @@ def UpdateEditorial(editorialId):
             statusCode = 500
         else:
             action = 'Renombró la editorial "{0}" por "{1}" '.format(targetEditorial['name'], cleanData['name'])
-            editorialModel.CreateBinnacle(targetUser['id'], action)
+            editorialModel.CreateBinnacle(targetUser['id'],action, request.remote_addr)
             message = 'Editorial renombrada correctamente'
 
     if error != '':
@@ -222,7 +222,7 @@ def DeleteEditorial(editorialId):
             statusCode = 500
         else:
             action = 'Eliminó la editorial "{0}"'.format(targetEditorial['name'])
-            editorialModel.CreateBinnacle(targetUser['id'], action)
+            editorialModel.CreateBinnacle(targetUser['id'],action, request.remote_addr)
             message = 'Editorial eliminada correctamente'
 
     if error != '':

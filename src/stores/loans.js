@@ -40,7 +40,7 @@ const useLoanStore = defineStore('loans', {
                 result = await json                
             }
             catch(error){
-                result = {success: false, message: 'Ocurrió un error inesperado al crear el préstamo'}
+                result = {success: false, message: 'Ocurrió un error inesperado al crear el préstamo: ' + error.message}
             }
 
             return result
@@ -84,6 +84,7 @@ const useLoanStore = defineStore('loans', {
         },
 
         async FetchLoanOfReaderId(id){
+            this.loans.value = []
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -112,7 +113,41 @@ const useLoanStore = defineStore('loans', {
                     utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los préstamos del lector', 'error')
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los préstamos del lector: ' + error.message, 'error')
+            }
+        },
+
+        async FetchLoansOfBook(bookId){
+            this.loans.value = []
+            const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
+            try{
+                let url = apiConfig.base_url + '/loans/book/' + bookId
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+
+                if (sessionStore.authenticated === true)
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'GET',
+                    headers: fetchHeaders
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                let result = await json
+                
+                if(result.success){
+                    this.loans.value = result.loans
+                }
+                else
+                    utilsStore.ShowModal('Error', result.message, 'error')
+            }
+            catch(error){
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los préstamos del libro: ' + error.message, 'error')
             }
         },
 
@@ -139,13 +174,14 @@ const useLoanStore = defineStore('loans', {
                 result = await json                
             }
             catch(error){
-                result = {success: false, message: 'Ocurrió un error inesperado al intentar finalizar al préstamo'}
+                result = {success: false, message: 'Ocurrió un error inesperado al intentar finalizar al préstamo: ' + error.message}
             }
 
             return result
         },
 
         async FetchPendingLoans(){
+            this.loans.value = []
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -173,11 +209,12 @@ const useLoanStore = defineStore('loans', {
                     utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los préstamos en curso', 'error')
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los préstamos en curso: ' + error.message, 'error')
             }
         },
 
         async FetchReturnedLoans(){
+            this.loans.value = []
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -205,14 +242,14 @@ const useLoanStore = defineStore('loans', {
                     utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los préstamos en curso', 'error')
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los préstamos en curso: ' + error.message, 'error')
             }
         },
 
         async FetchActiveLoans(){
+            this.loans.value = []
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
-            this.loans.value = []
             try{
                 let url = apiConfig.base_url + '/loans'
                 var fetchHeaders = {
@@ -238,11 +275,12 @@ const useLoanStore = defineStore('loans', {
                     utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los préstamos en curso', 'error')
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los préstamos en curso: ' + error.message, 'error')
             }
         },
 
         async FetchInactiveLoans(){
+            this.loans.value = []
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -270,11 +308,12 @@ const useLoanStore = defineStore('loans', {
                     utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los préstamos en curso', 'error')
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los préstamos en curso: ' + error.message, 'error')
             }
         },
 
         async FetchLatestLoans(days = 30){
+            this.loans.value = []
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -302,11 +341,12 @@ const useLoanStore = defineStore('loans', {
                     utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los préstamos recientes', 'error')
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los préstamos recientes: ' + error.message, 'error')
             }
         },
 
         async FetchLoansRecentCount(days = 30){
+            this.loans.value = []
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -333,7 +373,7 @@ const useLoanStore = defineStore('loans', {
                     utilsStore.ShowModal('Error', result.message, 'error')
             }
             catch(error){
-                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar la cantidad de préstamos recientes', 'error')
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar la cantidad de préstamos recientes: ' + error.message, 'error')
             }
         },
 
@@ -450,6 +490,7 @@ const useLoanStore = defineStore('loans', {
 
             return statistics
         },
+        
         async GetDeliveredAndReturnedLoansCountBetweenDates(initialDate, finalDate){
             var statistics = false
             const sessionStore = useSessionStore()
@@ -516,7 +557,7 @@ const useLoanStore = defineStore('loans', {
             catch(error){
                 updated  = {
                     'success': false,
-                    'message': 'Ocurrió un error inesperado al intentar actualizar la observación del préstamo'
+                    'message': 'Ocurrió un error inesperado al intentar actualizar la observación del préstamo: ' + error.message
                 }
             }
 
@@ -550,7 +591,7 @@ const useLoanStore = defineStore('loans', {
             catch(error){
                 deactivated  = {
                     'success': false,
-                    'message': 'Ocurrió un error inesperado al intentar desactivar el préstamo'
+                    'message': 'Ocurrió un error inesperado al intentar desactivar el préstamo: ' + error.message
                 }
             }
 
