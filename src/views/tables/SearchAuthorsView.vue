@@ -13,7 +13,6 @@ import PageTitleView from '@/components/PageTitle.vue';
 
 const bookStore = useBookStore()
 const sessionStore = useSessionStore()
-const authors = bookStore.authors
 
 onMounted(async ()  => {
   await bookStore.FetchAuthors()
@@ -37,14 +36,14 @@ onMounted(async ()  => {
       />
 
       <template
-      v-if="authors.value === undefined">
+      v-if="bookStore.authors === undefined">
         <LoadingGadget/>
       </template>
       <template v-else>
         
         <div class="w-100 m-0 p-3 px-5 table-container">
           <AuthorTable
-            :authors="authors.value"/>
+            :authors="bookStore.authors"/>
         </div>
       </template>
     </div>

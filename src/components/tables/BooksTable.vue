@@ -10,7 +10,7 @@ const sessionStore = useSessionStore()
 const utilsStore = useUtilsStore()
 
 const props = defineProps({
-    books: Object
+    books: {type: Array, default: []}
 })
 
 onMounted(() => {
@@ -42,7 +42,7 @@ onMounted(() => {
             </thead>
             <tbody class="fs-5">
                 <tr 
-                v-for="book in props.books.value"
+                v-for="book in props.books"
                 :key="book.id">
                     <td class="border-1">{{ book.title }}</td>
                     <td class="border-1">{{ book.author === null ? 'Desconocido' : book.author }}</td>

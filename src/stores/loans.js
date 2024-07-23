@@ -1,4 +1,3 @@
-import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 import ApiConfig from '@/stores/config.js'
@@ -11,8 +10,8 @@ const apiConfig = new ApiConfig()
 const useLoanStore = defineStore('loans', {
     state: () => {
         return {
-            loans: ref([]),
-            counts: ref([]),
+            loans: undefined,
+            counts: undefined,
         }
     },
     actions:{
@@ -84,7 +83,7 @@ const useLoanStore = defineStore('loans', {
         },
 
         async FetchLoanOfReaderId(id){
-            this.loans.value = []
+            this.loans = undefined
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -107,7 +106,7 @@ const useLoanStore = defineStore('loans', {
                 let result = await json
                 
                 if(result.success){
-                    this.loans.value = result.loans
+                    this.loans = result.loans
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
@@ -118,7 +117,7 @@ const useLoanStore = defineStore('loans', {
         },
 
         async FetchLoansOfBook(bookId){
-            this.loans.value = []
+            this.loans = undefined
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -141,7 +140,7 @@ const useLoanStore = defineStore('loans', {
                 let result = await json
                 
                 if(result.success){
-                    this.loans.value = result.loans
+                    this.loans = result.loans
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
@@ -181,7 +180,7 @@ const useLoanStore = defineStore('loans', {
         },
 
         async FetchPendingLoans(){
-            this.loans.value = []
+            this.loans = undefined
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -203,7 +202,7 @@ const useLoanStore = defineStore('loans', {
                 let json = await response.json()
                 let result = await json
                 if(result.success){
-                    this.loans.value = result.loans
+                    this.loans = result.loans
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
@@ -214,7 +213,7 @@ const useLoanStore = defineStore('loans', {
         },
 
         async FetchReturnedLoans(){
-            this.loans.value = []
+            this.loans = undefined
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -236,7 +235,7 @@ const useLoanStore = defineStore('loans', {
                 let json = await response.json()
                 let result = await json
                 if(result.success){
-                    this.loans.value = result.loans
+                    this.loans = result.loans
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
@@ -247,7 +246,7 @@ const useLoanStore = defineStore('loans', {
         },
 
         async FetchActiveLoans(){
-            this.loans.value = []
+            this.loans = undefined
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -269,7 +268,7 @@ const useLoanStore = defineStore('loans', {
                 let json = await response.json()
                 let result = await json
                 if(result.success){
-                    this.loans.value = result.loans
+                    this.loans = result.loans
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
@@ -280,7 +279,7 @@ const useLoanStore = defineStore('loans', {
         },
 
         async FetchInactiveLoans(){
-            this.loans.value = []
+            this.loans = undefined
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -302,7 +301,7 @@ const useLoanStore = defineStore('loans', {
                 let json = await response.json()
                 let result = await json
                 if(result.success){
-                    this.loans.value = result.loans
+                    this.loans = result.loans
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
@@ -313,7 +312,7 @@ const useLoanStore = defineStore('loans', {
         },
 
         async FetchLatestLoans(days = 30){
-            this.loans.value = []
+            this.loans = undefined
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -335,7 +334,7 @@ const useLoanStore = defineStore('loans', {
                 let json = await response.json()
                 let result = await json
                 if(result.success){
-                    this.loans.value = result.loans
+                    this.loans = result.loans
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
@@ -346,7 +345,7 @@ const useLoanStore = defineStore('loans', {
         },
 
         async FetchLoansRecentCount(days = 30){
-            this.loans.value = []
+            this.counts = undefined
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -368,7 +367,7 @@ const useLoanStore = defineStore('loans', {
                 let json = await response.json()
                 let result = await json
                 if(result.success)
-                    this.counts.value = result.counts
+                    this.counts = result.counts
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
             }
@@ -516,8 +515,7 @@ const useLoanStore = defineStore('loans', {
                 let result = await json
                 
                 if(result.success){
-                    statistics = result.counts
-                    
+                    statistics = result.counts                    
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')

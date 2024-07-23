@@ -1,4 +1,3 @@
-import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 import ApiConfig from '@/stores/config.js'
@@ -11,7 +10,7 @@ const apiConfig = new ApiConfig()
 const useBinnacleStore = defineStore('binnacle', {
     state: () => {
         return {
-            binnacle: ref([]),
+            binnacle: undefined,
         }
     },
     actions:{
@@ -37,7 +36,7 @@ const useBinnacleStore = defineStore('binnacle', {
                 let json = await response.json()
                 let result = await json
                 if(result.success){
-                    this.binnacle.value = result.binnacle
+                    this.binnacle = result.binnacle
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
@@ -46,7 +45,9 @@ const useBinnacleStore = defineStore('binnacle', {
                 utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar la bitácora: ' + error.message, 'error')
             }
         },
+
         async FetchBinnacleOfUser(userId){
+            this.binnacle = undefined
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -68,7 +69,7 @@ const useBinnacleStore = defineStore('binnacle', {
                 let json = await response.json()
                 let result = await json
                 if(result.success){
-                    this.binnacle.value = result.binnacle
+                    this.binnacle = result.binnacle
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
@@ -79,6 +80,7 @@ const useBinnacleStore = defineStore('binnacle', {
         },
 
         async FetchBinnacleBetweenDates(initialDate, finalDate){
+            this.binnacle = undefined
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -102,7 +104,7 @@ const useBinnacleStore = defineStore('binnacle', {
                 let result = await json
                 
                 if(result.success){
-                    this.binnacle.value = result.binnacle
+                    this.binnacle = result.binnacle
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
@@ -113,6 +115,7 @@ const useBinnacleStore = defineStore('binnacle', {
         },
 
         async FetchBinnacleOfUserBetweenDates(userId, initialDate, finalDate){
+            this.binnacle = undefined
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -136,7 +139,7 @@ const useBinnacleStore = defineStore('binnacle', {
                 let result = await json
                 
                 if(result.success){
-                    this.binnacle.value = result.binnacle
+                    this.binnacle = result.binnacle
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')

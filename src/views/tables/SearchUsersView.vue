@@ -13,7 +13,6 @@ import PageTitleView from '@/components/PageTitle.vue';
 
 const userStore = useUsersStore()
 const sessionStore = useSessionStore()
-const users = userStore.users
 
 onMounted(async ()  => {
   await userStore.FetchUsers()
@@ -36,13 +35,13 @@ onMounted(async ()  => {
       :title = "'Registrar nuevo usuario'"
       />
       <template
-      v-if="users.value === undefined">
+      v-if="userStore.users === undefined">
         <LoadingGadget/>
       </template>
       <template v-else>
         <div class="w-100 m-0 p-3 px-5 table-container hide-up">
           <UserTable
-            :users="users.value"/>
+            :users="userStore.users"/>
         </div>
       </template>
     </div>

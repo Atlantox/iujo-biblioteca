@@ -1,5 +1,4 @@
 <script setup>
-
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
@@ -20,11 +19,6 @@ const bookStore = useBookStore()
 
 const targetBook = ref([])
 const fetchReady = ref(false)
-
-const editorials = bookStore.editorials
-const authors = bookStore.authors
-const bookStates = bookStore.bookStates
-const categories = categoryStore.categories
 
 onMounted( async () => {
   fetchReady.value = false
@@ -85,10 +79,10 @@ const SpinSymbol = (() =>{
     
     <BookForm
     :targetBook = "targetBook"
-    :editorials = editorials
-    :authors = authors
-    :bookStates = bookStates
-    :categories = "categories"
+    :editorials = "bookStore.editorials"
+    :authors = "bookStore.authors"
+    :bookStates = "bookStore.bookStates"
+    :categories = "categoryStore.categories"
     @fetchAgain = "FetchData"
     />
   </template>

@@ -1,4 +1,3 @@
-import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import ApiConfig from '@/stores/config.js'
 
@@ -10,10 +9,10 @@ const apiConfig = new ApiConfig()
 const useBookStore = defineStore('books', {
     state: () => {
         return {
-            books: ref([]),
-            authors: ref([]),
-            editorials: ref([]),
-            bookStates: ref([])
+            books: undefined,
+            authors: undefined,
+            editorials: undefined,
+            bookStates: undefined
         }
     },
     actions:{
@@ -310,7 +309,7 @@ const useBookStore = defineStore('books', {
         },
 
         async FetchBooks(){
-            this.books.value = []
+            this.books = undefined
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -332,7 +331,7 @@ const useBookStore = defineStore('books', {
                 let json = await response.json()
                 let result = await json
                 if(result.success){
-                    this.books.value = result.books
+                    this.books = result.books
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
@@ -343,7 +342,7 @@ const useBookStore = defineStore('books', {
         },
 
         async FetchBooksWithFilter(filters){
-            this.books.value = []
+            this.books = undefined
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -367,7 +366,7 @@ const useBookStore = defineStore('books', {
                 let result = await json
                 
                 if(result.success){
-                    this.books.value = result.books
+                    this.books = result.books
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
@@ -378,7 +377,7 @@ const useBookStore = defineStore('books', {
         },
 
         async FetchAuthors(){
-            this.authors.value = []
+            this.authors = undefined
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -400,7 +399,7 @@ const useBookStore = defineStore('books', {
                 let json = await response.json()
                 let result = await json
                 if(result.success){
-                    this.authors.value = result.authors
+                    this.authors = result.authors
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
@@ -411,7 +410,7 @@ const useBookStore = defineStore('books', {
         },
 
         async FetchEditorials(){
-            this.editorials.value = []
+            this.editorials = undefined
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -433,7 +432,7 @@ const useBookStore = defineStore('books', {
                 let json = await response.json()
                 let result = await json
                 if(result.success){
-                    this.editorials.value = result.editorials
+                    this.editorials = result.editorials
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
@@ -444,7 +443,7 @@ const useBookStore = defineStore('books', {
         },
 
         async FetchBookStates(){
-            this.bookStates.value = []
+            this.bookStates = undefined
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -466,7 +465,7 @@ const useBookStore = defineStore('books', {
                 let json = await response.json()
                 let result = await json
                 if(result.success){
-                    this.bookStates.value = result.states
+                    this.bookStates = result.states
                 }
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')

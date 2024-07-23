@@ -10,7 +10,7 @@ const apiConfig = new ApiConfig()
 const useUserStore = defineStore('users', {
     state: () => {
         return {
-            users: ref([])
+            users: undefined
         }
     },
     actions:{
@@ -45,7 +45,7 @@ const useUserStore = defineStore('users', {
         },
 
         async FetchUsers(){
-            this.users.value = []
+            this.users = undefined
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -67,7 +67,7 @@ const useUserStore = defineStore('users', {
                 let json = await response.json()
                 let result = await json
                 if(result.success)
-                    this.users.value = result.users
+                    this.users = result.users
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
             }

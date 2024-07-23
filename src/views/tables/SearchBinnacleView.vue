@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 
 import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue'
 import BackButtonGadget from '@/components/myGadgets/BackButtonGadget.vue'
@@ -11,9 +11,6 @@ import useBinnacleStore from '@/stores/binnacle'
 
 const binnacleStore = useBinnacleStore()
 
-const binnacle = binnacleStore.binnacle
-const fetched = ref(false)
-
 onMounted(async ()  => {
   await FetchBinnacle()
 })
@@ -23,15 +20,11 @@ const ResetBinnacle = (async () => {
 })
 
 const ChangeDate = (async (data) => {
-  fetched.value = false
   await binnacleStore.FetchBinnacleBetweenDates(data['initial_date'], data['final_date'])
-  fetched.value = true
 })
 
 const FetchBinnacle = (async () => {
-  fetched.value = false
   await binnacleStore.FetchBinnacle()
-  fetched.value = true
 })
 
 </script>
@@ -46,13 +39,13 @@ const FetchBinnacle = (async () => {
     />
     <div class="row m-0 p-0 col-12 py-4 shadowed-l rounded lb-bg-terciary-ul justify-content-center">
       <template
-      v-if="fetched === false">
+      v-if="binnacleStore.binnacle === undefined">
         <LoadingGadget/>
       </template>
       <template v-else>
         <div class="w-100 m-0 p-3 px-5 table-container">
           <BinnacleTable
-            :binnacle="binnacle"
+            :binnacle="binnacleStore.binnacle"
             @ChangeDate="ChangeDate"
             @ResetBinnacle="ResetBinnacle"
           />

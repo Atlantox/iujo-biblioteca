@@ -6,6 +6,7 @@ import useSessionStore from '@/stores/session';
 import useLoanStore from '@/stores/loans';
 
 import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue';
+import OnAppearAnimation from '@/utils/ElegantDisplayer';
 
 const articleStyle = 'col-12 my-4 rounded bg-white shadowed-l'
 const articleWrappedStyle = 'row col-12 m-0 p-0 justify-content-start shadowed p-2 px-4'
@@ -18,12 +19,12 @@ const linkTextStyle = 'text-grey col-10 fs-5 w-auto hover-bold hover-spacing'
 
 const sessionStore = useSessionStore()
 const loanStore = useLoanStore()
-const recentLoans = loanStore.loans
-const loansCount = loanStore.counts
 
 onMounted( async () => {
   await loanStore.FetchLatestLoans()
   await loanStore.FetchLoansRecentCount()
+  await new Promise(r => setTimeout(r, 50));
+  OnAppearAnimation('hide-up')
 })
 </script>
 
@@ -310,37 +311,39 @@ onMounted( async () => {
       <div class="row col-12 justify-content-center col-lg-4 p-3">
         <div class="row w-100 m-0 p-0 justify-content-around h-100 py-3 shadowed-l rounded lb-bg-terciary-ul my-3">
           <h3 class="fw-bold col-12 text-center">Los últimos 30 días se realizaron...</h3>
-          <template v-if="loansCount.value === undefined">
+          <template v-if="loanStore.counts === undefined">
             <LoadingGadget/>
           </template>
           <template v-else>
-            <article class="col-12 col-lg-6 row m-0 p-0 align-middle p-3 px-lg-2 my-1">
-                <div class="col-12 d-flex align-items-center bg-white rounded shadowed-l">
-                    <h4 class="h4 m-0 text-center w-100 p-2">
-                      <strong>{{ loansCount.value['delivered'] }}</strong>
-                      Préstamo{{ loansCount.value['delivered'] > 1 ? 's' : '' }}
-                    </h4>
-                </div>
-            </article>
-  
-            <article class="col-12 col-lg-6 row m-0 p-0 align-middle p-3 px-lg-2 my-1">
-                <div class="col-12 d-flex align-items-center bg-white rounded shadowed-l">
-                    <h4 class="h4 m-0 text-center w-100 p-2">
-                      <strong>{{ loansCount.value['returned'] }}</strong>
-                        {{ loansCount.value['returned'] > 1 ? 'Devoluciones' : 'Devolución' }}
-                    </h4>
-                </div>
-            </article>
+            <div class="row col-12 m-0 p-0 justify-content-center hide-up animated-1">
+              <article class="col-12 col-lg-6 row m-0 p-0 align-middle p-3 px-lg-2 my-1">
+                  <div class="col-12 d-flex align-items-center bg-white rounded shadowed-l">
+                      <h4 class="h4 m-0 text-center w-100 p-2">
+                        <strong>{{ loanStore.counts['delivered'] }}</strong>
+                        Préstamo{{ loanStore.counts['delivered'] > 1 ? 's' : '' }}
+                      </h4>
+                  </div>
+              </article>
+    
+              <article class="col-12 col-lg-6 row m-0 p-0 align-middle p-3 px-lg-2 my-1">
+                  <div class="col-12 d-flex align-items-center bg-white rounded shadowed-l">
+                      <h4 class="h4 m-0 text-center w-100 p-2">
+                        <strong>{{ loanStore.counts['returned'] }}</strong>
+                          {{ loanStore.counts['returned'] > 1 ? 'Devoluciones' : 'Devolución' }}
+                      </h4>
+                  </div>
+              </article>
+            </div>
           </template>
         </div>
 
         <div class="row w-100 m-0 p-0 justify-content-around h-100 py-3 shadowed-l rounded lb-bg-terciary-ul my-3">
           <h3 class="fw-bold col-12 text-center">Préstamos recientes</h3>
-          <template v-if="recentLoans.value === undefined">
+          <template v-if="loanStore.loans === undefined">
             <LoadingGadget/>
           </template>
           <template v-else>
-            <table class="col-10 text-center">
+            <table class="col-10 text-center hide-up animated-1">
               <thead>
                 <tr class="border-bottom">
                   <th>Lector</th>
@@ -350,7 +353,7 @@ onMounted( async () => {
               </thead>
               <tbody>
                 <tr 
-                v-for="loan in recentLoans.value"
+                v-for="loan in loanStore.loans"
                 :key="loan.id"
                 >
                   <td>

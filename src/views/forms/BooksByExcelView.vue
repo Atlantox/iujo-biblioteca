@@ -15,7 +15,3 @@ import BooksByExcelForm from '@/components/forms/BooksByExcelForm.vue'
 
     <BooksByExcelForm />
 </template>
-
-<style scoped>
-
-</style>

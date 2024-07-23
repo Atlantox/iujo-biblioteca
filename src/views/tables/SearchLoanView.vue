@@ -16,7 +16,6 @@ import useSessionStore from '@/stores/session'
 const loanStore = useLoanStore()
 const sessionStore = useSessionStore()
 const route = useRoute()
-const loans = loanStore.loans
 const fetched = ref(false)
 
 onMounted(async ()  => {
@@ -66,7 +65,7 @@ const stateTranslator = {
       <template v-else>
         <div class="w-100 m-0 p-3 px-5 table-container">
           <LoanTable
-            :loans="loans"
+            :loans="loanStore.loans"
           />
         </div>
       </template>

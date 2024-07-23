@@ -13,7 +13,6 @@ import PageTitleView from '@/components/PageTitle.vue';
 
 const readerStore = useReaderStore()
 const sessionStore = useSessionStore()
-const readers = readerStore.readers
 
 onMounted(async ()  => {
   await readerStore.FetchReaders()
@@ -36,13 +35,13 @@ onMounted(async ()  => {
       :title = "'Registrar nuevo lector'"
       />
       <template
-      v-if="readers.value === undefined">
+      v-if="readerStore.readers === undefined">
         <LoadingGadget/>
       </template>
       <template v-else>
         <div class="w-100 m-0 p-3 px-5 table-container hide-up">
           <ReaderTable
-            :readers="readers.value"/>
+            :readers="readerStore.readers"/>
         </div>
       </template>
     </div>

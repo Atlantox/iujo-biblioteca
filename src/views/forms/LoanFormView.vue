@@ -20,9 +20,6 @@ const bookStore = useBookStore()
 const readerStore = useReaderStore()
 const loanStore = useLoanStore()
 
-const readers = readerStore.readers
-const books = bookStore.books
-
 const targetLoan = ref([])
 const fetchReady = ref(false)
 
@@ -59,14 +56,10 @@ const FetchData = ( async () => {
   </template>
   <template v-else>    
     <LoanForm
-    :books = "books"
-    :readers = "readers"
+    :books = "bookStore.books"
+    :readers = "readerStore.readers"
     :targetLoan = "targetLoan"
     @fetchAgain = "FetchData"
     />
   </template>
 </template>
-
-<style scoped>
-
-</style>

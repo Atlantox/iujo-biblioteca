@@ -8,7 +8,7 @@ import OnAppearAnimation from '@/utils/ElegantDisplayer';
 const utilsStore = useUtilsStore()
 
 const props = defineProps({
-    editorials: Array
+    editorials: {type: Array, default: []}
 })
 
 onMounted(() => {

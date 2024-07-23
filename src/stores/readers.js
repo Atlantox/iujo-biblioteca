@@ -1,4 +1,3 @@
-import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 import ApiConfig from '@/stores/config.js'
@@ -10,8 +9,8 @@ const apiConfig = new ApiConfig()
 const useReaderStore = defineStore('readers', {
     state: () => {
         return {
-            readers: ref([]),
-            errorMessage: ref('')
+            readers: undefined,
+            errorMessage: undefined,
         }
     },
     actions:{
@@ -46,7 +45,7 @@ const useReaderStore = defineStore('readers', {
         },
 
         async FetchReaders(){
-            this.readers.value = []
+            this.readers = undefined
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -68,7 +67,7 @@ const useReaderStore = defineStore('readers', {
                 let json = await response.json()
                 let result = await json
                 if(result.success)
-                    this.readers.value = result.readers
+                    this.readers = result.readers
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
             }

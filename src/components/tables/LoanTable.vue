@@ -10,7 +10,7 @@ const utilsStore = useUtilsStore()
 const sessionStore = useSessionStore()
 
 const props = defineProps({
-    loans: {type: Object, default: {}}
+    loans: {type: Array, default: []}
 })
 
 onMounted(() => {
@@ -35,7 +35,7 @@ onMounted(() => {
             </thead>
             <tbody>
             <tr 
-            v-for="loan in props.loans.value"
+            v-for="loan in props.loans"
             :key="loan.id">
                 <td class="border-1"><strong>({{ loan.cedula }})</strong> {{ loan.fullname }}</td>
                 <td class="border-1">{{ loan.title }}</td>

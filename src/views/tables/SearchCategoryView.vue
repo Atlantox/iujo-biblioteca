@@ -13,7 +13,6 @@ import PageTitleView from '@/components/PageTitle.vue';
 
 const categoryStore = useCategoryStore()
 const sessionStore = useSessionStore()
-const categories = categoryStore.categories
 
 onMounted(async ()  => {
   await categoryStore.FetchCategories()
@@ -36,13 +35,14 @@ onMounted(async ()  => {
       :title = "'Registrar nueva categoría'"
       />
       <template
-      v-if="categories.value === undefined">
+      v-if="categoryStore.categories === undefined">
         <LoadingGadget/>
       </template>
       <template v-else>
         <div class="w-100 m-0 p-3 px-5 table-container">
           <CategoryTable
-            :categories="categories.value"/>
+            :categories="categoryStore.categories"
+          />
         </div>
       </template>
     </div>

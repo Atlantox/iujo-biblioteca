@@ -37,11 +37,11 @@ const labelStyle = 'text-center text-md-end'
 const inputContainerStyle = 'row m-0 p-0 col-12 col-md-7 justify-content-center justify-content-md-start'
 
 const props = defineProps({
-    'targetBook': Object,
-    'editorials': Array,
-    'authors': Array,
-    'bookStates': Array,
-    'categories': Array,
+    'targetBook': {type: Object, default: []},
+    'editorials': {type: Array, default: []},
+    'authors': {type: Array, default: []},
+    'bookStates': {type: Array, default: []},
+    'categories': {type: Array, default: []},
 })
 
 const emit = defineEmits(['fetchAgain'])
@@ -281,7 +281,7 @@ const FetchAgain = (() => {
                                 <select class="myInput select2" id="author" :v-model="bookAuthor">
                                     <option value="">&nbsp;</option>
                                     <template
-                                    v-for="author in props.authors.value"
+                                    v-for="author in props.authors"
                                     :key="author.id">
                                         <option class="fw-normal" :value="author.id" :selected="bookAuthor == author.id">
                                             {{ author.name }}
@@ -326,7 +326,7 @@ const FetchAgain = (() => {
                                 <select class="myInput select2" id="editorial" :v-model="bookEditorial">
                                     <option value="">&nbsp;</option>
                                     <template
-                                    v-for="editorial in props.editorials.value"
+                                    v-for="editorial in props.editorials"
                                     :key="editorial.id">
                                         <option class="fw-normal" :value="editorial.id" :selected="bookEditorial == editorial.id">
                                             {{ editorial.name }}
@@ -349,7 +349,7 @@ const FetchAgain = (() => {
                                 <select class="myInput select2" id="state" :v-model="bookState">
                                     <option value="">&nbsp;</option>
                                     <template
-                                    v-for="state in props.bookStates.value"
+                                    v-for="state in props.bookStates"
                                     :key="state.name">
                                         <option class="fw-normal" :value="state.name" :selected="bookState === state.name">
                                             {{ state.name }}
@@ -396,7 +396,7 @@ const FetchAgain = (() => {
                     <h2 class="col-12 text-center">Categorías</h2>
                     <div class="col-12 d-flex justify-content-start align-items-center flex-column rounded shadowed-l p-0 bg-white" style="overflow:hidden">
                         <div class="col-12 d-flex categories-section justify-content-center p-0"
-                        v-for="category, index in props.categories.value"
+                        v-for="category, index in props.categories"
                         :key="index">
                             <div class="category-label-container col-8 d-flex justify-content-center align-items-center p-0 py-1">
                                 <label class="text-center w-100" :for="category.id">{{ category.name }}</label>

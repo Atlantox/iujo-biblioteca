@@ -7,7 +7,7 @@ import OnAppearAnimation from '@/utils/ElegantDisplayer';
 const utilsStore = useUtilsStore()
 
 const props = defineProps({
-    users: Object
+    users: {type: Array, default: []}
 })
 
 onMounted(() => {

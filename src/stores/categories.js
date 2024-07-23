@@ -1,4 +1,3 @@
-import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import ApiConfig from '@/stores/config.js'
 
@@ -10,7 +9,7 @@ const apiConfig = new ApiConfig()
 const useCategoryStore = defineStore('categories', {
     state: () => {
         return {
-            categories: ref([]),
+            categories: undefined,
         }
     },
     actions:{
@@ -45,7 +44,7 @@ const useCategoryStore = defineStore('categories', {
         },
 
         async FetchCategories(){
-            this.categories.value = []
+            this.categories = undefined
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -66,9 +65,8 @@ const useCategoryStore = defineStore('categories', {
                 let response = await fetch(url, fetchConfig)
                 let json = await response.json()
                 let result = await json
-                
                 if(result.success)
-                    this.categories.value = result.categories
+                    this.categories = result.categories
                 else
                     utilsStore.ShowModal('Error', result.message, 'error')
             }

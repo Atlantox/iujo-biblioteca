@@ -13,7 +13,6 @@ import PageTitleView from '@/components/PageTitle.vue';
 
 const bookStore = useBookStore()
 const sessionStore = useSessionStore()
-const editorials = bookStore.editorials
 
 onMounted(async ()  => {
   await bookStore.FetchEditorials()
@@ -36,13 +35,13 @@ onMounted(async ()  => {
       :title = "'Registrar nueva editorial'"
       />
       <template
-      v-if="editorials.value === undefined">
+      v-if="bookStore.editorials === undefined">
         <LoadingGadget/>
       </template>
       <template v-else>
         <div class="w-100 m-0 p-3 px-5 table-container">
           <EditorialTable
-            :editorials="editorials.value"/>
+            :editorials="bookStore.editorials"/>
         </div>
       </template>
     </div>

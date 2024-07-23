@@ -19,10 +19,6 @@ const sessionStore = useSessionStore()
 const categoryStore = useCategoryStore()
 
 const targetFetched = ref(false)
-const books = bookStore.books
-const authors = bookStore.authors
-const editorials = bookStore.editorials
-const categories = categoryStore.categories
 
 const categoryFilter = ref('')
 const authorFilter = ref('')
@@ -105,7 +101,7 @@ onMounted(async ()  => {
           <select class="select2 fs-6" id="categories">
             <option value="">&nbsp;</option>
             <option
-            v-for="category in categories.value"
+            v-for="category in categoryStore.categories"
             :key="category.id"
             :value="category.id"
             >
@@ -119,7 +115,7 @@ onMounted(async ()  => {
           <select class="select2 fs-6" id="author">
             <option value="">&nbsp;</option>
             <option
-            v-for="author in authors.value"
+            v-for="author in bookStore.authors"
             :key="author.id"
             :value="author.id"
             >
@@ -133,7 +129,7 @@ onMounted(async ()  => {
           <select class="select2 fs-6" id="editorial">
             <option value="">&nbsp;</option>
             <option
-            v-for="editorial in editorials.value"
+            v-for="editorial in bookStore.editorials"
             :key="editorial.id"
             :value="editorial.id"
             >
@@ -150,7 +146,7 @@ onMounted(async ()  => {
       <template v-else>
         <div class="w-100 m-0 p-3 px-2 px-lg-5 table-container" id="table-container">
           <BooksTable
-            :books="books"/>
+            :books="bookStore.books"/>
         </div>
       </template>
     </div>

@@ -12,7 +12,7 @@ const finalDate = ref()
 const emit = defineEmits(['ChangeDate', 'ResetBinnacle'])
 
 const props = defineProps({
-    binnacle: {type: Object, default: {}}
+    binnacle: {type: Array, default: []}
 })
 
 onMounted(() => {
@@ -61,7 +61,7 @@ const ResetBinnacle = (() => {
             </thead>
             <tbody>
             <tr 
-            v-for="binnacle in props.binnacle.value"
+            v-for="binnacle in props.binnacle"
             :key="binnacle.id">
                 <td class="border-1 text-center">{{ binnacle.nickname }}</td>
                 <td class="border-1">{{ binnacle.action }}</td>
