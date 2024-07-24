@@ -30,7 +30,6 @@ const userUsername = ref('')
 const userPassword = ref('')
 const userPasswordConfirm = ref('')
 const userActive = ref([1])
-const userBinnacle = binnacleStore.binnacle
 
 const formRowStyle = 'row m-0 p-0 justify-content-center my-2'
 const labelContainerStyle = 'row m-0 p-0 col-12 col-md-3'
@@ -378,24 +377,26 @@ const ResetBinnacle = (async () => {
                 </div>    
 
                 <template v-if="Object.keys(props.targetUser).length !== 0">
-                    <div class="col-10 mt-5 p-2 row myForm shadowed-l rounded lb-bg-terciary-ul justify-content-center">
-
-                        <h2 class="w-100 text-center h1 my-3 fw-bold">
-                            Historial de acciones de {{ props.targetUser.nickname }}
-                        </h2>
-                        <template v-if="binnacleFetched === false">
-                            <LoadingGadget/>
-                        </template>
-                        <template v-else>
-                            <div class="w-100 p-2 fs-6">
-                                <BinnacleTable
-                                :binnacle="userBinnacle"
-                                @ChangeDate="ChangeDate"
-                                @ResetBinnacle="ResetBinnacle"
-                                />
-                            </div>
-                        </template>
-                    </div>            
+                    <template v-if="sessionStore.userData.permissons.includes('Bitácora')">
+                        <div class="col-10 mt-5 p-2 row myForm shadowed-l rounded lb-bg-terciary-ul justify-content-center">
+    
+                            <h2 class="w-100 text-center h1 my-3 fw-bold">
+                                Historial de acciones de {{ props.targetUser.nickname }}
+                            </h2>
+                            <template v-if="binnacleFetched === false">
+                                <LoadingGadget/>
+                            </template>
+                            <template v-else>
+                                <div class="w-100 p-2 fs-6">
+                                    <BinnacleTable
+                                    :binnacle="binnacleStore.binnacle"
+                                    @ChangeDate="ChangeDate"
+                                    @ResetBinnacle="ResetBinnacle"
+                                    />
+                                </div>
+                            </template>
+                        </div>            
+                    </template>
                 </template>
             </div>
         </template>

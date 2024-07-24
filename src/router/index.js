@@ -189,10 +189,25 @@ router.beforeEach(async (to, from, next) => {
   if(sessionStore.authenticated){
     // Si está autenticado, validamos que el usuario esté activo, sino le cerramos la sesión
     var userIsActive = await sessionStore.MyUserIsActive()
-      if(userIsActive === false){
+    if(userIsActive === false){
+      sessionStore.DestroySession()
+      routeOk = false
+    }
+
+    if(sessionStore.lastLoginDate === null){
+      // No tiene fecha de último logeo
+      sessionStore.DestroySession()
+      routeOk = false
+    }
+    else{
+      var today = new Date()
+      var diffHours = Math.abs(sessionStore.lastLoginDate - today) / 36e5;
+      if(diffHours >= 24){
+        // si el usuario tiene 24 horas o más estando autenticado, le cerramos la sesión
         sessionStore.DestroySession()
         routeOk = false
       }
+    }
   }
 
   if(to.meta.requireAuth){

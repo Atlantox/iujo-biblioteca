@@ -8,7 +8,9 @@ import BooksByExcelForm from '@/components/forms/BooksByExcelForm.vue'
 
 <template>
     <div class="row m-0 p-0 justify-content-center justify-content-lg-start">
-        <BackButtonGadget :back_to="'dashboard'"/>
+        <div class="col-4 col-lg-2 col-xl-1 ps-0 ps-lg-5">
+            <BackButtonGadget :back_to="'dashboard'"/>
+        </div>
     </div>
 
     <PageTitle :title="'Agregar libros por excel'"/>

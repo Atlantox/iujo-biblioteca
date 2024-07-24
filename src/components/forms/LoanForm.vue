@@ -14,7 +14,6 @@ import useLoanStore from '@/stores/loans'
 
 import LargeModalGadget from '../myGadgets/LargeModalGadget.vue'
 
-
 const utilsStore = useUtilsStore()
 const loanStore = useLoanStore()
 const router = useRouter()
@@ -67,15 +66,27 @@ onMounted(async () => {
         else
             loanActive.value = []
 
-        const myDate = new Date(props.targetLoan['deliver_date'])
-        
-        var year = myDate.getFullYear()
-        var month = myDate.getMonth() + 1
+        const deliverDate = new Date(props.targetLoan['deliver_date'])        
+        var year = deliverDate.getFullYear()
+        var month = deliverDate.getMonth() + 1
         if(month < 10) month = '0' + month
-        var day = myDate.getDate() + 1
+        var day = deliverDate.getDate() + 1
         if(day < 10) day = '0' + day
         
         deliverDateInput.value = year + '-' + month + '-' + day
+
+        if(props.targetLoan['deliver_date'] !== null){
+            const returnDateInput = document.getElementById('return_date')
+            const returnDate = new Date(props.targetLoan['deliver_date'])        
+            var year = returnDate.getFullYear()
+            var month = returnDate.getMonth() + 1
+            if(month < 10) month = '0' + month
+            var day = returnDate.getDate() + 1
+            if(day < 10) day = '0' + day
+            
+            returnDateInput.value = year + '-' + month + '-' + day
+            document.getElementById('observation').disabled = true
+        }
 
         $('#readers').val(loanReader.value)
         $('#readers').trigger('change')
@@ -254,7 +265,7 @@ const FetchAgain = (() => {
                 <div class="col-12 col-lg-9 row myForm shadowed-l rounded lb-bg-terciary-ul justify-content-center">
                     <div :class="formRowStyle">
                         <div :class="labelContainerStyle">
-                            <label :class="labelStyle" for="deliver_date"><strong>Fecha de entrega</strong></label>
+                            <label :class="labelStyle" for="deliver_date"><strong>Fecha del préstamo</strong></label>
                         </div>
                         <div :class="inputContainerStyle">
                             <div class="row col-12">
@@ -265,9 +276,24 @@ const FetchAgain = (() => {
                         </div>
                     </div>
 
+                    <template v-if="Object.keys(props.targetLoan).length !== 0">
+                        <div :class="formRowStyle" v-if="props.targetLoan['return_date'] !== null">
+                            <div :class="labelContainerStyle">
+                                <label :class="labelStyle" for="return_date">Fecha de devolución</label>
+                            </div>
+                            <div :class="inputContainerStyle">
+                                <div class="row col-12">
+                                    <div class="row col-12 col-lg-4 m-0 p-0">
+                                        <input class="col-12 myInput" type="date" id="return_date" name="return_date" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
                     <div :class="formRowStyle" v-if="Object.keys(props.targetLoan).length !== 0">
                         <div :class="labelContainerStyle">
-                            <label :class="labelStyle" for="deliver_date"><strong>Fecha de creación</strong></label>
+                            <label :class="labelStyle" for="deliver_date">Fecha de creación</label>
                         </div>
                         <div :class="inputContainerStyle">
                             <div class="row col-12">
@@ -287,7 +313,7 @@ const FetchAgain = (() => {
                                 <select class="myInput select2" id="readers" :v-model="loanReader">
                                     <option value="">&nbsp;</option>
                                     <template
-                                    v-for="reader in props.readers.value"
+                                    v-for="reader in props.readers"
                                     :key="reader.id">
                                         <option class="fw-normal" :value="reader.id" :selected="loanReader == reader.id">
                                             ({{ reader.cedula }}) {{ reader.names }} {{  reader.surnames }}
@@ -310,7 +336,7 @@ const FetchAgain = (() => {
                                 <select class="myInput select2" id="books" :v-model="loanBook">
                                     <option value="">&nbsp;</option>
                                     <template
-                                    v-for="book in props.books.value"
+                                    v-for="book in props.books"
                                     :key="book.id">
                                         <option class="fw-normal" :value="book.id" :selected="loanBook == book.id">
                                             {{ book.title }} ({{ book.call_number }})
@@ -333,28 +359,30 @@ const FetchAgain = (() => {
                     </div>
 
                     <template v-if="Object.keys(props.targetLoan).length !== 0">
-                        <div class="row m-0 p-0 justify-content-center my-3">
-                            <div class="row m-0 p-0 col-4 justify-content-center">
-                                <button class="col-8 myBtn shadowed-l h3 bg-danger border-white rounded-pill border-1 text-white" type="button" @click="DeactivateLoan">
-                                    Desactivar préstamo
-                                </button>
+                        <template v-if="props.targetLoan['return_date'] === null">
+                            <div class="row m-0 p-0 justify-content-center my-3">
+                                <div class="row m-0 p-0 col-4 justify-content-center">
+                                    <button class="col-8 myBtn shadowed-l h3 bg-danger border-white rounded-pill border-1 text-white" type="button" @click="DeactivateLoan">
+                                        Desactivar préstamo
+                                    </button>
+                                </div>
+        
+                                <div class="row m-0 p-0 col-4 justify-content-center">
+                                    <button class="col-8 myBtn shadowed-l h3 lb-bg-primary rounded-pill border-1 text-white" type="button" @click="FinishLoan">
+                                        Préstamo devuelto
+                                    </button>
+                                </div>
                             </div>
-    
-                            <div class="row m-0 p-0 col-4 justify-content-center">
-                                <button class="col-8 myBtn shadowed-l h3 lb-bg-primary rounded-pill border-1 text-white" type="button" @click="FinishLoan">
-                                    Préstamo devuelto
-                                </button>
+                            <div class="row m-0 p-0 justify-content-center my-2 mt-5">
+                                <div class="row m-0 p-0 col-12 justify-content-center">
+                                    <button class="col-6 col-lg-3 myBtn terciary-btn shadowed-l h3">
+                                        {{ Object.keys(props.targetLoan).length === 0 ? 'Registrar ' : 'Modificar ' }}
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        </template>
                     </template>
         
-                    <div class="row m-0 p-0 justify-content-center my-2 mt-5">
-                        <div class="row m-0 p-0 col-12 justify-content-center">
-                            <button class="col-6 col-lg-3 myBtn terciary-btn shadowed-l h3">
-                                {{ Object.keys(props.targetLoan).length === 0 ? 'Registrar ' : 'Modificar ' }}
-                            </button>
-                        </div>
-                    </div>
         
                     <div v-if="formErrors.length > 0" class="row m-0 p-0 justify-content-center my-2 mt-2">
                         <ul class="row m-0 p-0 col-12 justify-content-center list-unstyled text-center text-danger fs-5">
@@ -373,12 +401,14 @@ const FetchAgain = (() => {
         </template>
     </form>
 
-    <LargeModalGadget
-    :componentToShow="ReaderForm"
-    :title="'Agregar nuevo lector'"
-    :modalName="'ReaderModal'"
-    @firstEmit="FetchAgain"
-    />
+    <template v-if="Object.keys(props.targetLoan).length === 0">
+        <LargeModalGadget
+        :componentToShow="ReaderForm"
+        :title="'Agregar nuevo lector'"
+        :modalName="'ReaderModal'"
+        @firstEmit="FetchAgain"
+        />
+    </template>
 
 </template>
 

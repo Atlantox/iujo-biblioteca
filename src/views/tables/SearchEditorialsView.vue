@@ -23,7 +23,9 @@ onMounted(async ()  => {
 <template>
   <div class="row w-100 m-0 p-0 px-5">
     <div class="row m-0 p-0 justify-content-center justify-content-lg-start">
+      <div class="col-4 col-lg-2 col-xl-1 ps-0 ps-lg-5">
         <BackButtonGadget :back_to="'dashboard'"/>
+      </div>
     </div>
     <PageTitleView
     :title="'Listado de editoriales'"

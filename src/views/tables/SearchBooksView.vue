@@ -75,7 +75,9 @@ onMounted(async ()  => {
 <template>
   <div class="row w-100 m-0 p-0 px-5">
     <div class="row m-0 p-0 justify-content-center justify-content-lg-start">
+      <div class="col-4 col-lg-2 col-xl-1 ps-0 ps-lg-5">
         <BackButtonGadget :back_to="sessionStore.authenticated ? 'dashboard' : 'home'"/>
+      </div>
     </div>
     <PageTitleView
     :title="'Nuestros libros'"
@@ -96,7 +98,7 @@ onMounted(async ()  => {
         <h3 class="w-100">
           Filtrar por...
         </h3>
-        <div class="col-6 col-lg-2 fs-6">
+        <div class="col-6 col-lg-2 fs-6 my-3 my-lg-0">
           Categoría: 
           <select class="select2 fs-6" id="categories">
             <option value="">&nbsp;</option>
@@ -110,7 +112,7 @@ onMounted(async ()  => {
           </select>
         </div>
 
-        <div class="col-6 col-lg-2 fs-6">
+        <div class="col-6 col-lg-2 fs-6 my-3 my-lg-0">
           Autor:
           <select class="select2 fs-6" id="author">
             <option value="">&nbsp;</option>
@@ -124,7 +126,7 @@ onMounted(async ()  => {
           </select>
         </div>
 
-        <div class="col-6 col-lg-2 fs-6">
+        <div class="col-6 col-lg-2 fs-6 my-3 my-lg-0">
           Editorial: 
           <select class="select2 fs-6" id="editorial">
             <option value="">&nbsp;</option>

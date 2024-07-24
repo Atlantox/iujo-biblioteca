@@ -9,6 +9,7 @@ import OnAppearAnimation from '@/utils/ElegantDisplayer'
 import useUtilsStore from '@/stores/utils'
 import useReaderStore from '@/stores/readers'
 import useLoanStore from '@/stores/loans'
+import useSessionStore from '@/stores/session'
 
 import LoanTable from '../tables/LoanTable.vue'
 
@@ -16,11 +17,12 @@ import LoanTable from '../tables/LoanTable.vue'
 const utilsStore = useUtilsStore()
 const readerStore = useReaderStore()
 const loanStore = useLoanStore()
+const sessionStore = useSessionStore()
+
 const today = ref(new Date())
 
 const mounted = ref(false)
 const formErrors = ref([])
-const readerLoans = loanStore.loans
 
 const readerCedula = ref('')
 const readerNames = ref('')
@@ -327,17 +329,19 @@ const ValidateForm = (async (e) => {
                     
                 </div>    
 
-                <!-- Reader's loans -->
-                <div v-if="Object.keys(props.targetReader).length !== 0 && mounted === true" class="col-12 col-lg-10 p-2 row shadowed-l rounded lb-bg-terciary-ul justify-content-center mt-5">
-                    <h2 class="w-100 text-center h1 my-3 fw-bold">
-                        Préstamos de {{ props.targetReader.names }}
-                    </h2>
-                    <div class="w-100 p-2 fs-6">
-                        <LoanTable
-                        :loans="readerLoans"
-                        />
+                <template v-if="sessionStore.userData.permissons.includes('Préstamos')">
+                    <!-- Reader's loans -->
+                    <div v-if="Object.keys(props.targetReader).length !== 0 && mounted === true" class="col-12 col-lg-10 p-2 row shadowed-l rounded lb-bg-terciary-ul justify-content-center mt-5">
+                        <h2 class="w-100 text-center h1 my-3 fw-bold">
+                            Préstamos de {{ props.targetReader.names }}
+                        </h2>
+                        <div class="w-100 p-2 fs-6">
+                            <LoanTable
+                            :loans="loanStore.loans"
+                            />
+                        </div>
                     </div>
-                </div>
+                </template>
             </div>
         </template>
     </form>

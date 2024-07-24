@@ -28,6 +28,7 @@ const ValidateForm = (async (e) => {
             sessionStore.authenticated = true
             sessionStore.token = loginResult.value.token
             sessionStore.userData = loginResult.value.userData
+            sessionStore.lastLoginDate = new Date()
             window.location.href = '/dashboard'
         }
         else{

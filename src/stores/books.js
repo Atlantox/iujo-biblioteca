@@ -476,7 +476,7 @@ const useBookStore = defineStore('books', {
         },
 
         async GetBooksOfAuthor(authorId, exceptId = null){
-            var books = false
+            var books = []
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{
@@ -512,7 +512,7 @@ const useBookStore = defineStore('books', {
         },
 
         async GetBooksOfCategories(categories, exceptId = null){
-            var books = false
+            var books = []
             const sessionStore = useSessionStore()
             const utilsStore = useUtilsStore()
             try{

@@ -10,6 +10,7 @@ const useSessionStore = defineStore('session', {
   state: () => {
     return {
       authenticated: false,
+      lastLoginDate: null,
       token: '',
       userData: {},
       loginResult: ref({})

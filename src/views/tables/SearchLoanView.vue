@@ -47,10 +47,12 @@ const stateTranslator = {
 <template>
   <div class="row w-100 m-0 p-0 px-5">
     <div class="row m-0 p-0 justify-content-center justify-content-lg-start">
+      <div class="col-4 col-lg-2 col-xl-1 ps-0 ps-lg-5">
         <BackButtonGadget :back_to="'dashboard'"/>
+      </div>
     </div>
     <PageTitleView
-    :title="'Lista de préstamos ' + (['', undefined, 'pending'].includes(route.params.filter) ? '' : stateTranslator[route.params.filter])"
+    :title="'Lista de préstamos ' + (['', undefined, 'pending'].includes(route.params.filter) ? 'pendientes' : stateTranslator[route.params.filter])"
     />
     <div class="row m-0 p-0 col-12 py-4 shadowed-l rounded lb-bg-terciary-ul justify-content-center">
       <AddButtonGadget

@@ -54,7 +54,9 @@ const SpinSymbol = (() =>{
 
 <template>
   <div class="row m-0 p-0 justify-content-center justify-content-lg-start">
-    <BackButtonGadget :back_to="route.params.id === undefined || route.params.id === '' ? 'dashboard' : 'books'"/>
+    <div class="col-4 col-lg-2 col-xl-1 ps-0 ps-lg-5">
+      <BackButtonGadget :back_to="route.params.id === undefined || route.params.id === '' ? 'dashboard' : 'books'"/>
+    </div>
   </div>
 
   <PageTitle

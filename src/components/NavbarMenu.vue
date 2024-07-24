@@ -10,13 +10,6 @@ const ToggleNavbar = (() => {
         collapser.classList.add('show')
 })
 
-const ToggleDropdown = ((id) => {
-    const dropdown = document.getElementById(id)
-    if(dropdown.classList.contains('show'))
-        dropdown.classList.remove('show')
-    else
-        dropdown.classList.add('show')
-})
 </script>
 
 <template>
@@ -28,7 +21,7 @@ const ToggleDropdown = ((id) => {
                     <img class="navbar-logo w-100" src="@/assets/iujo_logo.png" alt="iujo logo">
                 </router-link>
             </figure>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" @click="ToggleNavbar">
+            <button class="navbar-toggler" type="button" datas-toggle="collapse" data-bs-target="#navbarCollapse" @click="ToggleNavbar">
                 <span class="fa fa-bars"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -53,8 +46,8 @@ const ToggleDropdown = ((id) => {
                     
                     <template v-if="sessionStore.authenticated === true">
                         <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle fs-5" @click="ToggleDropdown('userOptions')" data-bs-toggle="dropdown">{{ sessionStore.userData.nickname }}</a>
-                            <div class="dropdown-menu m-0" id="userOptions">
+                            <a href="#" class="nav-link dropdown-toggle fs-5" data-bs-toggle="dropdown">{{ sessionStore.userData.nickname }}</a>
+                            <div class="dropdown-menu m-0 w-auto" id="userOptions">
                                 <router-link class="dropdown-item text-decoration-none fs-4 hover-bold hover-spacing" :to="{name:'account'}">
                                     Mi cuenta
                                 </router-link>
