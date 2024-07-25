@@ -35,7 +35,7 @@ onMounted(() => {
 <template>
   <main class="row m-0 p-0 justify-content-center">
     <section class="row col-12 m-0 p-0">
-      <figure class="m-0 p-0 my-hero d-flex align-items-center justify-content-center animated-2 shadowed-h" id="my-hero" :style="`background-image: url('src/assets/images/${heroImages[currentHeroImage]}')`">
+      <figure class="m-0 p-0 my-hero d-flex align-items-center justify-content-center animated-2 shadowed-h" id="my-hero" :style="`background-image: url('images/${heroImages[currentHeroImage]}')`">
         <h1 class="h1 fw-bold text-center outline-black">Biblioteca José María Vélaz</h1>
       </figure>
     </section>
@@ -162,7 +162,7 @@ h1{
 }
 
 .services-section{
-  background-image: url('src/assets/images/hero2.jpg');
+  background-image: url('images/hero2.jpg');
   background-position:center;
 
 }
