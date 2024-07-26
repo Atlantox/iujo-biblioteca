@@ -105,7 +105,7 @@ const ValidateForm = (async (e) => {
         formErrors.value.push('Debe elegir un tipo de usuario')
     }
     else{
-        if(!sessionStore.userData.permissons.includes(userLevel.value)){
+        if(!sessionStore.userData.permissons.includes(userLevel.value) && selfUser.value === false){
             formErrors.value.push('Usted carece de permisos para crear usuarios de tipo ' + userLevel.value)
         }
     }
@@ -118,7 +118,7 @@ const ValidateForm = (async (e) => {
     if(!['0', '1'].includes(userActive.value[0]))
         formErrors.value.push('El campo "activo" debe ser 1 o 0')
     
-    if(!['Editor', 'Amin'].includes(userLevel.value))
+    if(!['Editor', 'Admin', 'Super'].includes(userLevel.value))
         formErrors.value.push('Tipo de usuario inválido')
 
     if(userPassword.value !== userPasswordConfirm.value){
@@ -174,7 +174,6 @@ const ValidateForm = (async (e) => {
                 cleanUserData['password'] = userPassword.value
             }
 
-            console.log(cleanUserData)
             if(Object.keys(cleanUserData).length === 0)
                 utilsStore.ShowModal('Info', 'No se realizaron cambios', 'info')
             else{
@@ -305,7 +304,7 @@ const ResetBinnacle = (async () => {
                                     v-if="sessionStore.userData.permissons.includes('Admin')"
                                     class="row col-12 col-lg-5 m-0 p-0 my-1"
                                     >
-                                        <label class="col-6 text-end" for="level-admin">Administrador</label>
+                                        <label class="col-8 text-end text-lg-center" for="level-admin">Administrador</label>
                                         <input class="col-1" type="radio" id="level-admin" name="gender" value="Admin" v-model="userLevel">
                                     </div>
                                 </div>

@@ -60,6 +60,7 @@ onMounted(async () => {
         loanBook.value = props.targetLoan['book_id']
         loanObservation.value = props.targetLoan['observation']
         loanDeliverDate.value = props.targetLoan['deliver_date']
+        console.log(props.targetLoan['return_date'])
 
         if(props.targetLoan['active'] === 1)
             loanActive.value = [1]
@@ -75,7 +76,7 @@ onMounted(async () => {
         
         deliverDateInput.value = year + '-' + month + '-' + day
 
-        if(props.targetLoan['deliver_date'] !== null){
+        if(props.targetLoan['return_date'] !== null){
             const returnDateInput = document.getElementById('return_date')
             const returnDate = new Date(props.targetLoan['deliver_date'])        
             var year = returnDate.getFullYear()
@@ -226,7 +227,7 @@ const DeactivateLoan = (async () => {
         const finishResult = await loanStore.DeactivateLoan(props.targetLoan.loan_id)
         if (finishResult.success === true){
             utilsStore.ShowModal('Éxito', finishResult.message, 'success')
-            router.push('/biblioteca/dashboard')
+            router.push({name: 'dashboard'})
         }
         else{
             utilsStore.ShowModal('Error', finishResult.message, 'error')
@@ -241,7 +242,7 @@ const FinishLoan = (async () => {
         const finishResult = await loanStore.FinishLoan(props.targetLoan.loan_id)
         if (finishResult.success === true){
             utilsStore.ShowModal('Éxito', finishResult.message, 'success')
-            router.push('/biblioteca/dashboard')
+            router.push({name: 'dashboard'})
         }
         else{
             utilsStore.ShowModal('Error', finishResult.message, 'error')
@@ -357,32 +358,29 @@ const FetchAgain = (() => {
                             </div>
                         </div>
                     </div>
-
-                    <template v-if="Object.keys(props.targetLoan).length !== 0">
-                        <template v-if="props.targetLoan['return_date'] === null">
-                            <div class="row m-0 p-0 justify-content-center my-3">
-                                <div class="row m-0 p-0 col-4 justify-content-center">
-                                    <button class="col-8 myBtn shadowed-l h3 bg-danger border-white rounded-pill border-1 text-white" type="button" @click="DeactivateLoan">
-                                        Desactivar préstamo
-                                    </button>
-                                </div>
-        
-                                <div class="row m-0 p-0 col-4 justify-content-center">
-                                    <button class="col-8 myBtn shadowed-l h3 lb-bg-primary rounded-pill border-1 text-white" type="button" @click="FinishLoan">
-                                        Préstamo devuelto
-                                    </button>
-                                </div>
+                    
+                    <template v-if="props.targetLoan['return_date'] === null || Object.keys(props.targetLoan).length === 0">
+                        <div class="row m-0 p-0 justify-content-center my-3">
+                            <div class="row m-0 p-0 col-4 justify-content-center">
+                                <button class="col-8 myBtn shadowed-l h3 bg-danger border-white rounded-pill border-1 text-white" type="button" @click="DeactivateLoan">
+                                    Desactivar préstamo
+                                </button>
                             </div>
-                            <div class="row m-0 p-0 justify-content-center my-2 mt-5">
-                                <div class="row m-0 p-0 col-12 justify-content-center">
-                                    <button class="col-6 col-lg-3 myBtn terciary-btn shadowed-l h3">
-                                        {{ Object.keys(props.targetLoan).length === 0 ? 'Registrar ' : 'Modificar ' }}
-                                    </button>
-                                </div>
+    
+                            <div class="row m-0 p-0 col-4 justify-content-center">
+                                <button class="col-8 myBtn shadowed-l h3 lb-bg-primary rounded-pill border-1 text-white" type="button" @click="FinishLoan">
+                                    Préstamo devuelto
+                                </button>
                             </div>
-                        </template>
+                        </div>
+                        <div class="row m-0 p-0 justify-content-center my-2 mt-5">
+                            <div class="row m-0 p-0 col-12 justify-content-center">
+                                <button class="col-6 col-lg-3 myBtn terciary-btn shadowed-l h3">
+                                    {{ Object.keys(props.targetLoan).length === 0 ? 'Registrar ' : 'Modificar ' }}
+                                </button>
+                            </div>
+                        </div>
                     </template>
-        
         
                     <div v-if="formErrors.length > 0" class="row m-0 p-0 justify-content-center my-2 mt-2">
                         <ul class="row m-0 p-0 col-12 justify-content-center list-unstyled text-center text-danger fs-5">

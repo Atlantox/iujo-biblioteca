@@ -51,7 +51,7 @@ const FetchData = ( async () => {
     </div>
   </div>
   <PageTitle
-    :title="(route.params.id === undefined || route.params.id === '' ? 'Registrar nuevo ' : 'Modificar ') + 'préstamo'"
+    :title="(route.params.id === undefined || route.params.id === '' ? 'Registrar nuevo ' : 'Ver ') + 'préstamo'"
   />
   <template v-if="fetchReady === false">
     <LoadingGadget />

@@ -469,7 +469,7 @@ INSERT INTO `permisson` (`id`, `name`, `level`) VALUES
 (10, 'Lectores', 'Super'),
 (11, 'Categorías', 'Super'),
 (12, 'Estados de libros', 'Super'),
-(13, 'Editores', 'Super'),
+(13, 'Editor', 'Super'),
 (14, 'Admin', 'Super'),
 (15, 'Préstamos', 'Super'),
 (18, 'Categorías', 'Editor'),
