@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import Apiconfig from '@/stores/config.js'
+import useUtilsStore from './utils'
 
 const apiConfig = new Apiconfig()
 
@@ -80,10 +81,11 @@ const useSessionStore = defineStore('session', {
     },
 
     DestroySession(){
+      const utilsStore = useUtilsStore()
       this.token = ''
       this.authenticated = false
       this.userData = {}
-      
+      utilsStore.ShowModal('Success', 'Sesión cerrada', 'success')
     },
   },
   
