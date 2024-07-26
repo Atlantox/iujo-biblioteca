@@ -2,7 +2,6 @@
 import NavbarMenu from '@/components/NavbarMenu.vue'
 import Footer from '@/components/Footer.vue'
 
-
 </script>
 
 <template>

@@ -7,6 +7,7 @@ import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
 
+/*
 // Select2
 import "@/assets/libs/select2/css/select2.min.css"
 
@@ -28,6 +29,7 @@ import "@/assets/libs/datatable/css/buttons.dataTables.css"
 
 // Bootstrap
 import "@/assets/libs/template_files/style.css"
+*/
 
 
 
@@ -51,8 +53,7 @@ app.use(pinia)
 app.use(router)
 app.use(VueSweetalert2, sweetalertOptions)
 
-app.mount('#app')
-
+/*
 // Jquery
 import "@/assets/libs/jquery/jquery.min.js"
 
@@ -71,18 +72,8 @@ import "@/assets/libs/datatable/js/dataTables.buttons.js"
 import "@/assets/libs/datatable/js/buttons.html5.js"
 import "@/assets/libs/datatable/js/buttons.print.js"  
 
-// Terapia files
-/*
-import "@/assets/libs/template_files/main.js"
-import "@/assets/libs/wow/wow.min.js"
-import "@/assets/libs/easing/easing.min.js"
-import "@/assets/libs/waypoints/waypoints.min.js"
-import "@/assets/libs/owlcarousel/owl.carousel.min.js"
-*/
-
 // Excel reader
 import "@/assets/libs/xlsx/xlsx.full.min.js"
-
 
 // Highcharts
 import "@/assets/libs/highcharts/highcharts.js"
@@ -93,3 +84,7 @@ import "@/assets/libs/highcharts/modules/accessibility.js"
 import "@/assets/libs/template_files/jquery.sticky.js"
 import "@/assets/libs/template_files/click-scroll.js"
 import "@/assets/libs/template_files/custom.js"
+*/
+
+app.mount('#app')
+
