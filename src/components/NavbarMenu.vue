@@ -1,6 +1,8 @@
 <script setup>
+import { useRouter } from 'vue-router'
 import useSessionStore from '@/stores/session.js'
 const sessionStore = useSessionStore()
+const router = useRouter()
 
 const ToggleNavbar = (() => {
     const collapser = document.getElementById('navbarCollapse')
@@ -8,6 +10,11 @@ const ToggleNavbar = (() => {
         collapser.classList.remove('show')
     else
         collapser.classList.add('show')
+})
+
+const CloseSession = (() => {
+    sessionStore.DestroySession()
+    router.push({name: 'home'})
 })
 
 </script>
@@ -54,7 +61,7 @@ const ToggleNavbar = (() => {
                                 <router-link class="dropdown-item text-decoration-none fs-4 hover-bold hover-spacing" :to="{name:'dashboard'}">
                                     Dashboard
                                 </router-link>
-                                <a class="dropdown-item text-decoration-none fs-4 hover-bold hover-spacing" @click="sessionStore.DestroySession">
+                                <a class="dropdown-item text-decoration-none fs-4 hover-bold hover-spacing" @click="CloseSession">
                                     Cerrar sesión
                                 </a>
                             </div>

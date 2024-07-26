@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import LoadingGadget from '../myGadgets/LoadingGadget.vue';
 import PageTitleView from '../PageTitle.vue'
 
@@ -8,6 +9,7 @@ import useSessionStore from '@/stores/session.js'
 
 const utilsStore = useUtilsStore()
 const sessionStore = useSessionStore()
+const router = useRouter()
 
 const formErrors = ref([])
 const waitingResponse = ref(false)
@@ -29,7 +31,7 @@ const ValidateForm = (async (e) => {
             sessionStore.token = loginResult.value.token
             sessionStore.userData = loginResult.value.userData
             sessionStore.lastLoginDate = new Date()
-            window.location.href = '/dashboard'
+            router.push({name: 'dashboard'})
         }
         else{
             utilsStore.ShowModal('Error', loginResult.value.message, 'error')

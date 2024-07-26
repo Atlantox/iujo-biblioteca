@@ -15,6 +15,7 @@ from controllers.ReaderController import readerController
 from controllers.LoanController import loanController
 
 app = Flask(__name__)
+app.config.from_object(config['development'])
 CORS(app)
 connection = MySQL(app)
 
@@ -37,10 +38,8 @@ def NotFound(error):
     return jsonify({'success': False, 'message': 'Ruta no encontrada'}), 404
 
 
-if __name__ == '__main__':
-    app.config.from_object(config['development'])
+if __name__ == '__main__':    
     app.register_error_handler(404, NotFound)
-
     #Registrar los controladores / blueprints
     for controller in CONTROLLERS:
         app.register_blueprint(controller)

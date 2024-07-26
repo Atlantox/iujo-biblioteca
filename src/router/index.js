@@ -263,7 +263,7 @@ router.beforeEach(async (to, from, next) => {
   if(routeOk === true)
     next()
   else
-    next('/')
+    next('/biblioteca')
 
 })
 

@@ -1,6 +1,5 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import Swal from 'sweetalert2/dist/sweetalert2.all.js'
 import Apiconfig from '@/stores/config.js'
 
 const apiConfig = new Apiconfig()
@@ -84,7 +83,7 @@ const useSessionStore = defineStore('session', {
       this.token = ''
       this.authenticated = false
       this.userData = {}
-      window.location.href = '/'
+      
     },
   },
   

@@ -226,7 +226,7 @@ const DeactivateLoan = (async () => {
         const finishResult = await loanStore.DeactivateLoan(props.targetLoan.loan_id)
         if (finishResult.success === true){
             utilsStore.ShowModal('Éxito', finishResult.message, 'success')
-            router.push('/dashboard')
+            router.push('/biblioteca/dashboard')
         }
         else{
             utilsStore.ShowModal('Error', finishResult.message, 'error')
@@ -241,7 +241,7 @@ const FinishLoan = (async () => {
         const finishResult = await loanStore.FinishLoan(props.targetLoan.loan_id)
         if (finishResult.success === true){
             utilsStore.ShowModal('Éxito', finishResult.message, 'success')
-            router.push('/dashboard')
+            router.push('/biblioteca/dashboard')
         }
         else{
             utilsStore.ShowModal('Error', finishResult.message, 'error')

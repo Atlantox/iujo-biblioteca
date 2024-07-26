@@ -40,7 +40,7 @@ const FetchBook = (async (id = null) => {
   if(recievedId !== undefined && recievedId !== '')
     targetBook.value = await bookStore.FetchBookById(recievedId)
   else
-    router.push('/')
+    router.push('/biblioteca')
   
   fetchReady.value = true
   OnAppearAnimation('hide-up')

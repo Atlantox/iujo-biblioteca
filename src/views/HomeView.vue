@@ -19,11 +19,17 @@ const services = [
 ]
 
 setInterval(function (){
-  if(heroImages.value[currentHeroImage.value + 1] !== undefined)
-    currentHeroImage.value++
-  else
-    currentHeroImage.value = 0
-
+  const heroElement = document.getElementById('my-hero')
+  if(heroElement !== null){
+    heroElement.classList.remove('hero' + (currentHeroImage.value + 1) + '-bg')
+    if(heroImages.value[currentHeroImage.value + 1] !== undefined)
+      currentHeroImage.value++
+    else
+      currentHeroImage.value = 0
+  
+      
+    heroElement.classList.add('hero' + (currentHeroImage.value + 1) + '-bg')
+  }
 }, 5000)
 
 
@@ -35,7 +41,7 @@ onMounted(() => {
 <template>
   <main class="row m-0 p-0 justify-content-center">
     <section class="row col-12 m-0 p-0">
-      <figure class="m-0 p-0 my-hero d-flex align-items-center justify-content-center animated-2 shadowed-h" id="my-hero" :style="`background-image: url('images/${heroImages[currentHeroImage]}')`">
+      <figure class="m-0 p-0 my-hero d-flex align-items-center justify-content-center animated-2 shadowed-h hero1-bg" id="my-hero">
         <h1 class="h1 fw-bold text-center outline-black">Biblioteca José María Vélaz</h1>
       </figure>
     </section>
@@ -69,7 +75,7 @@ onMounted(() => {
     </section>
 
 
-    <section class="row col-12 m-0 p-0 mt-5 justify-content-center align-items-center flex-column flex-lg-row lb-bg-terciary shadowed-n services-section">
+    <section class="row col-12 m-0 p-0 mt-5 justify-content-center align-items-center flex-column flex-lg-row lb-bg-terciary shadowed-n services-section hero2-bg">
       <div class="row col-8 col-lg-4 m-0 p-0 d-flex justify-content-center text-center py-5">
         <figure class="col-12 col-md-8 col-lg-10 text-center">
           <img class="w-100 w-lg-75 hide-up animated-1" src="@/assets/images/library.png" alt="library cloud">
@@ -162,9 +168,15 @@ h1{
 }
 
 .services-section{
-  background-image: url('images/hero2.jpg');
   background-position:center;
+}
 
+.hero1-bg{
+  background-image: url('@/assets/images/hero1.jpg');
+}
+
+.hero2-bg{
+  background-image: url('@/assets/images/hero2.jpg');
 }
 
 h2{
