@@ -360,7 +360,7 @@ def GetBooksByCategory(categoryId):
     return jsonify(response), statusCode
 
 
-@bookController.route('/books/by_author/', defaults={'exceptId': None}, methods=['POST'])
+@bookController.route('/books/by_categories/', defaults={'exceptId': None}, methods=['POST'])
 @bookController.route('/books/by_categories/<int:exceptId>', methods=['POST'])
 def GetBooksByCategories(exceptId):
     connection = GetConnection()
