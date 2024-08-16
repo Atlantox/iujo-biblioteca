@@ -404,7 +404,7 @@ class BookModel(BaseModel):
                 self.connection.connection.commit()
             except:
                 errorMessage = 'Ocurrió un error durante el proceso de actualización del libro'
-                if result is str():
+                if type(result) is str:
                     result += '<br>' + errorMessage
                 else:
                     result = errorMessage
