@@ -1,5 +1,0 @@
-usar npm run dev -- --host
-en el app.py poner la dirección ip de la máquina en cuestión
-
-SuperBiblioteca
-BibliotecaDefinitiva77.
