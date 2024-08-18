@@ -359,7 +359,7 @@ const FetchAgain = (() => {
                         </div>
                     </div>
                     
-                    <template v-if="props.targetLoan['return_date'] === null || Object.keys(props.targetLoan).length === 0">
+                    <template v-if="props.targetLoan['return_date'] === null">
                         <div class="row m-0 p-0 justify-content-center my-3">
                             <div class="row m-0 p-0 col-4 justify-content-center">
                                 <button class="col-8 myBtn shadowed-l h3 bg-danger border-white rounded-pill border-1 text-white" type="button" @click="DeactivateLoan">
@@ -373,6 +373,9 @@ const FetchAgain = (() => {
                                 </button>
                             </div>
                         </div>
+                    </template>
+
+                    <template v-if="props.targetLoan['return_date'] === null || Object.keys(props.targetLoan).length === 0">
                         <div class="row m-0 p-0 justify-content-center my-2 mt-5">
                             <div class="row m-0 p-0 col-12 justify-content-center">
                                 <button class="col-6 col-lg-3 myBtn terciary-btn shadowed-l h3">
