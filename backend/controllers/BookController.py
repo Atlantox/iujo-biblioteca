@@ -10,7 +10,7 @@ from models.EditorialModel import EditorialModel
 from helpers import *
 
 LENGTH_CONFIG = {
-    'call_number': {'min': 1, 'max':8},
+    'call_number': {'min': 1, 'max': 20},
     'title': {'min': 1, 'max':150},
     'state': {'min': 5, 'max':30},
     'shelf': {'min': 1, 'max':10},
@@ -19,7 +19,7 @@ LENGTH_CONFIG = {
 
 REQUIRED_FIELDS = [
     'title',
-    'author',
+    'authors',
     'editorial',
     'call_number',
     'shelf',
@@ -66,11 +66,9 @@ def DoCreateBook(bookData, connection):
             statusCode = 400
 
     if error == '':
-        if cleanData['author'] == '':
-            cleanData['author'] = None
-        else:
-            authorModel = AuthorModel(connection)
-            targetAuthor = authorModel.GetAuthorById(cleanData['author'])
+        authorModel = AuthorModel(connection)
+        for author in cleanData['authors']:
+            targetAuthor = authorModel.GetAuthorById(author)
             if targetAuthor is None:
                 error = 'Autor no encontrado'
                 statusCode = 400
@@ -175,7 +173,7 @@ def CreateBooksByExcel():
         editorialModel = EditorialModel(connection)
         EXCEL_FIELDS = {
             'Título': 'title', 
-            'Autor': 'author', 
+            'Autores': 'authors', 
             'Cota': 'call_number', 
             'Editorial': 'editorial', 
             'Categorías': 'categories', 
@@ -231,21 +229,26 @@ def CreateBooksByExcel():
 
             currentBook['categories'] = finalBookCategories
 
-            targetAuthor = authorModel.GetAuthorByName(currentBook['author'])
-            if targetAuthor == None:
-                if len(currentBook['author']) > 100:
-                    error = 'El autor {0} sobrepasa el límite de caracteres (100)'.format(currentBook['author'])
-                    statusCode = 400
-                    break
-                if authorModel.CreateAuthor({'name': currentBook['author']}) == False:
-                    error = 'Hubo un error inesperado al intentar crear el autor {0}'.format(currentBook['author'])
-                    statusCode = 500
-                    break
+            finalBookAuthors = []
+            bookAuthors = [a.strip() for a in currentBook['authors'].split(',')]
+            for author in bookAuthors:
+                targetAuthor = authorModel.GetAuthorByName(author)
+                if targetAuthor == None:
+                    if len(author) > 100:
+                        error = 'Un autor {0} sobrepasa el límite de caracteres (100)'.format(author)
+                        statusCode = 400
+                        break
 
-                finalAuthor = authorModel.GetAuthorByName(currentBook['author'])
-                currentBook['author'] = finalAuthor['id']
-            else:
-                currentBook['author'] = targetAuthor['id']
+                    if authorModel.CreateAuthor({'name': author}) == False:
+                        error = 'Hubo un error inesperado al intentar crear el autor {0}'.format(author)
+                        statusCode = 500
+                        break
+
+                    targetAuthor = authorModel.GetAuthorByName(author)
+                    finalBookAuthors.append(targetAuthor['id'])
+                else:
+                    finalBookAuthors.append(targetAuthor['id'])
+
                 
             targetEditorial = editorialModel.GetEditorialByName(currentBook['editorial'])
             if targetEditorial == None:
@@ -566,12 +569,12 @@ def UpdateBook(updateId):
                 statusCode = 400
 
     if error == '':
-        if 'author' in cleanData:
-            if cleanData['author'] != '':
-                targetAuthor = bookModel.GetAuthorById(cleanData['author'])
-                if targetAuthor is None:
-                    error = 'Autor no encontrado'
-                    statusCode = 400
+        if 'authors' in cleanData:
+            authorModel = AuthorModel(connection)
+            authorsExists = authorModel.AuthorsExists(cleanData['authors'])
+            if authorsExists is False:
+                error = 'Alguno de los autores seleccionados no encaja con los registrados'
+                statusCode = 400
 
     if error == '':
         if 'editorial' in cleanData:
@@ -586,7 +589,7 @@ def UpdateBook(updateId):
         categoryModel = CategoryModel(connection)
         categoriesExists = categoryModel.CategoriesExists(cleanData['categories'])
         if categoriesExists is False:
-            error = 'Alguna de las categorías no encaja con las registradas'
+            error = 'Alguna de las categorías seleccionadas no encaja con las registradas'
             statusCode = 400
 
     if error == '':

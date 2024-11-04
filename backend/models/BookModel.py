@@ -1,5 +1,6 @@
 from .BaseModel import BaseModel
 from .CategoryModel import CategoryModel
+from .AuthorModel import AuthorModel
 
 class BookModel(BaseModel):
     BOOK_SELECT_TEMPLATE = '''
@@ -29,7 +30,6 @@ class BookModel(BaseModel):
             book
             (
                 title,
-                author,
                 call_number,
                 editorial,
                 pages,
@@ -45,13 +45,11 @@ class BookModel(BaseModel):
                 %s,
                 %s,
                 %s,
-                %s,
                 %s
             )
             '''
         args = (
             bookData['title'],
-            bookData['author'],
             bookData['call_number'],
             bookData['editorial'],
             bookData['pages'],
@@ -74,6 +72,13 @@ class BookModel(BaseModel):
             categoriesAssigned = categoryModel.AddCategoriesToBook(createdBook['id'], bookData['categories'])
             if categoriesAssigned is False:
                 error = 'El libro fue creado, sin embargo, hubo un error al asignar las categorías de este'
+
+        if error == '':
+            authorModel = AuthorModel(self.connection)
+            authorsUpdated = authorModel.UpdateBookAuthors(createdBook['id'], bookData['authors'])
+            if authorsUpdated is False:
+                error = 'El libro fue creado, sin embargo, hubo un error al asignar los autores a este'
+
             
         if error == '':
             result = True
@@ -384,6 +389,14 @@ class BookModel(BaseModel):
             categoriesAssigned = categoryModel.UpdateCategoriesOfBook(bookId, recievedCategories)
             if categoriesAssigned is False:
                 result = 'Ocurrió un problema durante el proceso de actualización de las categorías del libro'
+
+        if 'authors' in bookData:
+            recievedAuthors = bookData['authors']
+            del bookData['authors']
+            authorModel = AuthorModel(self.connection)
+            authorsUpdated = authorModel.UpdateBookAuthors(bookId, recievedAuthors)
+            if authorsUpdated is False:
+                result = 'Ocurrió un problema durante el proceso de actualización de los autores del libro'
 
         if bookData != {}:
             cursor = self.connection.connection.cursor()

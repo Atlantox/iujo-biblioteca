@@ -133,10 +133,8 @@ class CategoryModel(BaseModel):
     def CategoriesExists(self, ids):
         ''' Gets a list of Ids and check if all exists, if not return false'''
         cursor = self.connection.connection.cursor()
-        orderedIds = ''
         arrayIds = []
         
-        orderedIds = orderedIds[0:-1]
         sql = "SELECT * FROM category WHERE id IN ("
         for id in ids:
             sql += "%s,"

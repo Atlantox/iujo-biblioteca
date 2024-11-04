@@ -1,0 +1,8 @@
+Asegurarte de que el archivo src/stores/config.js contiene la URL del backend
+Correr el comando npm run build
+Puedes probar que funciona utilizando npm run preview
+Ir a la carpeta dist y comprimir todo lo que está allí
+Si es la primera subida que haces procura comprimir la carpeta libs que contiene las librerías
+La carpeta libs puedes ignorarla si ya la subiste al servidor ya que pesa bastante, por supuesto, siempre y cuando no se hayan agregado nuevas librerías
+Subes los archivos a html_public/carpeta con nombre del proyecto
+Descomprimes el comprimido y listo

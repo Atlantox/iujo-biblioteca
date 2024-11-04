@@ -61,6 +61,7 @@ onMounted(async () => {
         bookShelf.value = props.targetBook['shelf']
         bookState.value = props.targetBook['state']
 
+        // Fix this to get all authors of the book and finish the form
         $('#author').val(bookAuthor.value); $('#author').trigger('change');
         $('#editorial').val(bookEditorial.value); $('#editorial').trigger('change');
         $('#state').val(bookState.value); $('#state').trigger('change');            
@@ -99,7 +100,7 @@ async function ValidateForm() {
         },
         'call_number':{
             'min': 1, 
-            'max': 8, 
+            'max': 20,
             'required': true, 
             'value': bookCallNumber.value 
         },
@@ -174,7 +175,7 @@ async function ValidateForm() {
                 'editorial': validationStructure['select2-editorial-container']['value'],
                 'state': validationStructure['select2-state-container']['value'],
                 'description': validationStructure['description']['value'],
-                'categories': validationStructure['categories']['value'],
+                'categories': bookCategories.value,
             }
 
             const created = await bookStore.CreateBook(cleanBookData)            
@@ -249,7 +250,7 @@ const FetchAgain = (() => {
         </template>
         <template v-else>
             <div class="col-12 row p-4 pt-5 fs-4 justify-content-around hide-up animated-1">
-                <div class="col-12 col-lg-8 p-2 row myForm shadowed-l rounded lb-bg-terciary-ul justify-content-center">
+                <div class="col-12 col-lg-10 p-2 row myForm shadowed-l rounded lb-bg-terciary-ul justify-content-center">
                     <div :class="formRowStyle">
                         <div :class="labelContainerStyle">
                             <label :class="labelStyle" for="title"><strong>Título</strong></label>
@@ -267,30 +268,7 @@ const FetchAgain = (() => {
                         </div>
                         <div :class="inputContainerStyle">
                             <div class="row col-7">
-                                <input type="text" class="myInput" maxlength="8" id="call_number" v-model="bookCallNumber">
-                            </div>
-                        </div>
-                    </div>
-        
-                    <div :class="formRowStyle">
-                        <div :class="labelContainerStyle">
-                            <label :class="labelStyle" for="author">Autor</label>
-                        </div>
-                        <div :class="inputContainerStyle">
-                            <div class="row col-10 col-lg-7">
-                                <select class="myInput select2" id="author" :v-model="bookAuthor">
-                                    <option value="">&nbsp;</option>
-                                    <template
-                                    v-for="author in props.authors"
-                                    :key="author.id">
-                                        <option class="fw-normal" :value="author.id" :selected="bookAuthor == author.id">
-                                            {{ author.name }}
-                                        </option>                                    
-                                    </template>
-                                </select>
-                            </div>
-                            <div class="col-1 align-middle cursor-pointer" title="Agregar nuevo autor" @click="DisplayAuthorForm()">
-                                <i class="fa fa-plus my-auto align-middle text-success bg-white border-black p-1 rounded"></i>
+                                <input type="text" class="myInput" maxlength="20" id="call_number" v-model="bookCallNumber">
                             </div>
                         </div>
                     </div>
@@ -334,7 +312,7 @@ const FetchAgain = (() => {
                                     </template>
                                 </select>
                             </div>
-                            <div class="col-1 align-middle cursor-pointer"  title="Agregar nueva editorial" @click="DisplayEditorialForm()">
+                            <div class="col-1 align-middle cursor-pointer" title="Agregar nueva editorial" @click="DisplayEditorialForm()">
                                 <i class="fa fa-plus my-auto align-middle text-success bg-white border-black p-1 rounded"></i>
                             </div>
                         </div>
@@ -370,6 +348,63 @@ const FetchAgain = (() => {
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-12 col-lg-5 row mt-4 m-lg-0 p-4 fs-4 rounded lb-bg-terciary-ul justify-content-start align-items-start align-self-start">
+                        <h2 class="col-12 text-center">Categorías</h2>
+                        <div class="col-12 d-flex justify-content-start align-items-center flex-column rounded shadowed-l p-0 bg-white" style="overflow:hidden">
+                            <div class="col-12 d-flex categories-section justify-content-center p-0"
+                            v-for="category, index in props.categories"
+                            :key="index">
+                                <div class="category-label-container col-8 d-flex justify-content-center align-items-center p-0 py-1">
+                                    <label class="text-center w-100" :for="category.id">{{ category.name }}</label>
+                                </div>
+                                <div class="category-radio-container col-4 d-flex justify-content-center align-items-center p-0 y-1">
+                                    <input class="" type="checkbox" :id="category.id" name="checkbox" :value="category.id" v-model="bookCategories">
+                                </div>
+                            </div>
+                        </div>
+                    </div>     
+
+                    <div class="col-12 col-lg-5 row mt-4 m-lg-0 p-4 fs-4 rounded lb-bg-terciary-ul justify-content-start align-items-start align-self-start">
+                        <h2 class="col-12 text-center">Autores</h2>
+                        <div class="col-12 d-flex justify-content-start align-items-center flex-column rounded shadowed-l p-3 bg-white" style="overflow:hidden">
+                            <div class="d-flex justify-content-around align-items-center flex-wrap">
+                                <div class="row col-10">
+                                    <select class="myInput select2" id="author" :v-model="bookAuthor">
+                                        <option value="">&nbsp;</option>
+                                        <template
+                                        v-for="author in props.authors"
+                                        :key="author.id">
+                                            <option class="fw-normal" :value="author.id" :selected="bookAuthor == author.id">
+                                                {{ author.name }}
+                                            </option>                                    
+                                        </template>
+                                    </select>
+                                </div>
+                                <div class="col-1 align-middle cursor-pointer" title="Agregar nuevo autor" @click="DisplayAuthorForm()">
+                                    <i class="fa fa-plus my-auto align-middle text-success bg-white border-black p-1 rounded"></i>
+                                </div>
+
+                                <div class="row col-12 m-0 p-0">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>Quitar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr
+                                            v-for=""
+                                            >
+
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>     
         
                     <div class="row m-0 p-0 justify-content-center my-2 mt-5">
                         <div class="row m-0 p-0 col-12 justify-content-center">
@@ -392,21 +427,7 @@ const FetchAgain = (() => {
     
                 </div>
                 
-                <div class="col-12 col-lg-3 row mt-4 m-lg-0 p-4 fs-4 shadowed-l rounded lb-bg-terciary-ul justify-content-start align-items-start align-self-start">
-                    <h2 class="col-12 text-center">Categorías</h2>
-                    <div class="col-12 d-flex justify-content-start align-items-center flex-column rounded shadowed-l p-0 bg-white" style="overflow:hidden">
-                        <div class="col-12 d-flex categories-section justify-content-center p-0"
-                        v-for="category, index in props.categories"
-                        :key="index">
-                            <div class="category-label-container col-8 d-flex justify-content-center align-items-center p-0 py-1">
-                                <label class="text-center w-100" :for="category.id">{{ category.name }}</label>
-                            </div>
-                            <div class="category-radio-container col-4 d-flex justify-content-center align-items-center p-0 y-1">
-                                <input class="" type="checkbox" :id="category.id" name="checkbox" :value="category.id" v-model="bookCategories">
-                            </div>
-                        </div>
-                    </div>
-                </div>        
+                   
             </div>
         </template>
     </form>

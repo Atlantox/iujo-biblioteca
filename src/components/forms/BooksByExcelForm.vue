@@ -1,10 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
-import EditorialForm from './EditorialForm.vue'
-import AuthorForm from './AuthorForm.vue'
-
-import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue'
 import OnAppearAnimation from '@/utils/ElegantDisplayer'
 
 import useUtilsStore from '@/stores/utils'
@@ -232,6 +228,7 @@ const ResetExcel = (() => {
                         <li>Las categorías, autores y editoriales no existentes en la base de datos, serán <strong>agregadas</strong> automáticamente</li>
                         <li>Los únicos campos que pueden estar <strong>vacíos</strong> son: autor, editorial y descripción</li>
                         <li><strong>NINGUNA</strong> de las cotas debe repetirse</li>
+                        <li>En caso de múltiples categorías y autores, separarlos por <strong>comas</strong></li>
                         <li>Los libros deben estar en la <strong>primera hoja</strong> del excel</li>
                         <li>Debe subir un archivo excel que tenga el siguiente <strong>formato:</strong></li>
                     </ul>

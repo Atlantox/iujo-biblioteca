@@ -51,10 +51,35 @@ class AuthorModel(BaseModel):
         
         return result
     
+    def AuthorsExists(self, ids):
+        ''' Gets a list of Ids and check if all exists, if not return false'''
+        cursor = self.connection.connection.cursor()
+        arrayIds = []
+        
+        sql = "SELECT * FROM author WHERE id IN ("
+        for id in ids:
+            sql += "%s,"
+            arrayIds.append(id)
+        sql = sql[0:-1] + ')'
+
+        try:
+            cursor.execute(sql, tuple(arrayIds))
+            authors = cursor.fetchall()
+        except:
+            authors = None
+
+        if authors is None:
+            result = False
+        else:
+            result = len(authors) == len(ids)
+
+        return result
+
+    
     def UpdateAuthor(self, authorId, authorData):
-        newName = authorData['name']
         cursor = self.connection.connection.cursor()
         result = True
+        newName = authorData['name']
 
         sql = "UPDATE author SET name = %s WHERE id = %s"
         args = (newName, authorId,)
@@ -66,6 +91,48 @@ class AuthorModel(BaseModel):
             result = False
         
         return result
+    
+    def UpdateBookAuthors(self, bookId, authors):
+        authorsDeleted = self.DeleteAuthorsOfBook(bookId)
+        if authorsDeleted is False:
+            return False
+
+        cursor = self.connection.connection.cursor()
+        result = True
+        args = []
+
+        sqlInsert = ''
+        for author in authors:
+            sqlInsert += '(%s, %s),'
+            args += [bookId, author]
+
+        sqlInsert = sqlInsert[:-1]
+
+        sql = "INSERT INTO book_author (book, author) VALUES " + sqlInsert
+        args = tuple(args)
+        try:
+            cursor.execute(sql, args)
+            self.connection.connection.commit()
+        except:
+            result = False
+        
+        return result
+
+    def DeleteAuthorsOfBook(self, bookId):
+        cursor = self.connection.connection.cursor()
+        result = True
+
+        sql = "DELETE FROM book_author WHERE book = %s"
+        args = (bookId,)
+
+        try:
+            cursor.execute(sql, args)
+            self.connection.connection.commit()
+        except:
+            result = False
+        
+        return result
+
     
     def DeleteAuthor(self, authorId):
         cursor = self.connection.connection.cursor()
