@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
 import FormValidator from '@/utils/FormValidator'
 
@@ -18,6 +19,7 @@ const utilsStore = useUtilsStore()
 const userStore = useUserStore()
 const sessionStore = useSessionStore()
 const binnacleStore = useBinnacleStore()
+const router = useRouter()
 
 const mounted = ref(false)
 const binnacleFetched = ref(false)
@@ -44,7 +46,14 @@ const emits = defineEmits(['formOk'])
 
 onMounted(async () => {
     OnAppearAnimation('hide-up')
+
     if(Object.keys(props.targetUser).length !== 0){
+        if(sessionStore.userData.id !== props.targetUser.id){
+            // If the user don't have permissons of the targetUser level, return it to dashboard
+            if(!sessionStore.userData.permissons.includes(props.targetUser.level))
+                router.push({name: 'dashboard'})
+        }
+
         await binnacleStore.FetchBinnacleOfUser(props.targetUser.id)
         selfUser.value = props.targetUser.id === sessionStore.userData.id
         userNickname.value = props.targetUser.nickname
