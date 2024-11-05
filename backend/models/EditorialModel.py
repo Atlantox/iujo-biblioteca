@@ -1,5 +1,5 @@
 from .BaseModel import BaseModel
-
+# TODO: actualizar la plantilla de la base de datos vacía e intentar agrupar los libros por título para que no salgan repetidos en la vista del estudiante
 class EditorialModel(BaseModel):
     def GetEditorials(self):
         cursor = self.connection.connection.cursor()
@@ -12,7 +12,7 @@ class EditorialModel(BaseModel):
         cursor = self.connection.connection.cursor()
         result = True
 
-        sql = "INSERT INTO Editorial (name) VALUES (%s)"
+        sql = "INSERT INTO editorial (name) VALUES (%s)"
         args = (name,)
 
         try:

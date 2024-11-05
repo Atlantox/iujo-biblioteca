@@ -45,7 +45,7 @@ onMounted(() => {
                 v-for="book in props.books"
                 :key="book.id">
                     <td class="border-1">{{ book.title }}</td>
-                    <td class="border-1">{{ book.author === null ? 'Desconocido' : book.author }}</td>
+                    <td class="border-1">{{ book.author_names.length === 0 ? 'Desconocido' : book.author_names.join(', ') }}</td>
                     <td class="border-1">{{ book.editorial === null ? 'Desconocida' : book.editorial}}</td>
                     <td class="border-1">{{ book.category_names.join(', ') }}</td>
                     <td :class="'text-center border-1 fw-bold text-' + (book.state === 'En biblioteca' ? 'success' : 'danger') ">{{ book.state }}</td>

@@ -8,8 +8,6 @@ class BookModel(BaseModel):
             book.id,
             book.call_number,
             book.title,
-            author.id as author_id,
-            author.name as author,
             editorial.id as editorial_id,
             editorial.name as editorial,
             book.pages,
@@ -18,7 +16,6 @@ class BookModel(BaseModel):
             book.state
             FROM
             book
-            LEFT JOIN author ON author.id = book.author 
             LEFT JOIN editorial ON editorial.id = book.editorial
             '''
     
@@ -97,13 +94,7 @@ class BookModel(BaseModel):
         
         if type(books) is tuple:
             for i in range(len(books)):
-                book = books[i]
-                categoryModel = CategoryModel(self.connection)
-                categories = categoryModel.GetCategoriesOfBook(book['id'])
-                categoryNames = [ c['name'] for c in categories ]
-                categoryIds = [ c['id'] for c in categories ]
-                book['category_names'] = categoryNames
-                book['category_ids'] = categoryIds
+                book = self.GetBookWithAuthorsAndCategories(books[i])
                 result.append(book)
 
         return result
@@ -122,13 +113,7 @@ class BookModel(BaseModel):
         
         if type(books) is tuple:
             for i in range(len(books)):
-                book = books[i]
-                categoryModel = CategoryModel(self.connection)
-                categories = categoryModel.GetCategoriesOfBook(book['id'])
-                categoryNames = [ c['name'] for c in categories ]
-                categoryIds = [ c['id'] for c in categories ]
-                book['category_names'] = categoryNames
-                book['category_ids'] = categoryIds
+                book = self.GetBookWithAuthorsAndCategories(books[i])
                 result.append(book)
 
         return result
@@ -161,13 +146,7 @@ class BookModel(BaseModel):
         
         if type(books) is tuple:
             for i in range(len(books)):
-                book = books[i]
-                categoryModel = CategoryModel(self.connection)
-                categories = categoryModel.GetCategoriesOfBook(book['id'])
-                categoryNames = [ c['name'] for c in categories ]
-                categoryIds = [ c['id'] for c in categories ]
-                book['category_names'] = categoryNames
-                book['category_ids'] = categoryIds
+                book = self.GetBookWithAuthorsAndCategories(books[i])
                 result.append(book)
 
         return result
@@ -175,8 +154,9 @@ class BookModel(BaseModel):
     def GetBooksByAuthor(self, authorId, exceptId):
         cursor = self.connection.connection.cursor()
         sql = self.BOOK_SELECT_TEMPLATE + '''
+            LEFT JOIN book_authors ON book_authors.book = book.id
             WHERE
-            book.author = %s
+            book_authors.author = %s
             
             '''
         if exceptId is not None:
@@ -195,13 +175,43 @@ class BookModel(BaseModel):
         
         if type(books) is tuple:
             for i in range(len(books)):
-                book = books[i]
-                categoryModel = CategoryModel(self.connection)
-                categories = categoryModel.GetCategoriesOfBook(book['id'])
-                categoryNames = [ c['name'] for c in categories ]
-                categoryIds = [ c['id'] for c in categories ]
-                book['category_names'] = categoryNames
-                book['category_ids'] = categoryIds
+                book = self.GetBookWithAuthorsAndCategories(books[i])
+                result.append(book)
+
+        return result
+    
+    def GetBooksOfSameAuthors(self, bookId, exceptId):
+        cursor = self.connection.connection.cursor()
+        sql = self.BOOK_SELECT_TEMPLATE + '''
+            INNER JOIN book_author ON book_author.book = book.id
+            WHERE
+            book_author.author IN(
+                SELECT 
+                book_author.author
+                FROM
+                book_author
+                WHERE
+                book_author.book = %s
+            )
+            
+            '''
+        if exceptId is not None:
+            sql += ' AND book.id != %s '
+
+        sql += ' ORDER BY  book.title LIMIT 12 '
+        
+        if exceptId is None:
+            args = (bookId,)
+        else:
+            args = (bookId, exceptId,)
+            
+        cursor.execute(sql, args)
+        books = cursor.fetchall()
+        result = []
+        
+        if type(books) is tuple:
+            for i in range(len(books)):
+                book = self.GetBookWithAuthorsAndCategories(books[i])
                 result.append(book)
 
         return result
@@ -217,13 +227,7 @@ class BookModel(BaseModel):
         if book is None:
             result = None
         else:
-            categoryModel = CategoryModel(self.connection)
-            categories = categoryModel.GetCategoriesOfBook(book['id'])
-            categoryNames = [ c['name'] for c in categories ]
-            categoryIds = [ c['id'] for c in categories ]
-            book['category_names'] = categoryNames
-            book['category_ids'] = categoryIds
-            result = book
+            result = self.GetBookWithAuthorsAndCategories(book)
         
         return result
     
@@ -238,15 +242,25 @@ class BookModel(BaseModel):
         if book is None:
             result = None
         else:
-            categoryModel = CategoryModel(self.connection)
-            categories = categoryModel.GetCategoriesOfBook(book['id'])
-            categoryNames = [ c['name'] for c in categories ]
-            categoryIds = [ c['id'] for c in categories ]
-            book['category_names'] = categoryNames
-            book['category_ids'] = categoryIds
-            result = book
+            result = self.GetBookWithAuthorsAndCategories(book)
         
         return result
+    
+    def GetBookWithAuthorsAndCategories(self, book):
+        categoryModel = CategoryModel(self.connection)
+        categories = categoryModel.GetCategoriesOfBook(book['id'])
+        book['category_names'] = [ c['name'] for c in categories ]
+        book['category_ids'] = [ c['id'] for c in categories ]
+
+        book['author_names'] = []
+        book['author_ids'] = []
+        authorModel = AuthorModel(self.connection)
+        authors = authorModel.GetAuthorsOfBook(book['id'])
+        if len(authors) > 0:
+            book['author_names'] = [ a['name'] for a in authors]
+            book['author_ids'] = [ a['id'] for a in authors]
+
+        return book
     
     def GetStateByName(self, name):
         cursor = self.connection.connection.cursor()
@@ -291,30 +305,34 @@ class BookModel(BaseModel):
         cursor = self.connection.connection.cursor()
         result = []
 
-        sql = self.BOOK_SELECT_TEMPLATE + 'INNER JOIN book_category ON book_category.book = book.id '
+        sql = self.BOOK_SELECT_TEMPLATE + '''
+            INNER JOIN book_category ON book_category.book = book.id 
+            LEFT JOIN book_author ON book_author.book = book.id 
+            '''
         args = []
 
-        if filters != []:
+        if filters != {}:
             sql += 'WHERE '
         
         if 'category' in filters:
-            sql += 'book_category.category IN (%s) AND '
+            sql += ' book_category.category IN (%s) AND '
             args.append(filters['category'])
 
         if 'author' in filters:
-            sql += 'book.author IN (%s) AND '
+            sql += ' book_author.author IN (%s) AND '
             args.append(filters['author'])
 
         if 'state' in filters:
-            sql += 'book.state IN (%s) AND '
+            sql += ' book.state IN (%s) AND '
             args.append(filters['state'])
 
         if 'editorial' in filters:
-            sql += 'book.editorial IN (%s) AND '
+            sql += ' book.editorial IN (%s) AND '
             args.append(filters['editorial'])
 
         sql = sql[0:-4]  # Removing the last 'AND'
 
+        print(sql)
         try:
             if args == []:
                 cursor.execute(sql)
@@ -325,13 +343,7 @@ class BookModel(BaseModel):
                 result = []
             else:
                 for i in range(len(books)):
-                    book = books[i]
-                    categoryModel = CategoryModel(self.connection)
-                    categories = categoryModel.GetCategoriesOfBook(book['id'])
-                    categoryNames = [ c['name'] for c in categories ]
-                    categoryIds = [ c['id'] for c in categories ]
-                    book['category_names'] = categoryNames
-                    book['category_ids'] = categoryIds
+                    book = self.GetBookWithAuthorsAndCategories(books[i])
                     result.append(book)
 
         except:

@@ -67,6 +67,7 @@ def DoCreateBook(bookData, connection):
 
     if error == '':
         authorModel = AuthorModel(connection)
+        print(cleanData['authors'])
         for author in cleanData['authors']:
             targetAuthor = authorModel.GetAuthorById(author)
             if targetAuthor is None:
@@ -196,10 +197,17 @@ def CreateBooksByExcel():
 
                 currentBook[englishField] = str(book[spanishField]).strip()
 
+            '''
             bookAreRepeated = bookModel.BookAreRepeated(currentBook)
             if bookAreRepeated is True:
                 creationError += f'El libro de la <strong>fila {bookCount}</strong> ya está registrado así que se obvió<br><br>'
                 continue
+            '''
+
+            if bookModel.GetBookByCallNumber(currentBook['call_number']) is not None:
+                error = f'La cota del libro de la fila {bookCount} está repetida'
+                statusCode = 400
+                break
 
             # Aquí tendríamos el libro con los campos en inglés
             # Debemos crear las categorías, editoriales y autores si no existen
@@ -233,6 +241,7 @@ def CreateBooksByExcel():
             bookAuthors = [a.strip() for a in currentBook['authors'].split(',')]
             for author in bookAuthors:
                 targetAuthor = authorModel.GetAuthorByName(author)
+                
                 if targetAuthor == None:
                     if len(author) > 100:
                         error = 'Un autor {0} sobrepasa el límite de caracteres (100)'.format(author)
@@ -249,7 +258,8 @@ def CreateBooksByExcel():
                 else:
                     finalBookAuthors.append(targetAuthor['id'])
 
-                
+            currentBook['authors'] = finalBookAuthors
+
             targetEditorial = editorialModel.GetEditorialByName(currentBook['editorial'])
             if targetEditorial == None:
                 if len(currentBook['editorial']) > 100:
@@ -423,6 +433,35 @@ def GetBooksByAuthor(authorId, exceptId):
 
     if error == '':
         books = bookModel.GetBooksByAuthor(targetAuthor['id'], exceptId)
+        if books is None:
+            error = 'No hay libros disponibles'
+            statusCode = 404
+
+    response['success'] = error == ''
+    if error == '':
+        response['books'] = books
+    else:
+        response['message'] = error    
+
+    return jsonify(response), statusCode
+
+@bookController.route('/books/same_author/<int:bookId>', defaults={'exceptId': None}, methods=['GET'])
+@bookController.route('/books/same_author/<int:bookId>/<int:exceptId>', methods=['GET'])
+def GetBooksOfSameAuthor(bookId, exceptId):
+    connection = GetConnection()
+    bookModel = BookModel(connection)
+    authorModel = AuthorModel(connection)
+    response = {}
+    statusCode = 200
+    error = ''
+
+    targetBook = bookModel.GetBookById(bookId)
+    if targetBook is None:
+        error = 'Libro no encontrado'
+        statusCode = 404
+
+    if error == '':
+        books = bookModel.GetBooksOfSameAuthors(targetBook['id'], exceptId)
         if books is None:
             error = 'No hay libros disponibles'
             statusCode = 404

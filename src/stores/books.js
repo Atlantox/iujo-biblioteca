@@ -511,6 +511,42 @@ const useBookStore = defineStore('books', {
             return books
         },
 
+        async GetCommonAuthorsBook(bookId, exceptId){
+            var books = []
+            const sessionStore = useSessionStore()
+            const utilsStore = useUtilsStore()
+            try{
+                let url = apiConfig.base_url + '/books/same_author/' + bookId
+                if (exceptId !== null) url += '/' + exceptId
+                var fetchHeaders = {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+
+                if (sessionStore.authenticated === true)
+                    fetchHeaders['Authorization'] = 'Bearer ' + sessionStore.token
+
+                let fetchConfig = {
+                    method: 'GET',
+                    headers: fetchHeaders
+                }
+
+                let response = await fetch(url, fetchConfig)
+                let json = await response.json()
+                let result = await json
+                if(result.success){
+                    books = result.books
+                }
+                else
+                    utilsStore.ShowModal('Error', result.message, 'error')
+            }
+            catch(error){
+                utilsStore.ShowModal('Error', 'Ocurrió un error inesperado al cargar los libros de los mismos autores del libro actual: ' + error.message, 'error')
+            }
+
+            return books
+        },
+
         async GetBooksOfCategories(categories, exceptId = null){
             var books = []
             const sessionStore = useSessionStore()

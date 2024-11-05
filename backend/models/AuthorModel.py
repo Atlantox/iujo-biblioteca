@@ -51,6 +51,29 @@ class AuthorModel(BaseModel):
         
         return result
     
+    def GetAuthorsOfBook(self, bookId):
+        cursor = self.connection.connection.cursor()
+        
+        sql = '''
+            SELECT
+            author.id,
+            author.name
+            FROM
+            author
+            INNER JOIN book_author ON book_author.author = author.id
+            WHERE
+            book_author.book = %s
+        '''
+        args = (bookId,)
+
+        try:
+            cursor.execute(sql, args)
+            authors = cursor.fetchall()
+        except:
+            authors = []
+
+        return authors
+    
     def AuthorsExists(self, ids):
         ''' Gets a list of Ids and check if all exists, if not return false'''
         cursor = self.connection.connection.cursor()

@@ -5,6 +5,7 @@ import FormValidator from '@/utils/FormValidator'
 
 import EditorialForm from './EditorialForm.vue'
 import AuthorForm from './AuthorForm.vue'
+import CategoryForm from './CategoryForm.vue'
 
 import LoadingGadget from '@/components/myGadgets/LoadingGadget.vue'
 import OnAppearAnimation from '@/utils/ElegantDisplayer'
@@ -23,7 +24,7 @@ const formErrors = ref([])
 
 const bookTitle = ref('')
 const bookCallNumber = ref('')
-const bookAuthor = ref('')
+const bookAuthors = ref([])
 const bookShelf = ref('')
 const bookEditorial = ref('')
 const bookPages = ref('')
@@ -34,7 +35,7 @@ const bookState = ref('En biblioteca')
 const formRowStyle = 'row m-0 p-0 justify-content-center my-2'
 const labelContainerStyle = 'row m-0 p-0 col-12 col-md-3'
 const labelStyle = 'text-center text-md-end'
-const inputContainerStyle = 'row m-0 p-0 col-12 col-md-7 justify-content-center justify-content-md-start'
+const inputContainerStyle = 'row m-0 p-0 col-12 col-md-9 justify-content-center justify-content-md-start'
 
 const props = defineProps({
     'targetBook': {type: Object, default: []},
@@ -53,7 +54,7 @@ onMounted(async () => {
     if(Object.keys(props.targetBook).length !== 0){
         bookTitle.value = props.targetBook['title']
         bookCallNumber.value = props.targetBook['call_number']
-        bookAuthor.value = props.targetBook['author_id']
+        bookAuthors.value = props.targetBook['author_ids']
         bookEditorial.value = props.targetBook['editorial_id']
         bookDescription.value = props.targetBook['description']
         bookCategories.value = props.targetBook['category_ids']
@@ -62,7 +63,6 @@ onMounted(async () => {
         bookState.value = props.targetBook['state']
 
         // Fix this to get all authors of the book and finish the form
-        $('#author').val(bookAuthor.value); $('#author').trigger('change');
         $('#editorial').val(bookEditorial.value); $('#editorial').trigger('change');
         $('#state').val(bookState.value); $('#state').trigger('change');            
     }
@@ -72,17 +72,11 @@ onMounted(async () => {
     $('#editorial').on('select2:select', function (e) { 
         bookEditorial.value = e.target.value;
         document.getElementById('select2-editorial-container').classList.remove('border-red') 
-
     });
-    $('#author').on('select2:select', function (e) { 
-        bookAuthor.value = e.target.value;
-        document.getElementById('select2-author-container').classList.remove('border-red') 
 
-    });
     $('#state').on('select2:select', function (e) { 
         bookState.value = e.target.value;
         document.getElementById('select2-state-container').classList.remove('border-red') 
-
     });
     
     mounted.value = true    
@@ -128,12 +122,6 @@ async function ValidateForm() {
             'required': false, 
             'value': bookEditorial.value 
         },
-        'select2-author-container':{
-            'min': 0, 
-            'max': 0, 
-            'required': false, 
-            'value': bookAuthor.value 
-        },
         'select2-state-container':{
             'min': 5, 
             'max': 30, 
@@ -169,7 +157,7 @@ async function ValidateForm() {
             const cleanBookData = {
                 'title': validationStructure['title']['value'],
                 'call_number': validationStructure['call_number']['value'],
-                'author': validationStructure['select2-author-container']['value'],
+                'authors': bookAuthors.value,
                 'pages':validationStructure['pages']['value'],
                 'shelf': validationStructure['shelf']['value'],
                 'editorial': validationStructure['select2-editorial-container']['value'],
@@ -183,7 +171,7 @@ async function ValidateForm() {
                 utilsStore.ShowModal('Success', created.message, 'success')
                 bookTitle.value = ''
                 bookCallNumber.value = ''
-                bookAuthor.value = ''
+                bookAuthors.value = []
                 bookShelf.value = ''
                 bookEditorial.value = ''
                 bookPages.value = ''
@@ -191,7 +179,6 @@ async function ValidateForm() {
                 bookDescription.value = ''
                 bookState.value = ''
 
-                $('#author').val(''); $('#author').trigger('change');
                 $('#editorial').val(''); $('#editorial').trigger('change');
                 $('#state').val('En biblioteca'); $('#state').trigger('change');
             }
@@ -207,14 +194,14 @@ async function ValidateForm() {
             let cleanBookData = {}
 
             if(props.targetBook['title'] !== bookTitle.value) cleanBookData['title'] = bookTitle.value
-            if(props.targetBook['call_number'] !== bookCallNumber.value) cleanBookData['call_number'] = bookCallNumber.value
-            if(props.targetBook['author_id'] !== bookAuthor.value) cleanBookData['author'] = bookAuthor.value
+            if(props.targetBook['call_number'] !== bookCallNumber.value) cleanBookData['call_number'] = bookCallNumber.value            
             if(props.targetBook['shelf'] !== bookShelf.value) cleanBookData['shelf'] = bookShelf.value
             if(props.targetBook['editorial_id'] !== bookEditorial.value) cleanBookData['editorial'] = bookEditorial.value
             if(props.targetBook['pages'] !== bookPages.value) cleanBookData['pages'] = bookPages.value
             if(props.targetBook['state'] !== bookState.value) cleanBookData['state'] = bookState.value
             if(props.targetBook['description'] !== bookDescription.value) cleanBookData['description'] = bookDescription.value
-            if(props.targetBook['category_ids'] !== bookCategories.value) cleanBookData['categories'] = bookCategories.value
+            cleanBookData['authors'] = bookAuthors.value
+            cleanBookData['categories'] = bookCategories.value
 
             if(Object.keys(cleanBookData).length === 0)
                 utilsStore.ShowModal('Info', 'No se realizaron cambios', 'info')
@@ -233,12 +220,52 @@ const DisplayAuthorForm = (() => {
     $('#AuthorModal').modal('show')
 })
 
+const DisplayCategoryForm = (() => {
+    $('#CategoryModal').modal('show')
+})
+
 const DisplayEditorialForm = (() => {
     $('#EditorialModal').modal('show')
 })
 
 const FetchAgain = (() => {
     emit('fetchAgain')
+})
+
+const DeleteAuthor = ((authorId) => {
+    const index = bookAuthors.value.indexOf(authorId);
+    if (index !== -1) {
+        bookAuthors.value.splice(index, 1);
+    }
+})
+
+const DeleteCategory = ((categoryId) => {
+    const index = bookCategories.value.indexOf(categoryId);
+    if (index !== -1) {
+        bookCategories.value.splice(index, 1);
+    }
+})
+
+const AddAuthor = (() => {
+    const targetId = parseInt($('#author')[0].value);
+
+    if(targetId === NaN || bookAuthors.value.includes(targetId))
+        return
+
+    bookAuthors.value.push(targetId)
+    
+    $('#author').val('');  $('#author').trigger('change');
+})
+
+const AddCategory = (() => {
+    const targetId = parseInt($('#categories')[0].value);
+
+    if(targetId === NaN || bookCategories.value.includes(targetId))
+        return
+
+        bookCategories.value.push(targetId)
+    
+    $('#category').val('');  $('#categories').trigger('change');
 })
 
 </script>
@@ -249,162 +276,235 @@ const FetchAgain = (() => {
             <LoadingGadget/>
         </template>
         <template v-else>
-            <div class="col-12 row p-4 pt-5 fs-4 justify-content-around hide-up animated-1">
-                <div class="col-12 col-lg-10 p-2 row myForm shadowed-l rounded lb-bg-terciary-ul justify-content-center">
-                    <div :class="formRowStyle">
-                        <div :class="labelContainerStyle">
-                            <label :class="labelStyle" for="title"><strong>Título</strong></label>
-                        </div>
-                        <div :class="inputContainerStyle">
-                            <div class="row col-12">
-                                <input type="text" class="myInput" maxlength="150" id="title" autofocus v-model="bookTitle">
+            <div class="col-12 row p-4 pt-5 fs-4 justify-content-around align-items-start hide-up animated-1">
+                <div class="col-12 p-2 row myForm shadowed-l rounded lb-bg-terciary-ul justify-content-center">
+                    <div class="col-12 col-lg-5 p-2">
+                        <div :class="formRowStyle">
+                            <div :class="labelContainerStyle">
+                                <label :class="labelStyle" for="title"><strong>Título</strong></label>
                             </div>
-                        </div>
-                    </div>
-        
-                    <div :class="formRowStyle">
-                        <div :class="labelContainerStyle">
-                            <label :class="labelStyle" for="call_number"><strong>Cota</strong></label>
-                        </div>
-                        <div :class="inputContainerStyle">
-                            <div class="row col-7">
-                                <input type="text" class="myInput" maxlength="20" id="call_number" v-model="bookCallNumber">
-                            </div>
-                        </div>
-                    </div>
-        
-                    <div :class="formRowStyle">
-                        <div :class="labelContainerStyle">
-                            <label :class="labelStyle" for="pages"><strong>Páginas</strong></label>
-                        </div>
-                        <div :class="inputContainerStyle">
-                            <div class="row col-5 col-md-3">
-                                <input type="number" class="myInput" max="99999" id="pages" v-model="bookPages">
-                            </div>
-                        </div>
-                    </div>
-    
-                    <div :class="formRowStyle">
-                        <div :class="labelContainerStyle">
-                            <label :class="labelStyle" for="shelf"><strong>Estante</strong></label>
-                        </div>
-                        <div :class="inputContainerStyle">
-                            <div class="row col-5 col-md-3">
-                                <input type="text" class="myInput" maxlength="10" id="shelf" v-model="bookShelf">
-                            </div>
-                        </div>
-                    </div>
-    
-                    <div :class="formRowStyle">
-                        <div :class="labelContainerStyle">
-                            <label :class="labelStyle" for="editorial">Editorial</label>
-                        </div>
-                        <div :class="inputContainerStyle">
-                            <div class="row col-10 col-lg-7">
-                                <select class="myInput select2" id="editorial" :v-model="bookEditorial">
-                                    <option value="">&nbsp;</option>
-                                    <template
-                                    v-for="editorial in props.editorials"
-                                    :key="editorial.id">
-                                        <option class="fw-normal" :value="editorial.id" :selected="bookEditorial == editorial.id">
-                                            {{ editorial.name }}
-                                        </option>                                    
-                                    </template>
-                                </select>
-                            </div>
-                            <div class="col-1 align-middle cursor-pointer" title="Agregar nueva editorial" @click="DisplayEditorialForm()">
-                                <i class="fa fa-plus my-auto align-middle text-success bg-white border-black p-1 rounded"></i>
-                            </div>
-                        </div>
-                    </div>
-        
-                    <div :class="formRowStyle">
-                        <div :class="labelContainerStyle">
-                            <label :class="labelStyle" for="state"><strong>Estado</strong></label>
-                        </div>
-                        <div :class="inputContainerStyle">
-                            <div class="row col-10 col-lg-7">
-                                <select class="myInput select2" id="state" :v-model="bookState">
-                                    <option value="">&nbsp;</option>
-                                    <template
-                                    v-for="state in props.bookStates"
-                                    :key="state.name">
-                                        <option class="fw-normal" :value="state.name" :selected="bookState === state.name">
-                                            {{ state.name }}
-                                        </option>                                    
-                                    </template>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-        
-                    <div :class="formRowStyle">
-                        <div :class="labelContainerStyle">
-                            <label :class="labelStyle" for="description">Descripción</label>
-                        </div>
-                        <div :class="inputContainerStyle">
-                            <div class="row col-10">
-                                <textarea id="description" cols="30" rows="4" maxlength="1000" class="myInput" v-model="bookDescription"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-lg-5 row mt-4 m-lg-0 p-4 fs-4 rounded lb-bg-terciary-ul justify-content-start align-items-start align-self-start">
-                        <h2 class="col-12 text-center">Categorías</h2>
-                        <div class="col-12 d-flex justify-content-start align-items-center flex-column rounded shadowed-l p-0 bg-white" style="overflow:hidden">
-                            <div class="col-12 d-flex categories-section justify-content-center p-0"
-                            v-for="category, index in props.categories"
-                            :key="index">
-                                <div class="category-label-container col-8 d-flex justify-content-center align-items-center p-0 py-1">
-                                    <label class="text-center w-100" :for="category.id">{{ category.name }}</label>
-                                </div>
-                                <div class="category-radio-container col-4 d-flex justify-content-center align-items-center p-0 y-1">
-                                    <input class="" type="checkbox" :id="category.id" name="checkbox" :value="category.id" v-model="bookCategories">
+                            <div :class="inputContainerStyle">
+                                <div class="row col-12">
+                                    <input type="text" class="myInput" maxlength="150" id="title" autofocus v-model="bookTitle">
                                 </div>
                             </div>
                         </div>
-                    </div>     
-
-                    <div class="col-12 col-lg-5 row mt-4 m-lg-0 p-4 fs-4 rounded lb-bg-terciary-ul justify-content-start align-items-start align-self-start">
-                        <h2 class="col-12 text-center">Autores</h2>
-                        <div class="col-12 d-flex justify-content-start align-items-center flex-column rounded shadowed-l p-3 bg-white" style="overflow:hidden">
-                            <div class="d-flex justify-content-around align-items-center flex-wrap">
-                                <div class="row col-10">
-                                    <select class="myInput select2" id="author" :v-model="bookAuthor">
+            
+                        <div :class="formRowStyle">
+                            <div :class="labelContainerStyle">
+                                <label :class="labelStyle" for="call_number"><strong>Cota</strong></label>
+                            </div>
+                            <div :class="inputContainerStyle">
+                                <div class="row col-7">
+                                    <input type="text" class="myInput" maxlength="20" id="call_number" v-model="bookCallNumber">
+                                </div>
+                            </div>
+                        </div>
+            
+                        <div :class="formRowStyle">
+                            <div :class="labelContainerStyle">
+                                <label :class="labelStyle" for="pages"><strong>Páginas</strong></label>
+                            </div>
+                            <div :class="inputContainerStyle">
+                                <div class="row col-5 col-md-4">
+                                    <input type="number" class="myInput" max="99999" id="pages" v-model="bookPages">
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div :class="formRowStyle">
+                            <div :class="labelContainerStyle">
+                                <label :class="labelStyle" for="shelf"><strong>Estante</strong></label>
+                            </div>
+                            <div :class="inputContainerStyle">
+                                <div class="row col-5 col-md-4">
+                                    <input type="text" class="myInput" maxlength="10" id="shelf" v-model="bookShelf">
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div :class="formRowStyle">
+                            <div :class="labelContainerStyle">
+                                <label :class="labelStyle" for="editorial">Editorial</label>
+                            </div>
+                            <div :class="inputContainerStyle">
+                                <div class="row col-10 col-lg-8">
+                                    <select class="myInput select2" id="editorial" :v-model="bookEditorial">
                                         <option value="">&nbsp;</option>
                                         <template
-                                        v-for="author in props.authors"
-                                        :key="author.id">
-                                            <option class="fw-normal" :value="author.id" :selected="bookAuthor == author.id">
-                                                {{ author.name }}
+                                        v-for="editorial in props.editorials"
+                                        :key="editorial.id">
+                                            <option class="fw-normal" :value="editorial.id" :selected="bookEditorial == editorial.id">
+                                                {{ editorial.name }}
                                             </option>                                    
                                         </template>
                                     </select>
                                 </div>
-                                <div class="col-1 align-middle cursor-pointer" title="Agregar nuevo autor" @click="DisplayAuthorForm()">
+                                <div class="col-1 align-middle cursor-pointer" title="Agregar nueva editorial" @click="DisplayEditorialForm()">
                                     <i class="fa fa-plus my-auto align-middle text-success bg-white border-black p-1 rounded"></i>
-                                </div>
-
-                                <div class="row col-12 m-0 p-0">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Nombre</th>
-                                                <th>Quitar</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr
-                                            v-for=""
-                                            >
-
-                                            </tr>
-                                        </tbody>
-                                    </table>
                                 </div>
                             </div>
                         </div>
-                    </div>     
+            
+                        <div :class="formRowStyle">
+                            <div :class="labelContainerStyle">
+                                <label :class="labelStyle" for="state"><strong>Estado</strong></label>
+                            </div>
+                            <div :class="inputContainerStyle">
+                                <div class="row col-10 col-lg-6">
+                                    <select class="myInput select2" id="state" :v-model="bookState">
+                                        <option value="">&nbsp;</option>
+                                        <template
+                                        v-for="state in props.bookStates"
+                                        :key="state.name">
+                                            <option class="fw-normal" :value="state.name" :selected="bookState === state.name">
+                                                {{ state.name }}
+                                            </option>                                    
+                                        </template>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+            
+                        <div :class="formRowStyle">
+                            <div :class="labelContainerStyle">
+                                <label :class="labelStyle" for="description">Descripción</label>
+                            </div>
+                            <div :class="inputContainerStyle">
+                                <div class="row col-12">
+                                    <textarea id="description" cols="30" rows="4" maxlength="1000" class="myInput fs-5" v-model="bookDescription"></textarea>
+                                </div>
+                            </div>
+                        </div>                  
+                    </div>
+
+                    <div class="row m-0 col-12 col-lg-7">
+                        <div class="row col-12 col-lg-6 mt-4 m-lg-0 p-4">
+                            <div class="row m-0 col-12 align-items-center flex-column rounded shadowed-l px-3 py-2 bg-white">
+                                <h3 class="col-12 text-center fw-bold">Categorías</h3>
+                                <div class="row col-4 m-0 p-0 justify-content-center mb-4 fs-5">
+                                    <label class="text-center text-white btn-success border-black fw-bold p-0 rounded" @click="DisplayCategoryForm" title="Agregar nueva categoría">Crear nueva</label>
+                                </div>
+
+                                <div class="row col-12 justify-content-around align-items-center flex-wrap">
+                                    <div class="row col-12 col-lg-8 align-items-center justify-content-around m-0 p-0">
+                                        <div class="row col-10 col-8 mb-1">
+                                            <select class="col-10 myInput select2" id="categories">
+                                                <option value="">&nbsp;</option>
+                                                <template
+                                                v-for="category in props.categories"
+                                                :key="category.id"
+                                                >
+                                                    <option class="fw-normal" :value="category.id">
+                                                        {{ category.name }}
+                                                    </option>                                    
+                                                </template>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-1 d-flex align-items-center cursor-pointer p-0">
+                                            <i class="fa fa-plus my-auto align-middle text-success bg-white border-black p-1 rounded" @click="AddCategory"></i>
+                                        </div>
+                                    </div>
+
+                                    <div class="row col-12 mt-4 p-0">
+                                        <table class="table table-bordered text-black col-12 text-center align-middle">
+                                            <thead class="lb-bg-primary-l fs-5">
+                                                <tr class="border border-black">
+                                                    <th>Nombre</th>
+                                                    <th>Quitar</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <template
+                                                v-for="category in props.categories"
+                                                :key="category.id"
+                                                >
+                                                    <tr
+                                                    v-if="bookCategories.includes(parseInt(category.id))"
+                                                    class="border border-black fs-5"
+                                                    >
+                                                    <td>{{ category.name }}</td>
+                                                    <td>
+                                                        <div class="row justify-content-center m-0 p-0">
+                                                            <div class="btn-danger rounded align-middle text-center p-0" style="width:30px; height: 30px;">
+                                                                <i class="fa fa-close fs-6 align-middle" @click="DeleteCategory(parseInt(category.id))"></i>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </td>
+                                                    </tr>
+                                                </template>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+
+                        <div class="row col-12 col-lg-6 mt-4 m-lg-0 p-4">
+                            <div class="row m-0 col-12 align-items-center flex-column rounded shadowed-l px-3 py-2 bg-white">
+                                <h3 class="col-12 text-center fw-bold">Autores</h3>
+                                <div class="row col-4 m-0 p-0 justify-content-center mb-4 fs-5">
+                                    <label class="text-center text-white btn-success border-black fw-bold p-0 rounded" @click="DisplayAuthorForm()" title="Agregar nuevo autor">Crear nuevo</label>
+                                </div>
+
+                                <div class="row col-12 justify-content-around align-items-center flex-wrap">
+                                    <div class="row col-12 col-lg-8 align-items-center justify-content-around m-0 p-0">
+                                        <div class="row col-10 col-8 mb-1">
+                                            <select class="col-10 myInput select2" id="author">
+                                                <option value="">&nbsp;</option>
+                                                <template
+                                                v-for="author in props.authors"
+                                                :key="author.id"
+                                                >
+                                                    <option class="fw-normal" :value="author.id">
+                                                        {{ author.name }}
+                                                    </option>                                    
+                                                </template>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-1 d-flex align-items-center cursor-pointer p-0">
+                                            <i class="fa fa-plus my-auto align-middle text-success bg-white border-black p-1 rounded" @click="AddAuthor"></i>
+                                        </div>
+                                    </div>
+
+                                    <div class="row col-12 mt-4 p-0">
+                                        <table class="table table-bordered text-black col-12 text-center align-middle">
+                                            <thead class="lb-bg-primary-l fs-5">
+                                                <tr class="border border-black">
+                                                    <th>Nombre</th>
+                                                    <th>Quitar</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <template
+                                                v-for="author in props.authors"
+                                                :key="author.id"
+                                                >
+                                                    <tr
+                                                    v-if="bookAuthors.includes(parseInt(author.id))"
+                                                    class="border border-black fs-5"
+                                                    >
+                                                    <td>{{ author.name }}</td>
+                                                    <td>
+                                                        <div class="row justify-content-center m-0 p-0">
+                                                            <div class="btn-danger rounded align-middle text-center p-0" style="width:30px; height: 30px;">
+                                                                <i class="fa fa-close fs-6 align-middle" @click="DeleteAuthor(parseInt(category.id))"></i>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </td>
+                                                    </tr>
+                                                </template>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>  
+                    </div>                  
         
                     <div class="row m-0 p-0 justify-content-center my-2 mt-5">
                         <div class="row m-0 p-0 col-12 justify-content-center">
@@ -425,8 +525,7 @@ const FetchAgain = (() => {
                         </ul>
                     </div>
     
-                </div>
-                
+                </div>               
                    
             </div>
         </template>
@@ -442,6 +541,12 @@ const FetchAgain = (() => {
     :componentToShow="EditorialForm"
     :title="'Agregar nueva editorial'"
     :modalName="'EditorialModal'"
+    @firstEmit="FetchAgain"
+    />
+    <LargeModalGadget
+    :componentToShow="CategoryForm"
+    :title="'Agregar nueva categoría'"
+    :modalName="'CategoryModal'"
     @firstEmit="FetchAgain"
     />
 

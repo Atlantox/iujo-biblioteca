@@ -35,7 +35,7 @@ onMounted(async () => {
   if(sessionStore.authenticated === true)
     await loanStore.FetchLoansOfBook(route.params.id)
 
-  sameAuthorBooks.value = await bookStore.GetBooksOfAuthor(props.targetBook.author_id, route.params.id)
+  sameAuthorBooks.value = await bookStore.GetCommonAuthorsBook(props.targetBook.id, route.params.id)
   sameCategoryBooks.value = await bookStore.GetBooksOfCategories(props.targetBook.category_ids, route.params.id)
 })
 
@@ -53,7 +53,7 @@ onMounted(async () => {
                 </tr>
                 <tr>
                   <td :class="labelStyle">Autor:</td>
-                  <td>{{ props.targetBook.author }}</td>
+                  <td>{{ props.targetBook.author_names.length === 0 ? 'Desconocido' : props.targetBook.author_names.join(', ') }}</td>
                 </tr>
               </table>
             </div>
@@ -98,10 +98,10 @@ onMounted(async () => {
 
         <div class="row m-0 p-0 col-11 col-lg-4 justify-content-around align-items-start p-0 p-lg-4">
 
-          <template v-if="props.targetBook.author !== null">
+          <template v-if="props.targetBook.author_ids.length > 0">
             <div class="row m-0 p-0 col-12 p-3 shadowed-l rounded lb-bg-terciary-ul my-2">
-              <h4 class="text-center w-100">
-                Otros libros de <strong>{{ props.targetBook.author }}</strong>
+              <h4 class="text-center w-100 fw-bold">
+                Otros libros del mismo autor
               </h4>
               <template v-if="sameAuthorBooks.length > 0">
                 <a
@@ -121,7 +121,7 @@ onMounted(async () => {
           </template>
           
           <div class="row m-0 p-0 col-12 p-3 shadowed-l rounded lb-bg-terciary-ul my-2">
-            <h4 class="text-center w-100">
+            <h4 class="text-center w-100 fw-bold">
               Libros de categorías relacionadas
             </h4>
             <template v-if="sameCategoryBooks.length > 0">

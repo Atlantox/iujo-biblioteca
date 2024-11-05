@@ -224,8 +224,8 @@ class LoanModel(BaseModel):
             loan
             WHERE
             loan.active = 1 AND
-            deliver_date BETWEEN DATE_SUB(deliver_date, INTERVAL %s DAY) AND NOW() OR
-            return_date BETWEEN DATE_SUB(return_date, INTERVAL %s DAY) AND NOW()
+            DATE(deliver_date) BETWEEN DATE(NOW() - INTERVAL %s DAY) AND DATE(NOW())  OR
+            DATE(return_date)  BETWEEN DATE(NOW() - INTERVAL %s DAY) AND DATE(NOW())
         '''
         args = (days,days,)
         try:

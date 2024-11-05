@@ -30,14 +30,14 @@ async function ValidateForm() {
             'max': 150, 
             'required': true, 
         },
-        'Autor':{
+        'Autores':{
             'min': 0, 
-            'max': 30, 
+            'max': 999, 
             'required': false, 
         },
         'Cota':{
             'min': 1, 
-            'max': 8, 
+            'max': 20, 
             'required': true, 
         },
         'Editorial':{
@@ -64,12 +64,17 @@ async function ValidateForm() {
 
     var bookCounter = 2
     var call_numbers = []
+    const filteredBooks = []
 
-    excelData.value.forEach((tentativeBook) => {
+    for(let i = 0; i < excelData.value.length; i++){
+        var tentativeBook = excelData.value[i]
         var errorInBook = false
-
+        
+        if(tentativeBook['Título'] === '#END')
+            break
+        
         // Verificamos que los campos estalbecidos arriba son correctos
-        for(let key in validationStructure){
+       for(let key in validationStructure){
             if(key in tentativeBook === false && validationStructure[key]['required'] === true){
                 formErrors.value.push('El libro de la fila ' + bookCounter + ' no tiene el campo ' + key)
                 errorInBook = true
@@ -89,9 +94,7 @@ async function ValidateForm() {
                         formErrors.value.push('El campo ' + key + ' del libro de la fila ' + bookCounter + ' no alcanza el mínimo de caracteres permitido (' + validationStructure[key]['min']  +')')
                         errorInBook = true
                     }
-                }
-
-                
+                }                
             }
         }
 
@@ -158,8 +161,9 @@ async function ValidateForm() {
                 call_numbers.push(tentativeBook['Cota'])
         }
 
+        filteredBooks.push(tentativeBook)
         bookCounter++
-    })   
+    }
     
     if(formErrors.value.length === 0){
         /*
@@ -168,7 +172,7 @@ async function ValidateForm() {
             return
         */
 
-        const created = await bookStore.CreateBooks(excelData.value)
+        const created = await bookStore.CreateBooks(filteredBooks)
         if(created.success){
             utilsStore.ShowModal('Success', created.message, 'success')
             ResetExcel()            
@@ -229,6 +233,7 @@ const ResetExcel = (() => {
                         <li>Los únicos campos que pueden estar <strong>vacíos</strong> son: autor, editorial y descripción</li>
                         <li><strong>NINGUNA</strong> de las cotas debe repetirse</li>
                         <li>En caso de múltiples categorías y autores, separarlos por <strong>comas</strong></li>
+                        <li>Para definir donde terminan los libros debe escribir <strong>#END</strong> al final</li>
                         <li>Los libros deben estar en la <strong>primera hoja</strong> del excel</li>
                         <li>Debe subir un archivo excel que tenga el siguiente <strong>formato:</strong></li>
                     </ul>
