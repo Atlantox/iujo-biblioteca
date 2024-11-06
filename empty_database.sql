@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost:3306
--- Tiempo de generación: 04-11-2024 a las 10:10:15
--- Versión del servidor: 10.6.19-MariaDB
--- Versión de PHP: 8.1.30
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 06-11-2024 a las 13:15:43
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `iujobqto_iujo_library`
+-- Base de datos: `iujo-library`
 --
 
 -- --------------------------------------------------------
@@ -55,7 +55,6 @@ CREATE TABLE `binnacle` (
 CREATE TABLE `book` (
   `id` int(11) NOT NULL,
   `call_number` varchar(20) NOT NULL,
-  `author` int(11) DEFAULT NULL,
   `title` varchar(150) NOT NULL,
   `editorial` int(11) DEFAULT NULL,
   `pages` int(4) NOT NULL,
@@ -63,6 +62,18 @@ CREATE TABLE `book` (
   `description` text NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `state` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `book_author`
+--
+
+CREATE TABLE `book_author` (
+  `id` int(11) NOT NULL,
+  `book` int(11) NOT NULL,
+  `author` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -144,7 +155,7 @@ INSERT INTO `permisson` (`id`, `name`, `level`) VALUES
 (10, 'Lectores', 'Super'),
 (11, 'Categorías', 'Super'),
 (12, 'Estados de libros', 'Super'),
-(13, 'Editor', 'Super'),
+(13, 'Editores', 'Super'),
 (14, 'Admin', 'Super'),
 (15, 'Préstamos', 'Super'),
 (18, 'Categorías', 'Editor'),
@@ -217,7 +228,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `nickname`, `level`, `created_at`, `username`, `password`, `token`, `active`) VALUES
-(10, 'SuperBiblioteca', 'Super', '2024-07-26 08:07:00', '$argon2id$v=19$m=65536,t=3,p=4$H5QRUNQ1cKaCANACDAjBCg$HhicRyE9Opq0qHaFLJ257HMW0y4zCddGZmHtC/pGfe4', '$argon2id$v=19$m=65536,t=3,p=4$GkRS30Iy5uxTcdhaDvvehA$wtHRL3eqs04xtxOhGcFhoFyd+Y1A8bXCDdDUUrkOYvA', 'dcd78902-70b4-40a2-9c17-b7a0486e9980-5f031834-7798-4cb4-a77b-114b3a7b8d6f', 1);
+(14, 'SuperBiblioteca', 'Super', '2024-07-26 08:07:00', '$argon2id$v=19$m=65536,t=3,p=4$H5QRUNQ1cKaCANACDAjBCg$HhicRyE9Opq0qHaFLJ257HMW0y4zCddGZmHtC/pGfe4', '$argon2id$v=19$m=65536,t=3,p=4$GkRS30Iy5uxTcdhaDvvehA$wtHRL3eqs04xtxOhGcFhoFyd+Y1A8bXCDdDUUrkOYvA', 'dcd78902-70b4-40a2-9c17-b7a0486e9980-5f031834-7798-4cb4-a77b-114s3a7b8d6f', 1);
 
 -- --------------------------------------------------------
 
@@ -263,8 +274,15 @@ ALTER TABLE `book`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `call_number` (`call_number`),
   ADD KEY `book_state` (`state`),
-  ADD KEY `book_editorial` (`editorial`),
-  ADD KEY `book_author` (`author`);
+  ADD KEY `book_editorial` (`editorial`);
+
+--
+-- Indices de la tabla `book_author`
+--
+ALTER TABLE `book_author`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `book_author_book` (`book`),
+  ADD KEY `book_author_author` (`author`);
 
 --
 -- Indices de la tabla `book_category`
@@ -340,7 +358,7 @@ ALTER TABLE `user_level`
 -- AUTO_INCREMENT de la tabla `author`
 --
 ALTER TABLE `author`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `binnacle`
@@ -352,7 +370,13 @@ ALTER TABLE `binnacle`
 -- AUTO_INCREMENT de la tabla `book`
 --
 ALTER TABLE `book`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `book_author`
+--
+ALTER TABLE `book_author`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `book_category`
@@ -364,13 +388,13 @@ ALTER TABLE `book_category`
 -- AUTO_INCREMENT de la tabla `category`
 --
 ALTER TABLE `category`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `editorial`
 --
 ALTER TABLE `editorial`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `loan`
@@ -388,13 +412,13 @@ ALTER TABLE `permisson`
 -- AUTO_INCREMENT de la tabla `reader`
 --
 ALTER TABLE `reader`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Restricciones para tablas volcadas
@@ -410,9 +434,15 @@ ALTER TABLE `binnacle`
 -- Filtros para la tabla `book`
 --
 ALTER TABLE `book`
-  ADD CONSTRAINT `book_author` FOREIGN KEY (`author`) REFERENCES `author` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `book_editorial` FOREIGN KEY (`editorial`) REFERENCES `editorial` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `book_state` FOREIGN KEY (`state`) REFERENCES `state` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `book_author`
+--
+ALTER TABLE `book_author`
+  ADD CONSTRAINT `book_author_author` FOREIGN KEY (`author`) REFERENCES `author` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `book_author_book` FOREIGN KEY (`book`) REFERENCES `book` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `book_category`

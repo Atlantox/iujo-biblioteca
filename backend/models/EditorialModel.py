@@ -1,5 +1,5 @@
 from .BaseModel import BaseModel
-# TODO: actualizar la plantilla de la base de datos vacía e intentar agrupar los libros por título para que no salgan repetidos en la vista del estudiante
+
 class EditorialModel(BaseModel):
     def GetEditorials(self):
         cursor = self.connection.connection.cursor()

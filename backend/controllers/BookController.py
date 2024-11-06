@@ -67,7 +67,6 @@ def DoCreateBook(bookData, connection):
 
     if error == '':
         authorModel = AuthorModel(connection)
-        print(cleanData['authors'])
         for author in cleanData['authors']:
             targetAuthor = authorModel.GetAuthorById(author)
             if targetAuthor is None:
@@ -309,11 +308,22 @@ def CreateBooksByExcel():
 def GetBooks():
     connection = GetConnection()
     bookModel = BookModel(connection)
+    userModel = UserModel(connection)
+    token = GetTokenOfRequest(request)
+
     response = {}
     statusCode = 200
     error = ''
 
-    books = bookModel.GetAllBooks()
+    groupBooks = True # Groupping books by title, editorial and state
+    # By default is true for the students dont see too many repeated books
+
+    if token is not None:
+        targetUser = userModel.GetUserByToken(token)
+        if type(targetUser) is not str:
+            groupBooks = False
+
+    books = bookModel.GetAllBooks(groupBooks)
 
     if books is None:
         error = 'No hay libros disponibles'
@@ -450,7 +460,6 @@ def GetBooksByAuthor(authorId, exceptId):
 def GetBooksOfSameAuthor(bookId, exceptId):
     connection = GetConnection()
     bookModel = BookModel(connection)
-    authorModel = AuthorModel(connection)
     response = {}
     statusCode = 200
     error = ''
@@ -504,8 +513,17 @@ def GetBooksByFilter():
     connection = GetConnection()
     response = {}
     recievedData, error, statusCode = JsonExists(request)
+    token = GetTokenOfRequest(request)
     bookModel = BookModel(connection)
+    userModel = UserModel(connection)
     filters = {}
+    groupBooks = True # Groupping books by title, editorial and state
+    # By default is true for the students dont see too many repeated books
+
+    if token is not None:
+        targetUser = userModel.GetUserByToken(token)
+        if type(targetUser) is not str:
+            groupBooks = False
 
     if 'category' in recievedData:
         categoryModel = CategoryModel(connection)
@@ -545,7 +563,7 @@ def GetBooksByFilter():
                 filters['editorial'] = recievedData['editorial']
 
     if error == '':
-        booksFound = bookModel.FilterBooks(filters)
+        booksFound = bookModel.FilterBooks(filters, groupBooks)
         if type(booksFound) is str:
             error = booksFound
     

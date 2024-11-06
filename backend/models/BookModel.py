@@ -84,10 +84,14 @@ class BookModel(BaseModel):
 
         return result
     
-    def GetAllBooks(self):
+    def GetAllBooks(self, groupBooks:bool):
         cursor = self.connection.connection.cursor()
-        sql = self.BOOK_SELECT_TEMPLATE + 'ORDER BY book.title'
+        sql = self.BOOK_SELECT_TEMPLATE 
         
+        if groupBooks:
+            sql += ' GROUP BY book.title, book.editorial, book.state'
+
+        sql += ' ORDER BY book.title '
         cursor.execute(sql)
         books = cursor.fetchall()
         result = []
@@ -301,7 +305,7 @@ class BookModel(BaseModel):
 
         return result
     
-    def FilterBooks(self, filters:dict):
+    def FilterBooks(self, filters:dict, groupBooks:bool):
         cursor = self.connection.connection.cursor()
         result = []
 
@@ -332,7 +336,9 @@ class BookModel(BaseModel):
 
         sql = sql[0:-4]  # Removing the last 'AND'
 
-        print(sql)
+        if groupBooks:
+            sql += ' GROUP BY book.title, book.editorial, book.state'
+
         try:
             if args == []:
                 cursor.execute(sql)
