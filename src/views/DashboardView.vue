@@ -212,7 +212,7 @@ onMounted( async () => {
             <article :class="articleStyle">
               <div :class="articleWrappedStyle">
                 <h4 :class="h4Style">
-                  Ver lectores
+                  Lectores
                 </h4>
                 <div :class="linkContainersStyle">
                   <div :class="linkElementStyle">

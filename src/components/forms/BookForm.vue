@@ -491,7 +491,7 @@ const AddCategory = (() => {
                                                     <td>
                                                         <div class="row justify-content-center m-0 p-0">
                                                             <div class="btn-danger rounded align-middle text-center p-0" style="width:30px; height: 30px;">
-                                                                <i class="fa fa-close fs-6 align-middle" @click="DeleteAuthor(parseInt(category.id))"></i>
+                                                                <i class="fa fa-close fs-6 align-middle" @click="DeleteAuthor(parseInt(author.id))"></i>
                                                             </div>
                                                         </div>
                                                         

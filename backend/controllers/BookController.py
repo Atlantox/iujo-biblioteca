@@ -165,142 +165,154 @@ def CreateBooksByExcel():
             error = 'Información recibida en el formato incorrecto'
             statusCode = 400
 
-    creationError = ''
-    booksCreated = 0
-    if error == '':
-        categoryModel = CategoryModel(connection)
-        authorModel = AuthorModel(connection)
-        editorialModel = EditorialModel(connection)
-        EXCEL_FIELDS = {
-            'Título': 'title', 
-            'Autores': 'authors', 
-            'Cota': 'call_number', 
-            'Editorial': 'editorial', 
-            'Categorías': 'categories', 
-            'Páginas': 'pages', 
-            'Estante': 'shelf', 
-            'Descripción': 'description'
-        }
-        bookCount = 1        
-        # Convertimos la información para que sea legible
-        for book in recievedData:
-            if error != '': break
-            bookCount += 1
-
-            currentBook = {}
-            for spanishField, englishField in EXCEL_FIELDS.items():
-                if spanishField not in book:
-                    error = 'El campo {0} no existe para el libro {1}'.format(spanishField, bookCount)
-                    statusCode = 400
-                    break
-
-                currentBook[englishField] = str(book[spanishField]).strip()
-
-            '''
-            bookAreRepeated = bookModel.BookAreRepeated(currentBook)
-            if bookAreRepeated is True:
-                creationError += f'El libro de la <strong>fila {bookCount}</strong> ya está registrado así que se obvió<br><br>'
-                continue
-            '''
-
-            if bookModel.GetBookByCallNumber(currentBook['call_number']) is not None:
-                error = f'La cota del libro de la fila {bookCount} está repetida'
-                statusCode = 400
-                break
-
-            # Aquí tendríamos el libro con los campos en inglés
-            # Debemos crear las categorías, editoriales y autores si no existen
-            realCategoryNames = categoryModel.GetCategoryNames()
-
-            bookCategories = currentBook['categories'].split(',')
-            finalBookCategories = []
-
-            for bookCategory in bookCategories:
-                strippedName = bookCategory.strip()
-                if len(strippedName) > 50:
-                    error = f'La categoría {strippedName} sobrepasa el límite de caracteres (50)'
-                    statusCode = 400
-                    break
-                
-                if strippedName not in realCategoryNames:
-                    if categoryModel.CreateCategory({'name': strippedName}) == False:
-                        error = f'Hubo un error inesperado al intentar crear la categoría {strippedName}'
-                        statusCode = 500
-                        break
-
-                targetCategory = categoryModel.GetCategoryByName(strippedName)
-                finalBookCategories.append(targetCategory['id'])
-            
-            if error != '':
-                break
-
-            currentBook['categories'] = finalBookCategories
-
-            finalBookAuthors = []
-            bookAuthors = [a.strip() for a in currentBook['authors'].split(',')]
-            for author in bookAuthors:
-                targetAuthor = authorModel.GetAuthorByName(author)
-                
-                if targetAuthor == None:
-                    if len(author) > 100:
-                        error = 'Un autor {0} sobrepasa el límite de caracteres (100)'.format(author)
-                        statusCode = 400
-                        break
-
-                    if authorModel.CreateAuthor({'name': author}) == False:
-                        error = 'Hubo un error inesperado al intentar crear el autor {0}'.format(author)
-                        statusCode = 500
-                        break
-
-                    targetAuthor = authorModel.GetAuthorByName(author)
-                    finalBookAuthors.append(targetAuthor['id'])
-                else:
-                    finalBookAuthors.append(targetAuthor['id'])
-
-            currentBook['authors'] = finalBookAuthors
-
-            targetEditorial = editorialModel.GetEditorialByName(currentBook['editorial'])
-            if targetEditorial == None:
-                if len(currentBook['editorial']) > 100:
-                    error = 'La editorial {0} sobrepasa el límite de caracteres (100)'.format(currentBook['editorial'])
-                    statusCode = 400
-                    break
-                if editorialModel.CreateEditorial({'name': currentBook['editorial']}) == False:
-                    error = 'Hubo un error inesperado al intentar crear la editorial {0}'.format(currentBook['editorial'])
-                    statusCode = 500
-                    break
-
-                finalEditorial = editorialModel.GetEditorialByName(currentBook['editorial'])
-                currentBook['editorial'] = finalEditorial['id']
-            else:
-                currentBook['editorial'] = targetEditorial['id']
-            
-            currentBook['state'] = 'En biblioteca'
-
-            if error == '':
-                created, statusCode = DoCreateBook(currentBook, connection)
-                if type(created) is str:
-                    creationError += '<span class="text-left">Error en el libro de la <strong>fila {0}</strong>: {1}</span><br><br>'.format(bookCount, created)
-                else:
-                    booksCreated += 1
-                    
-    message = 'Libros insertados correctamente'
-    success = True
     if error != '':
-        message = error
-        success = False
+        return jsonify({'success': False, 'message': error}), statusCode
 
-    if creationError != '':
-        message = creationError
-        success = False
+    booksCreated = 0
+    categoryModel = CategoryModel(connection)
+    authorModel = AuthorModel(connection)
+    editorialModel = EditorialModel(connection)
+    EXCEL_FIELDS = {
+        'Título': 'title', 
+        'Autores': 'authors', 
+        'Cota': 'call_number', 
+        'Editorial': 'editorial', 
+        'Categorías': 'categories', 
+        'Páginas': 'pages', 
+        'Estante': 'shelf', 
+        'Descripción': 'description'
+    }
 
-    if booksCreated > 0:
+    OPTIONAL_FIELDS = [
+        'Autores',
+        'Editorial',
+        'Descripción'
+    ]
+    bookCount = 1     
+    authorsCreated = 0
+    editorialsCreated = 0
+    categoriesCreated = 0
+    # Convertimos la información para que sea legible
+    errors = []
+    for book in recievedData:
+        bookCount += 1
+        
+        currentBook = {}
+        for spanishField, englishField in EXCEL_FIELDS.items():
+            if spanishField not in book:
+                if spanishField in OPTIONAL_FIELDS:
+                    book[spanishField] = ''
+                else:
+                    errors.append('El campo {0} no existe para el libro {1}'.format(spanishField, bookCount))
+                    continue
+
+
+            currentBook[englishField] = str(book[spanishField]).strip()
+
+
+        if bookModel.GetBookByCallNumber(currentBook['call_number']) is not None:
+            errors.append(f'Se ignoró el libro de la fila {bookCount} porque su cota estaba repetida')
+            continue
+
+        # Aquí tendríamos el libro con los campos en inglés
+        # Debemos crear las categorías, editoriales y autores si no existen
+        realCategoryNames = categoryModel.GetCategoryNames()
+
+        bookCategories = currentBook['categories'].split(',')
+        finalBookCategories = []
+
+        for bookCategory in bookCategories:
+            strippedName = bookCategory.strip()
+            if len(strippedName) > 50:
+                errors.append(f'La categoría {strippedName} sobrepasa el límite de caracteres (50)')
+                continue
+            
+            if strippedName not in realCategoryNames:
+                if categoryModel.CreateCategory({'name': strippedName}) == False:
+                    errors.append(f'Hubo un error inesperado al intentar crear la categoría {strippedName}')
+                    continue
+                else:
+                    categoriesCreated += 1
+
+            targetCategory = categoryModel.GetCategoryByName(strippedName)
+            finalBookCategories.append(targetCategory['id'])
+
+        currentBook['categories'] = finalBookCategories
+
+        finalBookAuthors = []
+        bookAuthors = [a.strip() for a in currentBook['authors'].split(',')]
+        for author in bookAuthors:
+            targetAuthor = authorModel.GetAuthorByName(author)
+            
+            if targetAuthor == None:
+                if len(author) > 100:
+                    errors.append('Un autor {0} sobrepasa el límite de caracteres (100)'.format(author))
+                    continue
+
+                if authorModel.CreateAuthor({'name': author}) == False:
+                    errors.append('Hubo un error inesperado al intentar crear el autor {0}'.format(author))
+                    continue
+                else:
+                    authorsCreated += 1
+
+                targetAuthor = authorModel.GetAuthorByName(author)
+                finalBookAuthors.append(targetAuthor['id'])
+            else:
+                finalBookAuthors.append(targetAuthor['id'])
+
+        currentBook['authors'] = finalBookAuthors
+
+        targetEditorial = editorialModel.GetEditorialByName(currentBook['editorial'])
+        if targetEditorial == None:
+            if len(currentBook['editorial']) > 100:
+                errors.append('La editorial {0} sobrepasa el límite de caracteres (100)'.format(currentBook['editorial']))
+                continue
+
+            if editorialModel.CreateEditorial({'name': currentBook['editorial']}) == False:
+                errors.append('Hubo un error inesperado al intentar crear la editorial {0}'.format(currentBook['editorial']))
+                continue
+            else:
+                editorialsCreated += 1
+
+            finalEditorial = editorialModel.GetEditorialByName(currentBook['editorial'])
+            currentBook['editorial'] = finalEditorial['id']
+        else:
+            currentBook['editorial'] = targetEditorial['id']
+        
+        currentBook['state'] = 'En biblioteca'
+
+        if error == '':
+            created, statusCode = DoCreateBook(currentBook, connection)
+            if type(created) is str:
+                errors.append('<span class="text-left">Error en el libro de la <strong>fila {0}</strong>: {1}</span><br><br>'.format(bookCount, created))
+            else:
+                booksCreated += 1
+
+    if booksCreated == 0:
+        statusCode = 400
+        success = False
+        message = 'Ocurrieron los siguientes errores:<br>'
+    else:
         action = 'Insertó {0} libros mediante un excel'.format(booksCreated)
         bookModel.CreateBinnacle(targetUser['id'],action, request.remote_addr)
-        message = 'Libro creado correctamente'
-    
-    message = f'Se crearon {booksCreated} libros<br><br>' + message
-        
+
+        success = True
+        statusCode = 200
+        message = f'''
+            Se insertaron:<br>
+            {booksCreated} libros<br>
+            {categoriesCreated} categorías<br>
+            {authorsCreated} autores<br>
+            {editorialsCreated} editoriales<br><br>
+        '''
+        if len(errors) > 0:
+            message += 'Ocurrieron los siguientes errores:<br>'            
+        else:
+            message += 'No se encontraron errores'
+                    
+    for error in errors:
+        message += error + '<br>'
+            
     return jsonify({'success': success, 'message': message}), statusCode
 
 
