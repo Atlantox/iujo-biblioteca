@@ -30,11 +30,6 @@ async function ValidateForm() {
             'max': 150, 
             'required': true, 
         },
-        'Autores':{
-            'min': 0, 
-            'max': 999, 
-            'required': false, 
-        },
         'Cota':{
             'min': 1, 
             'max': 20, 
@@ -55,6 +50,19 @@ async function ValidateForm() {
             'max': 1000, 
             'required': false, 
         },       
+    }
+
+    const multiElementValidationStructure = {
+        'Autores':{
+            'min': 1, 
+            'max':100,
+            'required': false
+        },
+        'Categorías':{
+            'min': 1, 
+            'max':50,
+            'required': true
+        }
     }
     
     if(excelData.value === null){
@@ -98,34 +106,40 @@ async function ValidateForm() {
             }
         }
 
-        // Faltan por validar los campos categoría y páginas que tendrán validaciones más concretas
-        if('Categorías' in tentativeBook === false){
-            formErrors.value.push('El campo Categorías del libro de la fila ' + bookCounter + ' no existe')
-            errorInBook = true
-        }
-        else{
-            // El campo categorías existe
-            if(tentativeBook['Categorías'].trim() === ''){
-                formErrors.value.push('El campo Categorías del libro de la fila ' + bookCounter + ' está vacío')
+        // Validamos las categorías y los autores que son campos múltiples
+        for(let key in multiElementValidationStructure){
+            var required = multiElementValidationStructure[key]['required'] === true
+            if(key in tentativeBook === false && required){
+                // Es requerido y no está
+                formErrors.value.push('El campo ' + key + ' del libro de la fila ' + bookCounter + ' no existe')
                 errorInBook = true
             }
             else{
-                // El campo categorías contiene algo, validamos el tamaño de cada posible categoría que pueda tener
-                var categories = tentativeBook['Categorías'].split(',')
-                categories.forEach((category) => {
-                    var trimmedCategory = category.trim()
-                    if(trimmedCategory.length > 50){
-                        formErrors.value.push('La categoría' + trimmedCategory + ' del libro de la fila ' + bookCounter + ' supera el máximo de caracteres permitido (50)')
-                        errorInBook = true
-                    }
-
-                    if(trimmedCategory.length <= 2){
-                        formErrors.value.push('La categoría' + trimmedCategory + ' del libro de la fila ' + bookCounter + ' no alcanza el mínimo de caracteres permitido (3)')
-                        errorInBook = true
-                    }
-                })
+                // El campo existe
+                if(tentativeBook[key].trim() === '' && required){
+                    formErrors.value.push('El campo ' + key + ' del libro de la fila ' + bookCounter + ' está vacío')
+                    errorInBook = true
+                }
+                else{
+                    // Validamos los tamaños
+                    var splits = tentativeBook['Categorías'].split(',')
+                    splits.forEach((split) => {
+                        var trimmedSplit = split.trim()
+                        if(trimmedSplit.length > multiElementValidationStructure[key]['max']){
+                            formErrors.value.push('El valor' + trimmedSplit + ' del campo ' + key + ' del libro de la fila ' + bookCounter + ' supera el máximo de caracteres permitido (' + multiElementValidationStructure[key]['max'] +' )')
+                            errorInBook = true
+                        }
+    
+                        if(trimmedSplit.length <= multiElementValidationStructure[key]['min']){
+                            formErrors.value.push('El valor' + trimmedSplit + ' del campo ' + key + ' del libro de la fila ' + bookCounter + ' no alcanza el mínimo de caracteres permitido (' + multiElementValidationStructure[key]['min'] +' )')
+                            errorInBook = true
+                        }
+                    })
+                }
             }
         }
+
+
 
         // Validamos el número de páginas
         if('Páginas' in tentativeBook === false){
