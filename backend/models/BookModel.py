@@ -135,7 +135,7 @@ class BookModel(BaseModel):
         if exceptId is not None:
             sql += ' AND book.id != %s'
 
-        sql += ' ORDER BY book.title LIMIT 12 '
+        sql += ' GROUP BY book.title ORDER BY book.title LIMIT 6 '
         
         if exceptId is not None:
             categoryCopy = categoryIds.copy()
@@ -166,7 +166,7 @@ class BookModel(BaseModel):
         if exceptId is not None:
             sql += ' AND book.id != %s '
 
-        sql += ' ORDER BY  book.title LIMIT 12 '
+        sql += ' GROUP BY book.title ORDER BY book.title LIMIT 6 '
         
         if exceptId is None:
             args = (authorId,)
@@ -202,7 +202,7 @@ class BookModel(BaseModel):
         if exceptId is not None:
             sql += ' AND book.id != %s '
 
-        sql += ' ORDER BY  book.title LIMIT 12 '
+        sql += ' GROUP BY book.title ORDER BY book.title LIMIT 6 '
         
         if exceptId is None:
             args = (bookId,)

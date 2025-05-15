@@ -51,7 +51,8 @@ const useUtilsStore = defineStore('utils', {
 
     InitializeDatatables(){
       var even = true
-        $('#normal-dt').DataTable( {
+        new DataTable('#normal-dt', {
+        //$().DataTable( {
             scrollX: true,
             order: false,
             "language": {

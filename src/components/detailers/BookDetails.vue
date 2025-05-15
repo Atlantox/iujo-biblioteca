@@ -52,8 +52,8 @@ onMounted(async () => {
                   <td :class="'fw-bold text-' + (props.targetBook.state === 'En biblioteca' ? 'success' : 'danger') ">{{ props.targetBook.state }}</td>
                 </tr>
                 <tr>
-                  <td :class="labelStyle">Autor:</td>
-                  <td>{{ props.targetBook.author_names.length === 0 ? 'Desconocido' : props.targetBook.author_names.join(', ') }}</td>
+                  <td :class="labelStyle">Autores:</td>
+                  <td>{{ props.targetBook.author_names[0] === "" ? 'Desconocido' : props.targetBook.author_names.join(', ') }}</td>
                 </tr>
               </table>
             </div>
