@@ -33,20 +33,6 @@ const CloseSession = (() => {
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav ms-auto py-0">   
-                    <!--
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle fs-5" data-bs-toggle="dropdown">dropdown template</a>
-                        <div class="dropdown-menu m-0">
-                            <router-link class="dropdown-item fs-6 text-decoration-none fs-4 hover-bold hover-spacing">
-                                option1
-                            </router-link>
-                            <router-link class="dropdown-item fs-6 text-decoration-none fs-4 hover-bold hover-spacing">
-                                option2
-                            </router-link>
-                        </div>
-                    </div>
-                    -->
-
                     <router-link class="nav-item nav-link text-white text-decoration-none fs-5" :to="{name:'books'}">
                         Libros
                     </router-link>

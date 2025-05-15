@@ -251,9 +251,9 @@ const ResetExcel = (() => {
                         <li>Los libros deben estar en la <strong>primera hoja</strong> del excel</li>
                         <li>Debe subir un archivo excel que tenga el siguiente <strong>formato:</strong></li>
                     </ul>
-                    <figure class="col-12 shadowed-l p-0 my-3">
-                        <img class="w-100" src="@/assets/images/book_excel_guide.png" alt="">
-                    </figure>
+                    <div class="col-12 p-0 my-3 text-center">
+                        Descargue la plantilla <a class="fw-bold" href="Plantilla para importar libros.xlsx">aquí</a>
+                    </div>
                 </div>
     
                 <div :class="formRowStyle">
