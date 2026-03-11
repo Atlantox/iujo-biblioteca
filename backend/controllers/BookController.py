@@ -633,9 +633,11 @@ def UpdateBook(updateId):
 
     if error == '':
         if 'call_number' in cleanData:
-            if bookModel.GetBookByCallNumber(cleanData['call_number']) is not None:
-                error = 'La cota ya está registrada'
-                statusCode = 400
+            exists = bookModel.GetBookByCallNumber(cleanData['call_number'])
+            if exists is not None:
+                if int(exists['id']) != int(targetBook['id']):
+                    error = 'La cota ya está registrada'
+                    statusCode = 400
 
     if error == '':
         if 'authors' in cleanData:
